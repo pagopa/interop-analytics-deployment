@@ -1,0 +1,4 @@
+name: "jwt-audit-analytics-writer"
+
+serviceAccount:
+  roleArn: "arn:aws:iam::505630707203:role/interop-be-jwt-audit-analytics-writer-dev"
