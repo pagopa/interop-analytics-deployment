@@ -12,4 +12,4 @@ eks_cluster_name = "interop-eks-cluster-dev"
 
 sns_topic_name = "interop-platform-alarms-dev"
 
-cloudwatch_log_group_name = "/aws/eks/interop-eks-cluster-dev/application" #TOCHECK: Do deployments in dev-analytics namespace send logs to this log group? 
+cloudwatch_log_group_name = "/aws/eks/interop-eks-cluster-dev/application"
