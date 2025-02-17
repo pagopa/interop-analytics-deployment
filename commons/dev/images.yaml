@@ -1,0 +1,5 @@
+images:
+  microservices:
+    jwt-audit-analytics-writer:
+      tag: "develop"
+  jobs:
