@@ -1,4 +1,4 @@
-name: "interop-be-domain-analytics-writer"
+name: "interop-be-domains-analytics-writer"
 
 serviceAccount:
   roleArn: "arn:aws:iam::505630707203:role/interop-be-domains-analytics-writer-dev"
