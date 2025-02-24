@@ -9,6 +9,21 @@ service:
 configmap:
 
 deployment:
+  flywayInitContainer:
+    create: true
+    migrationsConfigmap: "common-flyway-domains-schema"
+    env:
+      FLYWAY_CREATE_SCHEMAS: true
+      FLYWAY_PLACEHOLDER_REPLACEMENT: true
+      FLYWAY_PLACEHOLDERS_NAMESPACE: "dev"
+      FLYWAY_URL: $(REDSHIFT_JDBC_URL)
+      FLYWAY_SCHEMAS: "domains"
+    envFromConfigmaps:
+      REDSHIFT_JDBC_URL: "common-redshift.REDSHIFT_JDBC_URL"
+    envFromSecrets:
+      FLYWAY_USER: "redshift-domains-analytics-writer-user.username"
+      FLYWAY_PASSWORD: "redshift-domains-analytics-writer-user.password"
+
   envFromConfigmaps:
     REDSHIFT_JDBC_URL: "common-redshift.REDSHIFT_JDBC_URL"
     REDSHIFT_DB_NAME: "common-redshift.REDSHIFT_DB_NAME"
