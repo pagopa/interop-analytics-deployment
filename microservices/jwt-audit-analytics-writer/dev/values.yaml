@@ -9,11 +9,26 @@ service:
 configmap:
 
 deployment:
+  flywayInitContainer:
+    create: true
+    migrationsConfigmap: "common-flyway-jwt-generated-schema"
+    env:
+      FLYWAY_CREATE_SCHEMAS: true
+      FLYWAY_PLACEHOLDER_REPLACEMENT: true
+      FLYWAY_PLACEHOLDERS_NAMESPACE: "dev"
+      FLYWAY_URL: $(REDSHIFT_JDBC_URL)
+      FLYWAY_SCHEMAS: "jwt_generated"
+    envFromConfigmaps:
+      REDSHIFT_JDBC_URL: "common-redshift.REDSHIFT_JDBC_URL"
+    envFromSecrets:
+      FLYWAY_USER: "redshift-jwt-audit-analytics-writer-user.username"
+      FLYWAY_PASSWORD: "redshift-jwt-audit-analytics-writer-user.password"
+
   envFromConfigmaps:
     REDSHIFT_JDBC_URL: "common-redshift.REDSHIFT_JDBC_URL"
     REDSHIFT_DB_NAME: "common-redshift.REDSHIFT_DB_NAME"
     REDSHIFT_DB_PORT: "common-redshift.REDSHIFT_DB_PORT"
-    REDSHIFT_DB_SCHEMA: "common-redshift.REDSHIFT_DB_JWT_SCHEMA"
+    REDSHIFT_DB_SCHEMA: "common-redshift.REDSHIFT_DB_JWT_GENERATED_SCHEMA"
   envFromSecrets:
     REDSHIFT_USERNAME: "redshift-jwt-audit-analytics-writer-user.username"
     REDSHIFT_PASSWORD: "redshift-jwt-audit-analytics-writer-user.password"
