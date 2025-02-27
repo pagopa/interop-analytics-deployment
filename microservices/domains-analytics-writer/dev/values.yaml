@@ -17,3 +17,5 @@ deployment:
   envFromSecrets:
     REDSHIFT_USERNAME: "redshift-domains-analytics-writer-user.username"
     REDSHIFT_PASSWORD: "redshift-domains-analytics-writer-user.password"
+  envFromFieldRef:
+    MERGE_TABLE_SUFFIX: "metadata.uid"
