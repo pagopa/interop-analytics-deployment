@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: common-flyway-domains-schema
+  namespace: dev
+data:
+  V1__Domains_Schema.sql: |-
+    CREATE SCHEMA IF NOT EXISTS domains;
+
+    GRANT USAGE ON SCHEMA domains TO
+      interop_be_domains_analytics_writer_${NAMESPACE},
+      interop_analytics_readonly;
+
+    CREATE TABLE IF NOT EXISTS domains.agreement (
+      ...
+    );
+
+    GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.agreement TO
+      interop_be_domains_analytics_writer_${NAMESPACE};
+
+    GRANT SELECT ON TABLE domains.agreement TO
+      interop_analytics_readonly;
+
+    CREATE TABLE IF NOT EXISTS domains.catalog (
+      ...
+    );
+
+    GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.catalog TO
+      interop_be_domains_analytics_writer_${NAMESPACE};
+
+    GRANT SELECT ON TABLE domains.catalog TO
+      interop_analytics_readonly;
+
+    CREATE TABLE IF NOT EXISTS domains.delegation (
+      ...
+    );
+
+    GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.delegation TO
+      interop_be_domains_analytics_writer_${NAMESPACE};
+
+    GRANT SELECT ON TABLE domains.delegation TO
+      interop_analytics_readonly;
+
+    CREATE TABLE IF NOT EXISTS domains.purpose (
+      ...
+    );
+
+    GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.purpose TO
+      interop_be_domains_analytics_writer_${NAMESPACE};
+
+    GRANT SELECT ON TABLE domains.purpose TO
+      interop_analytics_readonly;

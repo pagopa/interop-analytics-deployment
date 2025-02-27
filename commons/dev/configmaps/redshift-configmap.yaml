@@ -7,5 +7,5 @@ data:
   REDSHIFT_JDBC_URL: "jdbc:redshift://interop-analytics-dev.c8ulvrgyatyh.eu-south-1.redshift.amazonaws.com:5439/interop_dev"
   REDSHIFT_DB_NAME: "interop_dev"
   REDSHIFT_DB_PORT: "5439"
-  REDSHIFT_DB_JWT_SCHEMA: "jwt"
+  REDSHIFT_DB_JWT_SCHEMA: "jwt_generated"
   REDSHIFT_DB_DOMAINS_SCHEMA: "domains"
