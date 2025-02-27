@@ -21,8 +21,8 @@ deployment:
     envFromConfigmaps:
       REDSHIFT_JDBC_URL: "common-redshift.REDSHIFT_JDBC_URL"
     envFromSecrets:
-      FLYWAY_USER: "redshift-jwt-audit-analytics-writer-user.username"
-      FLYWAY_PASSWORD: "redshift-jwt-audit-analytics-writer-user.password"
+      FLYWAY_USER: "redshift-flyway-user.username"
+      FLYWAY_PASSWORD: "redshift-flyway-user.password"
 
   envFromConfigmaps:
     REDSHIFT_JDBC_URL: "common-redshift.REDSHIFT_JDBC_URL"
