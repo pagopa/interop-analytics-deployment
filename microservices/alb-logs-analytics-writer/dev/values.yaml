@@ -1,0 +1,24 @@
+name: "interop-be-alb-logs-analytics-writer"
+
+serviceAccount:
+  roleArn: "arn:aws:iam::505630707203:role/interop-be-alb-logs-analytics-writer-dev"
+
+service:
+  create: false
+
+configmap:
+
+deployment:
+  env:
+    S3_BUCKET: "interop-alb-logs-dev-es1"
+    SQS_NOTIFICATION_ENDPOINT: "interop-analytics-alb-logs-dev"
+  envFromConfigmaps:
+    DB_HOST: "common-redshift.REDSHIFT_JDBC_URL"
+    DB_NAME: "common-redshift.REDSHIFT_DB_NAME"
+    DB_PORT: "common-redshift.REDSHIFT_DB_PORT"
+    DB_SCHEMA_NAME: "common-redshift.REDSHIFT_DB_ALB_LOGS_SCHEMA"
+  envFromSecrets:
+    REDSHIFT_USERNAME: "redshift-alb-logs-analytics-writer-user.username"
+    REDSHIFT_PASSWORD: "redshift-alb-logs-analytics-writer-user.password"
+  envFromFieldRef:
+    MERGE_TABLE_SUFFIX: "metadata.uid"
