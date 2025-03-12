@@ -129,7 +129,7 @@ jobs:
         env:
           MICROSERVICE_NAME: ${{ matrix.microservice }}
           MICROSERVICE_FULLNAME: interop-be-${{ matrix.microservice }}
-          K8S_NAMESPACE: ${{ inputs.environment }}
+          K8S_NAMESPACE: ${{ inputs.environment }}-analytics
           TIMEOUT_SECONDS: ${{ inputs.timeout_seconds }}
           FORCE_ROLLOUT: ${{ inputs.force_restart }}
 
@@ -227,7 +227,7 @@ jobs:
       - name: Deploy
         env:
           CRONJOB_NAME: ${{ matrix.cronjob }}
-          K8S_NAMESPACE: ${{ inputs.environment }}
+          K8S_NAMESPACE: ${{ inputs.environment }}-analytics
         run: |
           set -euo pipefail
 
