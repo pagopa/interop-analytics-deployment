@@ -13,10 +13,6 @@ configmap:
   SQS_NOTIFICATION_ENDPOINT: http://localhost:9324/000000000000/jwt-audit-analytics
   MERGE_TABLE_SUFFIX: _staging
   S3_BUCKET: interop-jwt-audit-analytics-bucket
-  S3_CUSTOM_SERVER: true
-  S3_SERVER_HOST: http://localhost
-  S3_SERVER_PORT: 9000
-  AWS_CONFIG_FILE: aws.config.local
   BATCH_SIZE: 500
 
 deployment:
