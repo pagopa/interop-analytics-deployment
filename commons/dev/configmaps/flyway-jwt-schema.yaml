@@ -7,9 +7,6 @@ data:
   V1__jwt_Schema.sql: |-
     CREATE SCHEMA IF NOT EXISTS jwt;
 
-    GRANT CREATE ON SCHEMA jwt TO 
-      interop_be_jwt_audit_analytics_writer_${NAMESPACE};
-
     GRANT USAGE ON SCHEMA jwt TO
       interop_be_jwt_audit_analytics_writer_${NAMESPACE},
       interop_analytics_readonly;
