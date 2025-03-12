@@ -128,7 +128,7 @@ jobs:
       - name: Deploy
         env:
           MICROSERVICE_NAME: ${{ matrix.microservice }}
-          MICROSERVICE_FULLNAME: tracing-be-${{ matrix.microservice }}
+          MICROSERVICE_FULLNAME: interop-be-${{ matrix.microservice }}
           K8S_NAMESPACE: ${{ inputs.environment }}
           TIMEOUT_SECONDS: ${{ inputs.timeout_seconds }}
           FORCE_ROLLOUT: ${{ inputs.force_restart }}
