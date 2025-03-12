@@ -7,28 +7,32 @@ service:
   create: false
 
 configmap:
+  SERVICE_NAME: pagopa-interop-jwt-audit-analytics-writer
+  SQS_NOTIFICATION_ENDPOINT: https://sqs.eu-south-1.amazonaws.com/505630707203/interop-analytics-jwt-audit-dev
+  S3_BUCKET: interop-jwt-audit-analytics-bucket
+  BATCH_SIZE: 500
 
 deployment:
   flywayInitContainer:
     create: true
-    migrationsConfigmap: "common-flyway-jwt-generated-schema"
+    migrationsConfigmap: "common-flyway-jwt-schema"
     env:
       FLYWAY_CREATE_SCHEMAS: true
       FLYWAY_PLACEHOLDER_REPLACEMENT: true
       FLYWAY_PLACEHOLDERS_NAMESPACE: "dev"
-      FLYWAY_URL: $(REDSHIFT_JDBC_URL)
-      FLYWAY_SCHEMAS: "jwt_generated"
+      FLYWAY_URL: $(JDBC_URL)
+      FLYWAY_SCHEMAS: "jwt"
     envFromConfigmaps:
-      REDSHIFT_JDBC_URL: "common-redshift.REDSHIFT_JDBC_URL"
+      DB_HOST: "common-redshift.JDBC_URL"
     envFromSecrets:
       FLYWAY_USER: "redshift-flyway-user.username"
       FLYWAY_PASSWORD: "redshift-flyway-user.password"
 
   envFromConfigmaps:
-    REDSHIFT_JDBC_URL: "common-redshift.REDSHIFT_JDBC_URL"
-    REDSHIFT_DB_NAME: "common-redshift.REDSHIFT_DB_NAME"
-    REDSHIFT_DB_PORT: "common-redshift.REDSHIFT_DB_PORT"
-    REDSHIFT_DB_SCHEMA: "common-redshift.REDSHIFT_DB_JWT_GENERATED_SCHEMA"
+    DB_HOST: "common-redshift.JDBC_URL"
+    DB_NAME: "common-redshift.DB_NAME"
+    DB_PORT: "common-redshift.DB_PORT"
+    DB_SCHEMA: "common-redshift.DB_JWT_SCHEMA"
   envFromSecrets:
     REDSHIFT_USERNAME: "redshift-jwt-audit-analytics-writer-user.username"
     REDSHIFT_PASSWORD: "redshift-jwt-audit-analytics-writer-user.password"

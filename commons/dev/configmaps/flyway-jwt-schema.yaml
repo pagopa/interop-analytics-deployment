@@ -1,17 +1,20 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: common-flyway-jwt-generated-schema
+  name: common-flyway-jwt-schema
   namespace: dev
 data:
-  V1__Jwt_Generated_Schema.sql: |-
-    CREATE SCHEMA IF NOT EXISTS jwt_generated;
+  V1__jwt_Schema.sql: |-
+    CREATE SCHEMA IF NOT EXISTS jwt;
 
-    GRANT USAGE ON SCHEMA jwt_generated TO
+    GRANT USAGE ON SCHEMA jwt TO
       interop_be_jwt_audit_analytics_writer_${NAMESPACE},
       interop_analytics_readonly;
 
-    CREATE TABLE IF NOT EXISTS jwt_generated.client_assertion_audit_details (
+    GRANT CREATE, ALTER, DROP ON SCHEMA jwt TO 
+      interop_be_jwt_audit_analytics_writer_${NAMESPACE};
+
+    CREATE TABLE IF NOT EXISTS jwt.client_assertion_audit_details (
       jwt_id UUID PRIMARY KEY,
       issued_at TIMESTAMPTZ NOT NULL,
       algorithm VARCHAR(50) NOT NULL,
@@ -22,13 +25,13 @@ data:
       expiration_time TIMESTAMPTZ NOT NULL
     );
 
-    GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE jwt_generated.client_assertion_audit_details TO
+    GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE jwt.client_assertion_audit_details TO
       interop_be_jwt_audit_analytics_writer_${NAMESPACE};
 
-    GRANT SELECT ON TABLE jwt_generated.client_assertion_audit_details TO
+    GRANT SELECT ON TABLE jwt.client_assertion_audit_details TO
       interop_analytics_readonly;
 
-    CREATE TABLE IF NOT EXISTS jwt_generated.generated_token_audit_details (
+    CREATE TABLE IF NOT EXISTS jwt.generated_token_audit_details (
       jwt_id UUID PRIMARY KEY,
       correlation_id UUID NOT NULL,
       issued_at TIMESTAMPTZ NOT NULL,
@@ -47,11 +50,11 @@ data:
       expiration_time TIMESTAMPTZ NOT NULL,
       issuer VARCHAR(255) NOT NULL,
       client_assertion_jwt_id UUID NOT NULL,
-      CONSTRAINT fk_client_assertion FOREIGN KEY (client_assertion_jwt_id) REFERENCES jwt_generated.client_assertion_audit_details(jwt_id) ON DELETE CASCADE
+      CONSTRAINT fk_client_assertion FOREIGN KEY (client_assertion_jwt_id) REFERENCES jwt.client_assertion_audit_details(jwt_id) ON DELETE CASCADE
     );
 
-    GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE jwt_generated.generated_token_audit_details TO
+    GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE jwt.generated_token_audit_details TO
       interop_be_jwt_audit_analytics_writer_${NAMESPACE};
 
-    GRANT SELECT ON TABLE jwt_generated.generated_token_audit_details TO
+    GRANT SELECT ON TABLE jwt.generated_token_audit_details TO
       interop_analytics_readonly;
