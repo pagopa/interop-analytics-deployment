@@ -9,7 +9,6 @@ service:
 configmap:
   SERVICE_NAME: pagopa-interop-jwt-audit-analytics-writer
   LOG_LEVEL: info
-  AWS_REGION: eu-south-1
   SQS_NOTIFICATION_ENDPOINT: https://sqs.eu-south-1.amazonaws.com/505630707203/interop-analytics-jwt-audit-dev
   MERGE_TABLE_SUFFIX: _staging
   S3_BUCKET: interop-jwt-audit-analytics-bucket
