@@ -22,7 +22,7 @@ deployment:
       FLYWAY_PLACEHOLDER_REPLACEMENT: true
       FLYWAY_PLACEHOLDERS_NAMESPACE: "dev"
       FLYWAY_URL: $(JDBC_URL)
-      FLYWAY_SCHEMAS: "jwt_generated"
+      FLYWAY_SCHEMAS: "jwt"
     envFromConfigmaps:
       DB_HOST: "common-redshift.JDBC_URL"
     envFromSecrets:
