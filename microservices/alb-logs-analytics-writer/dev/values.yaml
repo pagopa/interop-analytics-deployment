@@ -7,16 +7,30 @@ service:
   create: false
 
 configmap:
+  SQS_NOTIFICATION_ENDPOINT: "interop-analytics-alb-logs-dev"
+  S3_BUCKET: "interop-alb-logs-dev-es1"
 
 deployment:
-  env:
-    S3_BUCKET: "interop-alb-logs-dev-es1"
-    SQS_NOTIFICATION_ENDPOINT: "interop-analytics-alb-logs-dev"
+  flywayInitContainer:
+    create: true
+    migrationsConfigmap: "common-flyway-jwt-schema"
+    env:
+      FLYWAY_CREATE_SCHEMAS: true
+      FLYWAY_PLACEHOLDER_REPLACEMENT: true
+      FLYWAY_PLACEHOLDERS_NAMESPACE: "dev"
+      FLYWAY_URL: $(JDBC_URL)
+      FLYWAY_SCHEMAS: "alb_logs"
+    envFromConfigmaps:
+      DB_HOST: "common-redshift.JDBC_URL"
+    envFromSecrets:
+      FLYWAY_USER: "redshift-flyway-user.username"
+      FLYWAY_PASSWORD: "redshift-flyway-user.password"
+
   envFromConfigmaps:
-    DB_HOST: "common-redshift.REDSHIFT_JDBC_URL"
-    DB_NAME: "common-redshift.REDSHIFT_DB_NAME"
-    DB_PORT: "common-redshift.REDSHIFT_DB_PORT"
-    DB_SCHEMA_NAME: "common-redshift.REDSHIFT_DB_ALB_LOGS_SCHEMA"
+    DB_HOST: "common-redshift.JDBC_URL"
+    DB_NAME: "common-redshift.DB_NAME"
+    DB_PORT: "common-redshift.DB_PORT"
+    DB_SCHEMA: "common-redshift.DB_ALB_LOGS_SCHEMA"
   envFromSecrets:
     REDSHIFT_USERNAME: "redshift-alb-logs-analytics-writer-user.username"
     REDSHIFT_PASSWORD: "redshift-alb-logs-analytics-writer-user.password"
