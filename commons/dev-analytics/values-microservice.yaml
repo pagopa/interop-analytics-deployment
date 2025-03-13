@@ -1,4 +1,4 @@
-namespace: "dev"
+namespace: "dev-analytics"
 techStack: "nodejs"
 
 deployment:
