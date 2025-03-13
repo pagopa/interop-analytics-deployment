@@ -139,12 +139,12 @@ jobs:
           echo MICROSERVICE_NAME=$MICROSERVICE_NAME
           
           export PROJECT_DIR=$(pwd)
-          TEMPLATE=$($SCRIPTS_FOLDER/helmTemplate-svc-single.sh --debug -e ${{ inputs.environment }} -m $MICROSERVICE_NAME -i $PROJECT_DIR/commons/${{ inputs.environment }}/images.yaml --output console)
+          TEMPLATE=$($SCRIPTS_FOLDER/helmTemplate-svc-single.sh --debug -e ${{ inputs.environment }} -m $MICROSERVICE_NAME -i $PROJECT_DIR/commons/${{ inputs.environment }}/images.yaml --output console > template.yaml)
 
           echo PROJECT_DIR=$PROJECT_DIR
           echo TEMPLATE=$TEMPLATE
 
-          K8S_NAMESPACE=$(echo $TEMPLATE | yq 'select(.kind == "Deployment") | .metadata.namespace')
+          K8S_NAMESPACE=$(cat template.yaml | yq 'select(.kind == "Deployment") | .metadata.namespace')
           MICROSERVICE_FULLNAME=$(echo $TEMPLATE | yq 'select(.kind == "Deployment") | .metadata.name')
 
           echo K8S_NAMESPACE=$K8S_NAMESPACE
