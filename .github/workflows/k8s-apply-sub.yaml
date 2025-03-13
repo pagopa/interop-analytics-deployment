@@ -137,7 +137,7 @@ jobs:
           TIMEOUT="${TIMEOUT_SECONDS}s"
           
           export PROJECT_DIR=$(pwd)
-          TEMPLATE=$(sh $SCRIPTS_FOLDER/helmTemplate-svc-single.sh --debug -e ${{ inputs.environment }} -m $MICROSERVICE_NAME -i $PROJECT_DIR/commons/${{ inputs.environment }}/images.yaml -sd --output console)
+          TEMPLATE=$($SCRIPTS_FOLDER/helmTemplate-svc-single.sh --debug -e ${{ inputs.environment }} -m $MICROSERVICE_NAME -i $PROJECT_DIR/commons/${{ inputs.environment }}/images.yaml -sd --output console)
           echo $TEMPLATE
 
           K8S_NAMESPACE=$(echo $TEMPLATE | yq 'select(.kind == "Deployment") | .metadata.namespace')
@@ -236,7 +236,7 @@ jobs:
 
           export PROJECT_DIR=$(pwd)
 
-          TEMPLATE=$(sh $SCRIPTS_FOLDER/helmTemplate-cron-single.sh --debug --environment ${{ inputs.environment }} --job $CRONJOB_NAME -i $PROJECT_DIR/commons/${{ inputs.environment }}/images.yaml -sd --output console)
+          TEMPLATE=$($SCRIPTS_FOLDER/helmTemplate-cron-single.sh --debug --environment ${{ inputs.environment }} --job $CRONJOB_NAME -i $PROJECT_DIR/commons/${{ inputs.environment }}/images.yaml -sd --output console)
           echo $TEMPLATE
 
           K8S_NAMESPACE=$(echo $TEMPLATE | yq 'select(.kind == "CronJob") | .metadata.namespace')
