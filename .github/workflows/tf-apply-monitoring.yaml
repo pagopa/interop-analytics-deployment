@@ -37,15 +37,13 @@ jobs:
           GH_ENV="${{ inputs.environment }}"
           NORM_ENV="$(echo "$GH_ENV" | sed -e 's/-tf//')"
           echo "NORM_ENV=$NORM_ENV" >> $GITHUB_ENV
-          TERRAFORM_ENV="${{ vars.TERRAFORM_ENV }}"
-          echo "TERRAFORM_ENV=$TERRAFORM_ENV" >> $GITHUB_ENV
 
       - id: set-outputs
         run: |
           set -euo pipefail
 
-          echo "microservices=$(find microservices -type f -path "*/$TERRAFORM_ENV/values.yaml" -exec yq '.name' {} \; | jq -R -s -c 'split("\n")[:-1]')" >> "$GITHUB_OUTPUT"
-          echo "cronjobs=$(find jobs -type f -path "*/$TERRAFORM_ENV/values.yaml" -exec yq '.name' {} \; | jq -R -s -c 'split("\n")[:-1]')" >> "$GITHUB_OUTPUT"
+          echo "microservices=$(find microservices -type f -path "*/$NORM_ENV/values.yaml" -exec yq '.name' {} \; | jq -R -s -c 'split("\n")[:-1]')" >> "$GITHUB_OUTPUT"
+          echo "cronjobs=$(find jobs -type f -path "*/$NORM_ENV/values.yaml" -exec yq '.name' {} \; | jq -R -s -c 'split("\n")[:-1]')" >> "$GITHUB_OUTPUT"
 
   terraform_apply_monitoring:
     name: Terraform Apply Monitoring
