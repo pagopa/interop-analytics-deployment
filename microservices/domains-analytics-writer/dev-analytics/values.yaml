@@ -9,6 +9,7 @@ service:
 configmap:
 
 deployment:
+  replicas: 
   envFromConfigmaps:
     REDSHIFT_JDBC_URL: "common-redshift.REDSHIFT_JDBC_URL"
     REDSHIFT_DB_NAME: "common-redshift.REDSHIFT_DB_NAME"
