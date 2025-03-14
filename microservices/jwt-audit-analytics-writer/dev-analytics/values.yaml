@@ -15,6 +15,8 @@ configmap:
 deployment:
   flywayInitContainer:
     create: true
+    version: "11.4.0"
+    downloadRedshiftDriver: true
     migrationsConfigmap: "common-flyway-jwt-schema"
     env:
       FLYWAY_CREATE_SCHEMAS: true
