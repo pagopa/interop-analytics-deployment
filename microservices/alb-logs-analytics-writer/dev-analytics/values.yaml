@@ -7,7 +7,7 @@ service:
   create: false
 
 configmap:
-  SQS_NOTIFICATION_ENDPOINT: "interop-analytics-alb-logs-dev"
+  SQS_NOTIFICATION_ENDPOINT: "https://sqs.eu-south-1.amazonaws.com/505630707203/interop-analytics-alb-logs-dev"
   S3_BUCKET: "interop-alb-logs-dev-es1"
 
 deployment:
@@ -19,7 +19,7 @@ deployment:
       FLYWAY_PLACEHOLDER_REPLACEMENT: true
       FLYWAY_PLACEHOLDERS_NAMESPACE: "dev"
       FLYWAY_URL: $(DB_HOST)
-      FLYWAY_SCHEMAS: "alb_logs"
+      FLYWAY_SCHEMAS: "infra"
     envFromConfigmaps:
       DB_HOST: "common-redshift.JDBC_URL"
     envFromSecrets:

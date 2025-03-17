@@ -9,4 +9,4 @@ data:
   DB_PORT: "5439"
   DB_JWT_SCHEMA: "jwt"
   DB_DOMAINS_SCHEMA: "domains"
-  DB_ALB_LOGS_SCHEMA: "alb_logs"
+  DB_ALB_LOGS_SCHEMA: "infra"
