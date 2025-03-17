@@ -7,8 +7,9 @@ service:
   create: false
 
 configmap:
-  SQS_NOTIFICATION_ENDPOINT: "https://sqs.eu-south-1.amazonaws.com/505630707203/interop-analytics-alb-logs-dev"
-  S3_BUCKET: "interop-alb-logs-dev-es1"
+  SERVICE_NAME: pagopa-interop-alb-logs-analytics-writer
+  SQS_NOTIFICATION_ENDPOINT: https://sqs.eu-south-1.amazonaws.com/505630707203/interop-analytics-alb-logs-dev
+  S3_BUCKET: interop-alb-logs-dev-es1
 
 deployment:
   flywayInitContainer:
