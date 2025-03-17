@@ -25,10 +25,10 @@ data:
       expiration_time TIMESTAMPTZ NOT NULL
     );
 
-    GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE jwt.client_assertion_audit_details TO
+    GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE jwt.client_assertion_audit TO
       interop_be_jwt_audit_analytics_writer_${NAMESPACE};
 
-    GRANT SELECT ON TABLE jwt.client_assertion_audit_details TO
+    GRANT SELECT ON TABLE jwt.client_assertion_audit TO
       interop_analytics_readonly;
 
     CREATE TABLE IF NOT EXISTS jwt.generated_token_audit (
@@ -53,8 +53,8 @@ data:
       CONSTRAINT fk_client_assertion FOREIGN KEY (client_assertion_jwt_id) REFERENCES jwt.client_assertion_audit(jwt_id) ON DELETE CASCADE
     );
 
-    GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE jwt.generated_token_audit_details TO
+    GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE jwt.generated_token_audit TO
       interop_be_jwt_audit_analytics_writer_${NAMESPACE};
 
-    GRANT SELECT ON TABLE jwt.generated_token_audit_details TO
+    GRANT SELECT ON TABLE jwt.generated_token_audit TO
       interop_analytics_readonly;
