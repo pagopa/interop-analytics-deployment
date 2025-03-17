@@ -2,4 +2,6 @@ images:
   microservices:
     jwt-audit-analytics-writer:
       tag: "develop"
+    alb-logs-analytics-writer:
+      tag: "develop"
   jobs:
