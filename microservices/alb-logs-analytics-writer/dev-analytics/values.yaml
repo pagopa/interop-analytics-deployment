@@ -36,7 +36,7 @@ deployment:
     DB_USE_SSL: "common-redshift.DB_USE_SSL"
     DB_SCHEMA: "common-redshift.DB_ALB_LOGS_SCHEMA"
   envFromSecrets:
-    REDSHIFT_USERNAME: "redshift-alb-logs-analytics-writer-user.username"
-    REDSHIFT_PASSWORD: "redshift-alb-logs-analytics-writer-user.password"
+    DB_USERNAME: "redshift-alb-logs-analytics-writer-user.username"
+    DB_PASSWORD: "redshift-alb-logs-analytics-writer-user.password"
   envFromFieldRef:
     MERGE_TABLE_SUFFIX: "metadata.uid"
