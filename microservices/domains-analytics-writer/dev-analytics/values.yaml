@@ -31,9 +31,10 @@ deployment:
     DB_HOST: "common-redshift.JDBC_URL"
     DB_NAME: "common-redshift.DB_NAME"
     DB_PORT: "common-redshift.DB_PORT"
+    DB_USE_SSL: "common-redshift.DB_USE_SSL"
     DB_SCHEMA: "common-redshift.DB_DOMAINS_SCHEMA"
   envFromSecrets:
-    REDSHIFT_USERNAME: "redshift-domains-analytics-writer-user.username"
-    REDSHIFT_PASSWORD: "redshift-domains-analytics-writer-user.password"
+    DB_USERNAME: "redshift-domains-analytics-writer-user.username"
+    DB_PASSWORD: "redshift-domains-analytics-writer-user.password"
   envFromFieldRef:
     MERGE_TABLE_SUFFIX: "metadata.uid"
