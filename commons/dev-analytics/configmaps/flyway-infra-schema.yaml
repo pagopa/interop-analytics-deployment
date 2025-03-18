@@ -14,7 +14,7 @@ data:
     GRANT CREATE, ALTER, DROP ON SCHEMA infra TO 
     interop_be_alb_logs_analytics_writer_${NAMESPACE};
 
-    CREATE TABLE IF NOT EXISTS infra.alb_logs (
+    CREATE TABLE IF NOT EXISTS infra.alb_logs_audit (
       trace_id VARCHAR(255) NOT NULL,
       type VARCHAR(255) NOT NULL,
       time VARCHAR(255) NOT NULL,
@@ -47,8 +47,8 @@ data:
       conn_trace_id VARCHAR(255)
     );
 
-    GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE infra.alb_logs TO
+    GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE infra.alb_logs_audit TO
     interop_be_alb_logs_analytics_writer_${NAMESPACE};
 
-    GRANT SELECT ON TABLE infra.alb_logs TO
+    GRANT SELECT ON TABLE infra.alb_logs_audit TO
       interop_analytics_readonly;
