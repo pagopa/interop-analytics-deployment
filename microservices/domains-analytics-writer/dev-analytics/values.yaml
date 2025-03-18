@@ -32,7 +32,7 @@ deployment:
     DB_NAME: "common-redshift.DB_NAME"
     DB_PORT: "common-redshift.DB_PORT"
     DB_USE_SSL: "common-redshift.DB_USE_SSL"
-    DB_SCHEMA: "common-redshift.DB_DOMAINS_SCHEMA"
+    DB_SCHEMA_NAME: "common-redshift.DB_DOMAINS_SCHEMA"
   envFromSecrets:
     DB_USERNAME: "redshift-domains-analytics-writer-user.username"
     DB_PASSWORD: "redshift-domains-analytics-writer-user.password"
