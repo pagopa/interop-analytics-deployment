@@ -13,7 +13,7 @@ module "k8s_deployment_monitoring" {
 
   env                 = var.env
   eks_cluster_name    = var.eks_cluster_name
-  k8s_namespace       = format("%s-analytics", var.env)
+  k8s_namespace       = format("%s", var.k8s_namespace)
   k8s_deployment_name = each.key
   sns_topics_arns     = [data.aws_sns_topic.platform_alarms.arn]
 
