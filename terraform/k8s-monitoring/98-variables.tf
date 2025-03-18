@@ -29,3 +29,8 @@ variable "cloudwatch_log_group_name" {
   description = "Name of the Cloudwatch log group to get metric filters"
   type        = string
 }
+
+variable "k8s_namespace" {
+  description = "Kubernetes namespace in which microservices and cronjobs are deployed"
+  type        = string
+}
