@@ -33,6 +33,7 @@ deployment:
     DB_HOST: "common-redshift.JDBC_URL"
     DB_NAME: "common-redshift.DB_NAME"
     DB_PORT: "common-redshift.DB_PORT"
+    DB_USE_SSL: "common-redshift.DB_USE_SSL"
     DB_SCHEMA: "common-redshift.DB_ALB_LOGS_SCHEMA"
   envFromSecrets:
     REDSHIFT_USERNAME: "redshift-alb-logs-analytics-writer-user.username"
