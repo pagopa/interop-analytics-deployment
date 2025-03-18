@@ -9,8 +9,8 @@ locals {
 resource "aws_cloudwatch_metric_alarm" "cronjob_errors" {
   for_each = toset(local.cronjobs_names)
 
-  alarm_name        = format("k8s-cronjob-%s-errors-%s", each.key, var.env)
-  alarm_description = format("Cronjob errors alarm for %s", each.key)
+  alarm_name        = format("k8s-cronjob-%s-errors-%s", each.key, var.k8s_namespace)
+  alarm_description = format("Cronjob errors alarm for %s in %s namespace", each.key, var.k8s_namespace)
 
   alarm_actions = [data.aws_sns_topic.platform_alarms.arn]
 
@@ -19,7 +19,7 @@ resource "aws_cloudwatch_metric_alarm" "cronjob_errors" {
 
   dimensions = {
     PodApp       = each.key
-    PodNamespace = format("%s-analytics", var.env)
+    PodNamespace = format("%s", var.k8s_namespace)
   }
 
   comparison_operator = "GreaterThanOrEqualToThreshold"
