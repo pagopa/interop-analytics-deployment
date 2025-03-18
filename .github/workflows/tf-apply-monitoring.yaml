@@ -114,8 +114,9 @@ jobs:
       - name: Terraform Apply Monitoring
         id: terraform_apply_monitoring
         working-directory: terraform/k8s-monitoring
+        env:
+          TF_VAR_k8s_namespace: ${{ inputs.environment }}
         run: |
           set -euo pipefail
 
-          export TF_VAR_k8s_namespace="${{ inputs.environment }}"
           terraform apply -var-file="./env/$TERRAFORM_ENV/terraform.tfvars" -auto-approve
