@@ -35,7 +35,7 @@ deployment:
     DB_NAME: "common-redshift.DB_NAME"
     DB_PORT: "common-redshift.DB_PORT"
     DB_USE_SSL: "common-redshift.DB_USE_SSL"
-    DB_SCHEMA: "common-redshift.DB_JWT_SCHEMA"
+    DB_SCHEMA_NAME: "common-redshift.DB_JWT_SCHEMA"
   envFromSecrets:
     DB_USERNAME: "redshift-jwt-audit-analytics-writer-user.username"
     DB_PASSWORD: "redshift-jwt-audit-analytics-writer-user.password"
