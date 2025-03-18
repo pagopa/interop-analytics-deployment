@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: common-flyway-domains-schema
-  namespace: dev
+  namespace: dev-analytics
 data:
   V1__Domains_Schema.sql: |-
     CREATE SCHEMA IF NOT EXISTS domains;
