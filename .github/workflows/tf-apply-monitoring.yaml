@@ -100,6 +100,8 @@ jobs:
           GH_ENV="${{ inputs.environment }}"
           NORM_ENV="$(echo "$GH_ENV" | sed -e 's/-tf//')"
           echo "NORM_ENV=$NORM_ENV" >> $GITHUB_ENV
+          TERRAFORM_ENV="${{ vars.TERRAFORM_ENV }}"
+          echo "TERRAFORM_ENV=$TERRAFORM_ENV" >> $GITHUB_ENV
 
       - name: Terraform Init
         id: terraform_init
@@ -107,7 +109,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          ./terraform.sh init "$NORM_ENV"
+          ./terraform.sh init "$TERRAFORM_ENV"
 
       - name: Terraform Apply Monitoring
         id: terraform_apply_monitoring
@@ -115,4 +117,4 @@ jobs:
         run: |
           set -euo pipefail
 
-          terraform apply -var-file="./env/$NORM_ENV/terraform.tfvars" -auto-approve
+          terraform apply -var-file="./env/$TERRAFORM_ENV/terraform.tfvars" -auto-approve

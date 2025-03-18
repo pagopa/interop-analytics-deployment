@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: common-redshift
+  namespace: dev-analytics
+data:
+  JDBC_URL: "jdbc:redshift://interop-analytics-dev.c8ulvrgyatyh.eu-south-1.redshift.amazonaws.com:5439/interop_dev"
+  DB_NAME: "interop_dev"
+  DB_PORT: "5439"
+  DB_JWT_SCHEMA: "jwt"
+  DB_DOMAINS_SCHEMA: "domains"
+  DB_ALB_LOGS_SCHEMA: "infra"
