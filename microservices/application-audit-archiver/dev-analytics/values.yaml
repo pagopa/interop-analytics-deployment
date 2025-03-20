@@ -12,6 +12,7 @@ configmap:
   GZ_COMPRESSION_LEVEL: 6
 
 deployment:
+  replicas: 0
   envFromConfigmaps:
     KAFKA_BROKERS: "common-kafka.KAFKA_BROKERS"
     KAFKA_TOPIC: "common-kafka.APPLICATION_AUDIT_TOPIC"
