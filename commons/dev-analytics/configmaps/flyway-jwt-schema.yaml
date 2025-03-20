@@ -14,25 +14,6 @@ data:
     GRANT CREATE, ALTER, DROP ON SCHEMA jwt TO 
       interop_be_jwt_audit_analytics_writer_${NAMESPACE};
 
-    CREATE TABLE IF NOT EXISTS jwt.client_assertion_audit (
-      jwt_id VARCHAR(36),
-      issued_at TIMESTAMPTZ NOT NULL,
-      algorithm VARCHAR(50) NOT NULL,
-      key_id VARCHAR(255) NOT NULL,
-      issuer VARCHAR(255) NOT NULL,
-      subject VARCHAR(36) NOT NULL,
-      audience VARCHAR(255) NOT NULL,
-      expiration_time TIMESTAMPTZ NOT NULL,
-      generated_token_jwt_id VARCHAR(36) PRIMARY KEY,
-      CONSTRAINT fk_generated_token FOREIGN KEY (generated_token_jwt_id) REFERENCES jwt.generated_token_audit(jwt_id)
-    );
-
-    GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE jwt.client_assertion_audit TO
-      interop_be_jwt_audit_analytics_writer_${NAMESPACE};
-
-    GRANT SELECT ON TABLE jwt.client_assertion_audit TO
-      interop_analytics_readonly;
-
     CREATE TABLE IF NOT EXISTS jwt.generated_token_audit (
       jwt_id VARCHAR(36) PRIMARY KEY,
       correlation_id VARCHAR(36) NOT NULL,
@@ -58,4 +39,23 @@ data:
       interop_be_jwt_audit_analytics_writer_${NAMESPACE};
 
     GRANT SELECT ON TABLE jwt.generated_token_audit TO
+      interop_analytics_readonly;
+
+    CREATE TABLE IF NOT EXISTS jwt.client_assertion_audit (
+      jwt_id VARCHAR(36),
+      issued_at TIMESTAMPTZ NOT NULL,
+      algorithm VARCHAR(50) NOT NULL,
+      key_id VARCHAR(255) NOT NULL,
+      issuer VARCHAR(255) NOT NULL,
+      subject VARCHAR(36) NOT NULL,
+      audience VARCHAR(255) NOT NULL,
+      expiration_time TIMESTAMPTZ NOT NULL,
+      generated_token_jwt_id VARCHAR(36) PRIMARY KEY,
+      CONSTRAINT fk_generated_token FOREIGN KEY (generated_token_jwt_id) REFERENCES jwt.generated_token_audit(jwt_id)
+    );
+
+    GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE jwt.client_assertion_audit TO
+      interop_be_jwt_audit_analytics_writer_${NAMESPACE};
+
+    GRANT SELECT ON TABLE jwt.client_assertion_audit TO
       interop_analytics_readonly;
