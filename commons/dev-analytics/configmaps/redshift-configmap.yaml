@@ -11,3 +11,4 @@ data:
   DB_JWT_SCHEMA: "jwt"
   DB_DOMAINS_SCHEMA: "domains"
   DB_ALB_LOGS_SCHEMA: "infra"
+  DB_APPLICATION_SCHEMA: "application"
