@@ -142,6 +142,9 @@ jobs:
           K8S_NAMESPACE=$(cat template.yaml | yq 'select(.kind == "Deployment") | .metadata.namespace')
           MICROSERVICE_FULLNAME=$(cat template.yaml | yq 'select(.kind == "Deployment") | .metadata.name')
           
+          GENERATION=$(kubectl get deployment "$MICROSERVICE_FULLNAME" -n "$K8S_NAMESPACE" -o jsonpath='{.metadata.generation}')
+          echo "::info::INFO - Current generation for deployment $MICROSERVICE_FULLNAME: $GENERATION"
+
           echo "INFO - Apply changes for $MICROSERVICE_FULLNAME."
           "$SCRIPTS_FOLDER/kubectlApply-svc-single-standalone.sh" --debug --skip-dep --environment "$K8S_NAMESPACE" -m "$MICROSERVICE_NAME" -i $PROJECT_DIR/commons/$K8S_NAMESPACE/images.yaml --output console
 
@@ -155,30 +158,19 @@ jobs:
           # Check if the force rollout flag is true
           if [ "$FORCE_ROLLOUT" = true ]; then
             echo "::info::INFO - Force rollout restart requested $MICROSERVICE_FULLNAME."
-            
-            # Check if a rollout is already in progress
             if ! kubectl rollout status -n "$K8S_NAMESPACE" "deployment/$MICROSERVICE_FULLNAME" --watch=false >/dev/null 2>&1; then
-              echo "::info::INFO - Rollout already active for $MICROSERVICE_FULLNAME. Checking Pods status."
+              echo "::info::INFO - Rollout already active for $MICROSERVICE_FULLNAME."
 
-              # Get the status of all Pods
-              PODS_STATUS=$(kubectl get pods -n "$K8S_NAMESPACE" -l app="$MICROSERVICE_FULLNAME" -o jsonpath='{.items[*].status.phase}')
-              PODS_ERROR=false
+              NEW_GENERATION=$(kubectl get deployment "$MICROSERVICE_FULLNAME" -n "$K8S_NAMESPACE" -o jsonpath='{.metadata.generation}')
+              echo "::info::INFO - New generation for deployment $MICROSERVICE_FULLNAME: $NEW_GENERATION"
 
-              # Check if any Pod is in error state
-              for STATUS in $PODS_STATUS; do
-                if [ "$STATUS" == "Error" ] || [ "$STATUS" == "CrashLoopBackOff" ]; then
-                  PODS_ERROR=true
-                  break
-                fi
-              done
-
-              # Force rollout restart if any Pod is in error state
-              if [ "$PODS_ERROR" = true ]; then
-                echo "::info::INFO - At least one Pod is in error state in the active rollout. Forcing a rollout restart."
+              if ! ["$GENERATION" -eq "$NEW_GENERATION" ]; then
+                echo "::info::INFO - Generations for deployment $MICROSERVICE_FULLNAME are different. Forcing a rollout restart."
                 kubectl rollout restart -n "$K8S_NAMESPACE" "deployment/$MICROSERVICE_FULLNAME"
               else
-                echo "::info::INFO - No Pods in error state. No force restart needed."
+                echo "::info::INFO - Generations for deployment $MICROSERVICE_FULLNAME are equals. No force restart needed."
               fi
+
             else
               echo "INFO - No rollout in progress, forcing a rollout restart."
               kubectl rollout restart -n "$K8S_NAMESPACE" "deployment/$MICROSERVICE_FULLNAME"
