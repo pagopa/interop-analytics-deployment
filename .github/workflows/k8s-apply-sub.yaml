@@ -164,11 +164,11 @@ jobs:
               NEW_GENERATION=$(kubectl get deployment "$MICROSERVICE_FULLNAME" -n "$K8S_NAMESPACE" -o jsonpath='{.metadata.generation}')
               echo "::info::INFO - New generation for deployment $MICROSERVICE_FULLNAME: $NEW_GENERATION"
 
-              if ! ["$GENERATION" -eq "$NEW_GENERATION" ]; then
-                echo "::info::INFO - Generations for deployment $MICROSERVICE_FULLNAME are different. Forcing a rollout restart."
+              if ["$GENERATION" -eq "$NEW_GENERATION" ]; then
+                echo "::info::INFO - Generations for deployment $MICROSERVICE_FULLNAME are equals. Forcing a rollout restart."
                 kubectl rollout restart -n "$K8S_NAMESPACE" "deployment/$MICROSERVICE_FULLNAME"
               else
-                echo "::info::INFO - Generations for deployment $MICROSERVICE_FULLNAME are equals. No force restart needed."
+                echo "::info::INFO - Generations for deployment $MICROSERVICE_FULLNAME are different. No force restart needed."
               fi
 
             else
