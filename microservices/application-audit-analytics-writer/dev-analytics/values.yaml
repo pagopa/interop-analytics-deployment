@@ -10,7 +10,6 @@ configmap:
   SERVICE_NAME: pagopa-interop-application-audit-analytics-writer-dev
 
 deployment:
-  replicas: 0
   flywayInitContainer:
     create: true
     version: "11.4.0"
