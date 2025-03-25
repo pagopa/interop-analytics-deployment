@@ -5,4 +5,4 @@ metadata:
   namespace: dev-analytics
 data:
   KAFKA_BROKERS: "b-1.iam.interopplatformevents.2doelu.c2.kafka.eu-south-1.amazonaws.com:14001,b-3.iam.interopplatformevents.2doelu.c2.kafka.eu-south-1.amazonaws.com:14003,b-2.iam.interopplatformevents.2doelu.c2.kafka.eu-south-1.amazonaws.com:14002"
-  APPLICATION_AUDIT_TOPIC: "outbound.dev_application.audit"
+  APPLICATION_AUDIT_TOPIC: "dev_application.audit"
