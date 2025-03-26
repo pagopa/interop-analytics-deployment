@@ -9,7 +9,7 @@ data:
 
     GRANT USAGE ON SCHEMA application TO
       interop_be_application_audit_analytics_writer_${NAMESPACE},
-      interop_analytics_readonly;
+      readonly_group;
 
     GRANT CREATE, ALTER, DROP ON SCHEMA application TO 
       interop_be_application_audit_analytics_writer_${NAMESPACE};
@@ -54,9 +54,3 @@ data:
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE application.end_request_audit TO
       interop_be_application_audit_analytics_writer_${NAMESPACE};
-
-    GRANT SELECT ON TABLE application.begin_request_audit TO
-      interop_analytics_readonly;
-
-    GRANT SELECT ON TABLE application.end_request_audit TO
-      interop_analytics_readonly;
