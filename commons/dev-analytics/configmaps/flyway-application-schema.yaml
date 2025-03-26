@@ -10,7 +10,7 @@ data:
     GRANT USAGE ON SCHEMA application TO
       interop_be_application_audit_analytics_writer_${NAMESPACE};
 
-    GRANT USAGE ON SCHEMA infra TO GROUP
+    GRANT USAGE ON SCHEMA application TO GROUP
       readonly_group;
 
     GRANT CREATE, ALTER, DROP ON SCHEMA application TO 
