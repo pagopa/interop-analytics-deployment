@@ -8,7 +8,9 @@ data:
     CREATE SCHEMA IF NOT EXISTS infra;
 
     GRANT USAGE ON SCHEMA infra TO
-      interop_be_alb_logs_analytics_writer_${NAMESPACE},
+      interop_be_alb_logs_analytics_writer_${NAMESPACE};
+
+    GRANT USAGE ON SCHEMA infra TO GROUP
       readonly_group;
 
     GRANT CREATE, ALTER, DROP ON SCHEMA infra TO 
