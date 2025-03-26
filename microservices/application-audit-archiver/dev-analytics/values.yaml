@@ -1,0 +1,17 @@
+name: "interop-be-application-audit-archiver"
+
+serviceAccount:
+  roleArn: "arn:aws:iam::505630707203:role/interop-be-application-audit-archiver-dev"
+
+service:
+  create: false
+
+configmap:
+  SERVICE_NAME: pagopa-interop-application-audit-archiver-dev
+  S3_BUCKET: interop-application-audit-archive-dev-es1
+  GZ_COMPRESSION_LEVEL: 6
+
+deployment:
+  envFromConfigmaps:
+    KAFKA_BROKERS: "common-kafka.KAFKA_BROKERS"
+    KAFKA_TOPIC: "common-kafka.APPLICATION_AUDIT_TOPIC"
