@@ -9,7 +9,7 @@ data:
 
     GRANT USAGE ON SCHEMA jwt TO
       interop_be_jwt_audit_analytics_writer_${NAMESPACE},
-      interop_analytics_readonly;
+      readonly_group;
 
     GRANT CREATE, ALTER, DROP ON SCHEMA jwt TO 
       interop_be_jwt_audit_analytics_writer_${NAMESPACE};
@@ -56,6 +56,3 @@ data:
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE jwt.client_assertion_audit TO
       interop_be_jwt_audit_analytics_writer_${NAMESPACE};
-
-    GRANT SELECT ON TABLE jwt.client_assertion_audit TO
-      interop_analytics_readonly;
