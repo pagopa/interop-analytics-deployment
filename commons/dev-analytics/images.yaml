@@ -4,4 +4,8 @@ images:
       tag: "develop"
     alb-logs-analytics-writer:
       tag: "develop"
+    application-audit-analytics-writer:
+      tag: "develop"
+    application-audit-archiver:
+      tag: "develop"
   jobs:
