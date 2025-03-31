@@ -8,6 +8,7 @@ service:
 
 configmap:
   SERVICE_NAME: pagopa-interop-application-audit-analytics-writer-dev
+  KAFKA_GROUP_ID: "application-audit-analytics-writer-dev"
 
 deployment:
   flywayInitContainer:
@@ -41,4 +42,5 @@ deployment:
     DB_USERNAME: "redshift-application-audit-analytics-writer-user.username"
     DB_PASSWORD: "redshift-application-audit-analytics-writer-user.password"
   envFromFieldRef:
+    KAFKA_CLIENT_ID: "metadata.name"
     MERGE_TABLE_SUFFIX: "metadata.uid"
