@@ -137,14 +137,11 @@ jobs:
           TIMEOUT="${TIMEOUT_SECONDS}s"
 
           export PROJECT_DIR=$(pwd)
-          $SCRIPTS_FOLDER/helmTemplate-svc-single.sh --debug -e ${{ inputs.environment }} -m $MICROSERVICE_NAME -i $PROJECT_DIR/commons/${{ inputs.environment }}/images.yaml --output console > template.yaml
+          $SCRIPTS_FOLDER/helmTemplate-svc-single.sh --debug -e ${{ inputs.environment }} -m $MICROSERVICE_NAME -i $PROJECT_DIR/commons/${{ inputs.environment }}/images.yaml --dry-run --output console > template.yaml
 
           K8S_NAMESPACE=$(cat template.yaml | yq 'select(.kind == "Deployment") | .metadata.namespace')
           MICROSERVICE_FULLNAME=$(cat template.yaml | yq 'select(.kind == "Deployment") | .metadata.name')
           
-          GENERATION=$(kubectl get deployment "$MICROSERVICE_FULLNAME" -n "$K8S_NAMESPACE" -o jsonpath='{.metadata.generation}')
-          echo "::info::INFO - Current generation for deployment $MICROSERVICE_FULLNAME: $GENERATION"
-
           echo "INFO - Apply changes for $MICROSERVICE_FULLNAME."
           "$SCRIPTS_FOLDER/kubectlApply-svc-single-standalone.sh" --debug --skip-dep --environment "$K8S_NAMESPACE" -m "$MICROSERVICE_NAME" -i $PROJECT_DIR/commons/$K8S_NAMESPACE/images.yaml --output console
 
@@ -159,18 +156,7 @@ jobs:
           if [ "$FORCE_ROLLOUT" = true ]; then
             echo "::info::INFO - Force rollout restart requested $MICROSERVICE_FULLNAME."
             if ! kubectl rollout status -n "$K8S_NAMESPACE" "deployment/$MICROSERVICE_FULLNAME" --watch=false >/dev/null 2>&1; then
-              echo "::info::INFO - Rollout already active for $MICROSERVICE_FULLNAME."
-
-              NEW_GENERATION=$(kubectl get deployment "$MICROSERVICE_FULLNAME" -n "$K8S_NAMESPACE" -o jsonpath='{.metadata.generation}')
-              echo "::info::INFO - New generation for deployment $MICROSERVICE_FULLNAME: $NEW_GENERATION"
-
-              if ["$GENERATION" -eq "$NEW_GENERATION" ]; then
-                echo "::info::INFO - Generations for deployment $MICROSERVICE_FULLNAME are equals. Forcing a rollout restart."
-                kubectl rollout restart -n "$K8S_NAMESPACE" "deployment/$MICROSERVICE_FULLNAME"
-              else
-                echo "::info::INFO - Generations for deployment $MICROSERVICE_FULLNAME are different. No force restart needed."
-              fi
-
+              echo "::info::INFO - Rollout already active for $MICROSERVICE_FULLNAME. No force restart needed."
             else
               echo "INFO - No rollout in progress, forcing a rollout restart."
               kubectl rollout restart -n "$K8S_NAMESPACE" "deployment/$MICROSERVICE_FULLNAME"
