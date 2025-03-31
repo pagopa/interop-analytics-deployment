@@ -93,3 +93,9 @@ data:
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE application.end_request_audit TO
       interop_be_application_audit_analytics_writer_${NAMESPACE};
+
+    GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE application.end_request_session_token_exchange_audit TO
+      interop_be_application_audit_analytics_writer_${NAMESPACE};
+
+    GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE application.end_request_auth_server_audit TO
+      interop_be_application_audit_analytics_writer_${NAMESPACE};
