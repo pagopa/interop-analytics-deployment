@@ -5,4 +5,8 @@ metadata:
   namespace: dev-analytics
 data:
   KAFKA_BROKERS: "b-1.iam.interopplatformevents.2doelu.c2.kafka.eu-south-1.amazonaws.com:14001,b-3.iam.interopplatformevents.2doelu.c2.kafka.eu-south-1.amazonaws.com:14003,b-2.iam.interopplatformevents.2doelu.c2.kafka.eu-south-1.amazonaws.com:14002"
+  KAFKA_AVERAGE_MESSAGE_SIZE_IN_BYTES: "1000"
+  KAFKA_MAX_WAIT_BATCH_MILLIS: "60000"
+  KAFKA_MESSAGES_TO_READ_PER_BATCH: "1000"
+  KAFKA_TOPIC_STARTING_OFFSET: "earliest"
   APPLICATION_AUDIT_TOPIC: "dev_application.audit"
