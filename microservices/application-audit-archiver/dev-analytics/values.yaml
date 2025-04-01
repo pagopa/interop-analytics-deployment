@@ -9,7 +9,7 @@ service:
 configmap:
   SERVICE_NAME: pagopa-interop-application-audit-archiver-dev
   S3_BUCKET: interop-application-audit-archive-dev-es1
-  KAFKA_GROUP_ID: "application-audit-archiver-dev"
+  KAFKA_GROUP_ID: "{{.Values.namespace}}-application-audit-archiver"
   GZ_COMPRESSION_LEVEL: 6
 
 deployment:
