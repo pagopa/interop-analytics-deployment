@@ -8,7 +8,7 @@ service:
 
 configmap:
   SERVICE_NAME: pagopa-interop-application-audit-analytics-writer-dev
-  KAFKA_GROUP_ID: "application-audit-analytics-writer-dev"
+  KAFKA_GROUP_ID: "{{.Values.namespace}}-application-audit-analytics-writer"
 
 deployment:
   flywayInitContainer:
