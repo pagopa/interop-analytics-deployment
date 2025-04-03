@@ -17,7 +17,8 @@ data:
       interop_be_application_audit_analytics_writer_${NAMESPACE};
 
     CREATE TABLE IF NOT EXISTS application.begin_request_audit (
-      correlation_id VARCHAR(36) PRIMARY KEY,
+      correlation_id VARCHAR(36),
+      span_id VARCHAR(36) PRIMARY KEY,
       service VARCHAR(255) NOT NULL,
       service_version VARCHAR(255) NOT NULL,
       endpoint VARCHAR(255) NOT NULL,
@@ -32,7 +33,8 @@ data:
     );
 
     CREATE TABLE IF NOT EXISTS application.end_request_audit (
-      correlation_id VARCHAR(36) PRIMARY KEY,
+      correlation_id VARCHAR(36),
+      span_id VARCHAR(36) PRIMARY KEY,
       service VARCHAR(255) NOT NULL,
       service_version VARCHAR(255) NOT NULL,
       endpoint VARCHAR(255) NOT NULL,
@@ -51,7 +53,8 @@ data:
     );
 
     CREATE TABLE IF NOT EXISTS application.end_request_session_token_exchange_audit (
-      correlation_id VARCHAR(36) PRIMARY KEY,
+      correlation_id VARCHAR(36),
+      span_id VARCHAR(36) PRIMARY KEY,
       service VARCHAR(255) NOT NULL,
       service_version VARCHAR(255) NOT NULL,
       endpoint VARCHAR(255) NOT NULL,
@@ -70,7 +73,8 @@ data:
     );
 
     CREATE TABLE IF NOT EXISTS application.end_request_auth_server_audit (
-      correlation_id VARCHAR(36) PRIMARY KEY,
+      correlation_id VARCHAR(36),
+      span_id VARCHAR(36) PRIMARY KEY,
       service VARCHAR(255) NOT NULL,
       service_version VARCHAR(255) NOT NULL,
       endpoint VARCHAR(255) NOT NULL,
