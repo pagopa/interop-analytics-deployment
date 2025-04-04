@@ -137,7 +137,7 @@ jobs:
           TIMEOUT="${TIMEOUT_SECONDS}s"
 
           export PROJECT_DIR=$(pwd)
-          $SCRIPTS_FOLDER/helmTemplate-svc-single.sh --debug -e ${{ inputs.environment }} -m $MICROSERVICE_NAME -i $PROJECT_DIR/commons/${{ inputs.environment }}/images.yaml --output console > template.yaml
+          $SCRIPTS_FOLDER/helmTemplate-svc-single.sh --debug -e ${{ inputs.environment }} -m $MICROSERVICE_NAME -i $PROJECT_DIR/commons/${{ inputs.environment }}/images.yaml --dry-run --output console > template.yaml
 
           K8S_NAMESPACE=$(cat template.yaml | yq 'select(.kind == "Deployment") | .metadata.namespace')
           MICROSERVICE_FULLNAME=$(cat template.yaml | yq 'select(.kind == "Deployment") | .metadata.name')
