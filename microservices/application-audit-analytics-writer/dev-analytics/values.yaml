@@ -22,7 +22,6 @@ deployment:
       FLYWAY_PLACEHOLDERS_NAMESPACE: "dev"
       FLYWAY_URL: jdbc:redshift://$(DB_HOST):$(DB_PORT)/$(DB_NAME)
       FLYWAY_SCHEMAS: "application"
-      LOG_LEVEL: "debug"
     envFromConfigmaps:
       DB_HOST: "common-redshift.DB_HOST"
       DB_PORT: "common-redshift.DB_PORT"
@@ -30,6 +29,8 @@ deployment:
     envFromSecrets:
       FLYWAY_USER: "redshift-flyway-user.username"
       FLYWAY_PASSWORD: "redshift-flyway-user.password"
+    env:
+      LOG_LEVEL: "debug"
 
   envFromConfigmaps:
     KAFKA_BROKERS: "common-kafka.KAFKA_BROKERS"
