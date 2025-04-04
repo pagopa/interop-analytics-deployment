@@ -24,6 +24,7 @@ deployment:
       FLYWAY_PLACEHOLDERS_NAMESPACE: "dev"
       FLYWAY_URL: jdbc:redshift://$(DB_HOST):$(DB_PORT)/$(DB_NAME)
       FLYWAY_SCHEMAS: "jwt"
+      LOG_LEVEL: "debug"
     envFromConfigmaps:
       DB_HOST: "common-redshift.DB_HOST"
       DB_PORT: "common-redshift.DB_PORT"
