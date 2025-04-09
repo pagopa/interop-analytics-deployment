@@ -1,0 +1,44 @@
+name: "interop-be-apply-mv"
+
+cronjob:
+  schedule: "0 0 31 2 *"
+  timeZone: "Europe/Rome"
+  concurrencyPolicy: "Forbid"
+  suspend: true
+  activeDeadlineSeconds: 3600
+
+  image: 
+    repositoryPrefix: docker.io
+    repositoryName: "flyway/flyway:11.4.0"
+  
+  command:
+    - /bin/sh
+    - -c
+    - |
+      echo "Downloading Redshift JDBC driver..."
+      curl -L -o /flyway/drivers/RedshiftJDBC.jar https://s3.amazonaws.com/redshift-downloads/drivers/jdbc/2.1.0.32/redshift-jdbc42-2.1.0.32.jar
+      echo "Starting Flyway migration..."
+      flyway migrate
+
+  env:
+    FLYWAY_URL: jdbc:redshift://$(DB_HOST):$(DB_PORT)/$(DB_NAME)
+    FLYWAY_SCHEMAS: "mv"
+    FLYWAY_LOCATIONS: "filesystem:/flyway/sql"
+  envFromConfigmaps:
+    DB_HOST: "common-redshift.DB_HOST"
+    DB_PORT: "common-redshift.DB_PORT"
+    DB_NAME: "common-redshift.DB_NAME"
+  envFromSecrets:
+    FLYWAY_USER: "redshift-flyway-user.username"
+    FLYWAY_PASSWORD: "redshift-flyway-user.password"
+
+  volumesMounts:
+    name: materialized-view-migrations
+    mountPath: "/flyway/sql"
+
+  volumes:
+    - name: materialized-view-migrations
+      projected:
+        sources:
+          - configMap:
+            name: materialized-view-migrations
