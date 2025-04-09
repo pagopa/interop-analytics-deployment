@@ -48,5 +48,6 @@ deployment:
     DB_USERNAME: "redshift-application-audit-analytics-writer-user.username"
     DB_PASSWORD: "redshift-application-audit-analytics-writer-user.password"
   envFromFieldRef:
+    AWS_ROLE_SESSION_NAME: "metadata.name"
     KAFKA_CLIENT_ID: "metadata.name"
     MERGE_TABLE_SUFFIX: "metadata.uid"

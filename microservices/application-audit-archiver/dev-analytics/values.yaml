@@ -21,4 +21,5 @@ deployment:
     KAFKA_TOPIC_STARTING_OFFSET: "common-kafka.KAFKA_TOPIC_STARTING_OFFSET"
     KAFKA_TOPIC: "common-kafka.APPLICATION_AUDIT_TOPIC"
   envFromFieldRef:
+    AWS_ROLE_SESSION_NAME: "metadata.name"
     KAFKA_CLIENT_ID: "metadata.name"
