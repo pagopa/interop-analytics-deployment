@@ -10,6 +10,8 @@ tags = {
 
 eks_cluster_name = "interop-eks-cluster-dev"
 
-sns_topic_name = "interop-platform-alarms-dev"
+sns_topic_name = "interop-analytics-alarms-dev"
 
 cloudwatch_log_group_name = "/aws/eks/interop-eks-cluster-dev/application"
+
+k8s_namespace = "dev-analytics"
