@@ -13,3 +13,5 @@ eks_cluster_name = "interop-eks-cluster-prod"
 sns_topic_name = "interop-analytics-alarms-prod"
 
 cloudwatch_log_group_name = "/aws/eks/interop-eks-cluster-prod/application"
+
+k8s_namespace = "dev-analytics"
