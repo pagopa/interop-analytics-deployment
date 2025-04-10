@@ -8,5 +8,4 @@ images:
       tag: "develop"
     application-audit-archiver:
       tag: "develop"
-
 jobs:
