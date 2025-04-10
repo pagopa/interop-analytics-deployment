@@ -17,8 +17,8 @@ cronjob:
     - |
       echo "Downloading Redshift JDBC driver..."
       curl -L -o /flyway/drivers/RedshiftJDBC.jar https://s3.amazonaws.com/redshift-downloads/drivers/jdbc/2.1.0.32/redshift-jdbc42-2.1.0.32.jar
-      echo "Starting Flyway migration..."
-      flyway migrate
+      echo "Download completed. Waiting for commands..."
+      sleep infinity
 
   env:
     FLYWAY_URL: jdbc:redshift://$(DB_HOST):$(DB_PORT)/$(DB_NAME)
@@ -31,14 +31,3 @@ cronjob:
   envFromSecrets:
     FLYWAY_USER: "redshift-flyway-user.username"
     FLYWAY_PASSWORD: "redshift-flyway-user.password"
-
-  volumeMounts:
-    - name: materialized-view-migrations
-      mountPath: "/flyway/sql"
-
-  volumes:
-    - name: materialized-view-migrations
-      projected:
-        sources:
-          - configMap:
-              name: materialized-view-migrations

@@ -256,13 +256,35 @@ jobs:
       - name: Set kubeconfig
         run: |
           aws eks update-kubeconfig --region ${{ secrets.AWS_REGION }} --name ${{ secrets.EKS_CLUSTER_NAME }}
-      - name: Create materialized-view-migrations configmap
-        run: |
-          if [ -d views ] && [ "$(find views -type f | wc -l)" -gt 0 ]; then
-            find views -type f | xargs -I{} echo --from-file={} | xargs kubectl create configmap materialized-view-migrations --from-file=views/ --n {{ inputs.environment }}
-          else
-            echo "No files found in /views directory."
-          fi
       - name: Create interop-be-apply-mv-manual cronjob
         run: |
-          kubectl create job --from=cronjob/interop-be-apply-mv interop-be-apply-mv-manual --n {{ inputs.environment }}
+          kubectl create job --from=cronjob/interop-be-apply-mv interop-be-apply-mv-manual -n {{ inputs.environment }}
+      - name: Copy ./views folder to Pod
+        run: |
+          echo "Waiting for the Pod to be ready..."
+          for i in {1..12}; do
+            POD=$(kubectl get pods -n ${{ inputs.environment }} -l job-name=interop-be-apply-mv-manual -o jsonpath="{.items[0].metadata.name}" 2>/dev/null || true)
+            STATUS=$(kubectl get pod "$POD" -n ${{ inputs.environment }} -o jsonpath="{.status.phase}" 2>/dev/null || true)
+            if [[ "$STATUS" == "Running" ]]; then
+              echo "Pod $POD is running"
+              echo "Copying ./views folder to Pod..."
+              kubectl cp ./views "$POD":/flyway/sql -n ${{ inputs.environment }}
+              echo "Copy completed"
+              exit 0
+            fi
+            echo "Waiting for the Pod to be running... ($i)"
+            sleep 10
+          done
+          echo "Time out reached waiting for the Pod to be running"
+          exit 1
+      - name: Run flyway migrate
+        run: |
+          POD=$(kubectl get pods -n ${{ inputs.environment }} -l job-name=interop-be-apply-mv-manual -o jsonpath="{.items[0].metadata.name}")
+          STATUS=$(kubectl get pod "$POD" -n ${{ inputs.environment }} -o jsonpath="{.status.phase}")
+          if [[ "$STATUS" == "Running" ]]; then
+            echo "Starting Flyway migration..."
+            kubectl exec -n ${{ inputs.environment }} "$POD" -- flyway migrate
+          else
+            echo "Pod $POD is not running. Cannot run Flyway migration."
+            exit 1
+          fi
