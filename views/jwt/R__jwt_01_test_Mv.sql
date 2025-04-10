@@ -1,3 +1,0 @@
-CREATE SCHEMA IF NOT EXISTS test;
-
-CREATE MATERIALIZED VIEW test.test_mv_2 AS SELECT * FROM test.test_table;

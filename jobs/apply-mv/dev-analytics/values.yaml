@@ -22,7 +22,7 @@ cronjob:
 
   env:
     FLYWAY_URL: jdbc:redshift://$(DB_HOST):$(DB_PORT)/$(DB_NAME)
-    FLYWAY_SCHEMAS: "mv"
+    FLYWAY_SCHEMAS: "views"
     FLYWAY_LOCATIONS: "filesystem:/flyway/sql"
   envFromConfigmaps:
     DB_HOST: "common-redshift.DB_HOST"
