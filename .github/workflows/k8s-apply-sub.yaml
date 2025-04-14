@@ -264,7 +264,7 @@ jobs:
           
       - name: Copy ./views folder to Pod
         run: |
-          echo "Waiting for the Pod to be running..."
+          echo "Checking Pod status..."
 
           timeout 120 bash -c '
 
