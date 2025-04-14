@@ -283,7 +283,7 @@ jobs:
             kubectl cp ./views "$POD":/flyway/sql -n ${{ inputs.environment }}
             echo "Copy completed."
           ' || {
-            echo "Timeout reached while waiting for the Pod to be ready."
+            echo "Timeout reached while waiting for the Pod to be running."
             exit 1
           }
 
