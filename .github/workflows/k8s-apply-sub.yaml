@@ -278,7 +278,7 @@ jobs:
               fi
             }
 
-            while ! $get_pod_status; do
+            while ! get_pod_status; do
               echo "Pod is not running yet. Waiting for the Pod to be running..."
               sleep 10
             done
