@@ -268,7 +268,7 @@ jobs:
 
           timeout 120 bash -c '
 
-            get_pod_status() {
+            is_pod_running() {
               POD=$(kubectl get pods -n ${{ inputs.environment }} -l job-name=interop-be-apply-mv-manual -o jsonpath="{.items[0].metadata.name}" 2>/dev/null)
               STATUS=$(kubectl get pod "$POD" -n ${{ inputs.environment }} -o jsonpath="{.status.phase}" 2>/dev/null)
               if [ "$STATUS" = "Running" ]; then
@@ -278,7 +278,7 @@ jobs:
               fi
             }
 
-            while ! get_pod_status; do
+            while ! is_pod_running; do
               echo "Pod is not running yet. Waiting for the Pod to be running..."
               sleep 10
             done
