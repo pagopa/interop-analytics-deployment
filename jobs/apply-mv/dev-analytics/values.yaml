@@ -17,8 +17,24 @@ cronjob:
     - |
       echo "Downloading Redshift JDBC driver..."
       curl -L -o /flyway/drivers/RedshiftJDBC.jar https://s3.amazonaws.com/redshift-downloads/drivers/jdbc/2.1.0.32/redshift-jdbc42-2.1.0.32.jar
-      echo "Download completed. Waiting for commands..."
-      sleep infinity
+      echo "Download completed."
+      
+      function is_copy_completed() {
+        if [ -f /tmp/copy_completed.txt ]; then
+          return 0
+        else
+          return 1
+        fi
+      }
+
+      while ! is_copy_completed; do
+        echo "Waiting for ./views folder to be copied..."
+        sleep 5
+      done
+      echo "Copy completed successfully."
+      
+      echo "Starting Flyway migrations..."
+      flyway migrate
 
   env:
     FLYWAY_URL: jdbc:redshift://$(DB_HOST):$(DB_PORT)/$(DB_NAME)

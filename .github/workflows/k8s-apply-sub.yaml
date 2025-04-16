@@ -258,53 +258,47 @@ jobs:
         run: |
           aws eks update-kubeconfig --region ${{ secrets.AWS_REGION }} --name ${{ secrets.EKS_CLUSTER_NAME }}
 
-      - name: Create interop-be-apply-mv-manual cronjob
+      - name: Create job
+        id: create_job
         run: |
-          kubectl create job --from=cronjob/interop-be-apply-mv interop-be-apply-mv-manual -n {{ inputs.environment }}
-          
+          set -euo pipefail
+
+          JOB_NAME="interop-be-apply-mv-$(date +%s)"
+          kubectl create job --from=cronjob/interop-be-apply-mv $JOB_NAME -n {{ inputs.environment }}
+          echo "job_name=$JOB_NAME" >> "$GITHUB_OUTPUT"
+    
       - name: Copy ./views folder to Pod
         run: |
-          echo "Checking Pod status..."
+          set -euo pipefail
 
-          timeout 120 bash -c '
+          JOB_NAME=${{ steps.create_job.outputs.job_name }}"
+          echo "Checking Job status..."
+          POD=$(kubectl get pods -n ${{ inputs.environment }} --selector=batch.kubernetes.io/job-name=$JOB_NAME -o jsonpath="{.items[0].metadata.name}")
 
-            is_pod_running() {
-              POD=$(kubectl get pods -n ${{ inputs.environment }} -l job-name=interop-be-apply-mv-manual -o jsonpath="{.items[0].metadata.name}" 2>/dev/null)
-              STATUS=$(kubectl get pod "$POD" -n ${{ inputs.environment }} -o jsonpath="{.status.phase}" 2>/dev/null)
-              if [ "$STATUS" = "Running" ]; then
-                return 0
-              else
-                return 1
-              fi
-            }
-
-            while ! is_pod_running; do
-              echo "Pod is not running yet. Waiting for the Pod to be running..."
-              sleep 10
-            done
-
-            echo "Pod $POD is running"
-            echo "Copying ./views folder to Pod..."
-            kubectl cp ./views "$POD":/flyway/sql -n ${{ inputs.environment }}
-            if [ $? -ne 0 ]; then
-              echo "Failed to copy ./views folder to Pod."
-              exit 1
-            else
-              echo "Copy completed successfully."
-            fi
-          ' || {
+          kubectl wait --for=jsonpath='{.status.phase}'=Running pod/"$POD" -n ${{ inputs.environment }} --timeout=120s
+          if [ $? -ne 0 ]; then
             echo "Timeout reached while waiting for the Pod to be running."
             exit 1
-          }
-
-      - name: Run flyway migrate
-        run: |
-          POD=$(kubectl get pods -n ${{ inputs.environment }} -l job-name=interop-be-apply-mv-manual -o jsonpath="{.items[0].metadata.name}")
-          STATUS=$(kubectl get pod "$POD" -n ${{ inputs.environment }} -o jsonpath="{.status.phase}")
-          if [[ "$STATUS" == "Running" ]]; then
-            echo "Starting Flyway migration..."
-            kubectl exec -n ${{ inputs.environment }} "$POD" -- flyway migrate
+          fi
+          
+          echo "Pod $POD is running"
+          echo "Copying ./views folder to Pod..."
+          kubectl cp ./views "$POD":/flyway/sql -n ${{ inputs.environment }}
+          if [ $? -ne 0 ]; then
+            echo "Failed to copy ./views folder to Pod."
+            exit 1
           else
-            echo "Pod $POD is not running. Cannot run Flyway migration."
+            echo "Copy completed successfully."
+            touch /tmp/copy_completed.txt
+          fi
+
+      - name: Check copy completion #Necessary? The preceding step checks for the kubectl cp command status code (line 287): if it is different from 0 it exits with an error
+        run: |
+          set -euo pipefail
+
+          if [ -f /tmp/copy_completed.txt ]; then
+            echo "Copy completed successfully."
+          else
+            echo "Copy failed."
             exit 1
           fi
