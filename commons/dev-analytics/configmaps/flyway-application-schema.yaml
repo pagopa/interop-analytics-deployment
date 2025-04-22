@@ -8,20 +8,23 @@ data:
     CREATE SCHEMA IF NOT EXISTS application;
 
     GRANT USAGE ON SCHEMA application TO
-      interop_be_application_audit_analytics_writer_${NAMESPACE},
-      interop_analytics_readonly;
+      interop_be_application_audit_analytics_writer_${NAMESPACE};
+
+    GRANT USAGE ON SCHEMA application TO GROUP
+      readonly_group;
 
     GRANT CREATE, ALTER, DROP ON SCHEMA application TO 
       interop_be_application_audit_analytics_writer_${NAMESPACE};
 
     CREATE TABLE IF NOT EXISTS application.begin_request_audit (
-      correlation_id VARCHAR(36) PRIMARY KEY,
+      correlation_id VARCHAR(36),
+      span_id VARCHAR(36) PRIMARY KEY,
       service VARCHAR(255) NOT NULL,
       service_version VARCHAR(255) NOT NULL,
       endpoint VARCHAR(255) NOT NULL,
       http_method VARCHAR(255) NOT NULL,
       phase VARCHAR(255) NOT NULL,
-      requester_ip_address VARCHAR(255) NOT NULL,
+      requester_ip_address VARCHAR(255),
       node_ip VARCHAR(255) NOT NULL,
       pod_name VARCHAR(255) NOT NULL,
       uptime_seconds BIGINT NOT NULL,
@@ -30,23 +33,63 @@ data:
     );
 
     CREATE TABLE IF NOT EXISTS application.end_request_audit (
-      correlation_id VARCHAR(36) PRIMARY KEY,
+      correlation_id VARCHAR(36),
+      span_id VARCHAR(36) PRIMARY KEY,
       service VARCHAR(255) NOT NULL,
       service_version VARCHAR(255) NOT NULL,
       endpoint VARCHAR(255) NOT NULL,
       http_method VARCHAR(255) NOT NULL,
       phase VARCHAR(255) NOT NULL,
-      requester_ip_address VARCHAR(255) NOT NULL,
+      requester_ip_address VARCHAR(255),
       node_ip VARCHAR(255) NOT NULL,
       pod_name VARCHAR(255) NOT NULL,
       uptime_seconds BIGINT NOT NULL,
       timestamp TIMESTAMPTZ NOT NULL,
       amazon_trace_id VARCHAR(255),
       organization_id VARCHAR(36),
-      user_id VARCHAR(36),
-      self_care_id VARCHAR(36),
       http_response_status INTEGER NOT NULL,
-      execution_time_ms BIGINT NOT NULL
+      execution_time_ms BIGINT NOT NULL,
+      user_id VARCHAR(36)
+    );
+
+    CREATE TABLE IF NOT EXISTS application.end_request_session_token_exchange_audit (
+      correlation_id VARCHAR(36),
+      span_id VARCHAR(36) PRIMARY KEY,
+      service VARCHAR(255) NOT NULL,
+      service_version VARCHAR(255) NOT NULL,
+      endpoint VARCHAR(255) NOT NULL,
+      http_method VARCHAR(255) NOT NULL,
+      phase VARCHAR(255) NOT NULL,
+      requester_ip_address VARCHAR(255),
+      node_ip VARCHAR(255) NOT NULL,
+      pod_name VARCHAR(255) NOT NULL,
+      uptime_seconds BIGINT NOT NULL,
+      timestamp TIMESTAMPTZ NOT NULL,
+      amazon_trace_id VARCHAR(255),
+      organization_id VARCHAR(36),
+      http_response_status INTEGER NOT NULL,
+      execution_time_ms BIGINT NOT NULL,
+      self_care_id VARCHAR(36)
+    );
+
+    CREATE TABLE IF NOT EXISTS application.end_request_auth_server_audit (
+      correlation_id VARCHAR(36),
+      span_id VARCHAR(36) PRIMARY KEY,
+      service VARCHAR(255) NOT NULL,
+      service_version VARCHAR(255) NOT NULL,
+      endpoint VARCHAR(255) NOT NULL,
+      http_method VARCHAR(255) NOT NULL,
+      phase VARCHAR(255) NOT NULL,
+      requester_ip_address VARCHAR(255),
+      node_ip VARCHAR(255) NOT NULL,
+      pod_name VARCHAR(255) NOT NULL,
+      uptime_seconds BIGINT NOT NULL,
+      timestamp TIMESTAMPTZ NOT NULL,
+      amazon_trace_id VARCHAR(255),
+      organization_id VARCHAR(36),
+      http_response_status INTEGER NOT NULL,
+      execution_time_ms BIGINT NOT NULL,
+      client_id VARCHAR(36)
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE application.begin_request_audit TO
@@ -55,8 +98,8 @@ data:
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE application.end_request_audit TO
       interop_be_application_audit_analytics_writer_${NAMESPACE};
 
-    GRANT SELECT ON TABLE application.begin_request_audit TO
-      interop_analytics_readonly;
+    GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE application.end_request_session_token_exchange_audit TO
+      interop_be_application_audit_analytics_writer_${NAMESPACE};
 
-    GRANT SELECT ON TABLE application.end_request_audit TO
-      interop_analytics_readonly;
+    GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE application.end_request_auth_server_audit TO
+      interop_be_application_audit_analytics_writer_${NAMESPACE};
