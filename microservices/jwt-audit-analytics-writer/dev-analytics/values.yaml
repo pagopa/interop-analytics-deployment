@@ -37,7 +37,6 @@ deployment:
       FLYWAY_PASSWORD: "redshift-flyway-user.password"
   env:
     LOG_LEVEL: "debug"
-    TEST_ANNOTATIONS_0: "test"
     
   envFromConfigmaps:
     DB_HOST: "common-redshift.DB_HOST"
