@@ -12,8 +12,7 @@ configmap:
   S3_BUCKET: interop-generated-jwt-details-dev-es1
   BATCH_SIZE: 500
   TEST_ANNOTATIONS_1: "foo"
-  TEST_ANNOTATIONS_2: {{.Values.deployment.env.TEST_ANNOTATIONS_0}} 
-  TEST_ANNOTATIONS_3: {{.Values.deployment.env.TEST_ANNOTATIONS_1}} 
+  TEST_ANNOTATIONS_2: {{.Values.deployment.env.TEST_ANNOTATIONS_0}}
 
 deployment:
   enableRolloutAnnotations: true
