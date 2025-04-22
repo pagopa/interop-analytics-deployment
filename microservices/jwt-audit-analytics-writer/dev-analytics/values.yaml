@@ -11,6 +11,7 @@ configmap:
   SQS_NOTIFICATION_ENDPOINT: https://sqs.eu-south-1.amazonaws.com/505630707203/interop-analytics-jwt-audit-dev
   S3_BUCKET: interop-generated-jwt-details-dev-es1
   BATCH_SIZE: 500
+  TEST_ANNOTATIONS_1: "foo"
   TEST_ANNOTATIONS_2: "{{.Values.name}}"
   TEST_ANNOTATIONS_3: "{{.Values.deployment.env.TEST_ANNOTATIONS_0}}"
 
