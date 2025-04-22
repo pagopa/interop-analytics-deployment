@@ -148,7 +148,7 @@ jobs:
     uses: ./.github/workflows/k8s-apply-sub.yaml
     with:
       environment: ${{ inputs.environment }}
-      timeout_seconds: 180
+      timeout_seconds: ${{ vars.ROLLOUT_TIMEOUT_SECONDS || 300 }}
 
   delete_runner:
     name: Delete Self-Hosted Runner
