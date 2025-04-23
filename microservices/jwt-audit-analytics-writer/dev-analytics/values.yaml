@@ -13,7 +13,6 @@ configmap:
   BATCH_SIZE: 500
 
 deployment:
-  enableRolloutAnnotations: true
   flywayInitContainer:
     create: true
     version: "11.4.0"
