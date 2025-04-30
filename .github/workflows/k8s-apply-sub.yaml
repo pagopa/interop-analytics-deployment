@@ -270,7 +270,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          JOB_NAME=${{ steps.create_job.outputs.job_name }}"
+          JOB_NAME="${{ steps.create_job.outputs.job_name }}"
           echo "Checking Job status..."
           POD=$(kubectl get pods -n ${{ inputs.environment }} --selector=batch.kubernetes.io/job-name=$JOB_NAME -o jsonpath="{.items[0].metadata.name}")
 
