@@ -263,7 +263,7 @@ jobs:
           set -euo pipefail
 
           JOB_NAME="interop-be-apply-mv-$(date +%s)"
-          kubectl create job --from=cronjob/interop-be-apply-mv $JOB_NAME -n {{ inputs.environment }}
+          kubectl create job --from=cronjob/interop-be-apply-mv "$JOB_NAME" -n {{ inputs.environment }}
           echo "job_name=$JOB_NAME" >> "$GITHUB_OUTPUT"
     
       - name: Copy ./views folder to Pod
