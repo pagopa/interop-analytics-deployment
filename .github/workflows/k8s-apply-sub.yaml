@@ -288,7 +288,7 @@ jobs:
             exit 1
           else
             echo "Copy completed successfully."
-            touch /tmp/copy_completed.txt
+            kubectl exec -n ${{ inputs.environment }} "$POD" -- touch /tmp/copy_completed.txt
           fi
 
       - name: Check copy completion #Necessary? The preceding step checks for the kubectl cp command status code (line 287): if it is different from 0 it exits with an error
