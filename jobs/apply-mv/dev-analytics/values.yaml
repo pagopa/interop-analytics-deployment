@@ -9,7 +9,7 @@ cronjob:
 
   image: 
     repositoryPrefix: docker.io
-    repositoryName: "flyway/flyway:11.4.0"
+    repositoryName: "flyway/flyway"
   
   command:
     - /bin/sh
