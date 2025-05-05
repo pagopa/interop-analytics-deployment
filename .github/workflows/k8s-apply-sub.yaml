@@ -282,15 +282,14 @@ jobs:
           
           echo "Pod $POD_NAME is running"
           echo "Copying ./views folder to Pod..."
-          kubectl cp ./views "$POD_NAME":/flyway/sql/ -n ${{ inputs.environment }}
+          kubectl cp ./views "$POD_NAME":/flyway/views -n ${{ inputs.environment }}
           if [ $? -ne 0 ]; then
             echo "Failed to copy ./views folder to Pod."
             exit 1
           else
-            CONTAINER_NAME=$(kubectl get pod "$POD_NAME" -n ${{ inputs.environment }} -o jsonpath="{.spec.containers[0].name}")
-            kubectl exec -n ${{ inputs.environment }} "$POD_NAME" -c "$CONTAINER_NAME" -- touch /tmp/copy_completed.txt
+            kubectl exec -n ${{ inputs.environment }} "$POD_NAME" -- touch /flyway/views/copy_completed.txt
             if [ $? -ne 0 ]; then
-              echo "Failed to create /tmp/copy_completed.txt file."
+              echo "Failed to create /flyway/views/copy_completed.txt file."
               exit 1
             else
               echo "Copy completed successfully."
