@@ -274,7 +274,7 @@ jobs:
           echo "Checking Job status..."
           POD_NAME=$(kubectl get pods -n ${{ inputs.environment }} --selector=batch.kubernetes.io/job-name=$JOB_NAME -o jsonpath="{.items[0].metadata.name}")
 
-          kubectl wait --for=jsonpath='{.status.phase}'=Running pod/"$POD_NAME" -n ${{ inputs.environment }} --timeout=120s
+          kubectl wait --for=condition=Ready pod/"$POD_NAME" -n ${{ inputs.environment }} --timeout=120s
           if [ $? -ne 0 ]; then
             echo "Timeout reached while waiting for the Pod to be running."
             exit 1
