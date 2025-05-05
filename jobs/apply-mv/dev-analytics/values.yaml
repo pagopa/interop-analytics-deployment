@@ -21,6 +21,7 @@ cronjob:
         until [ -f /flyway/views/copy_completed.txt ]; do echo 'Waiting for ./views folder to be copied...'; sleep 5; done &&
         echo "Copy completed successfully." &&
         echo "Starting Flyway migrations..." &&
+        export FLYWAY_URL="jdbc:redshift://$DB_HOST:$DB_PORT/$DB_NAME" &&
         flyway migrate
 
   env:
