@@ -280,9 +280,12 @@ jobs:
             exit 1
           fi
           
+          echo "Checking if tar in installed in the runner..."
+          which tar && tar --version || echo "tar NOT found"
+
           echo "Pod $POD_NAME is running"
           echo "Copying ./views folder to Pod..."
-          kubectl cp ./views $POD_NAME:/flyway -n ${{ inputs.environment }}
+          kubectl cp ./views "$POD_NAME":/flyway/views -n ${{ inputs.environment }}
           if [ $? -ne 0 ]; then
             echo "Failed to copy ./views folder to Container running in Pod."
             exit 1
