@@ -1,6 +1,6 @@
 CREATE SCHEMA IF NOT EXISTS views;
 
-CREATE TABLE views.test_table (
+CREATE TABLE IF NOT EXISTS views.test_table (
     id INT PRIMARY KEY,
     foo TEXT
 );
