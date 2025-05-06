@@ -6,5 +6,3 @@ CREATE TABLE IF NOT EXISTS views.test_table (
 );
 
 DROP MATERIALIZED VIEW IF EXISTS views.mv_1;
-
-CREATE MATERIALIZED VIEW views.mv_1 AS SELECT * FROM views.test_table;
