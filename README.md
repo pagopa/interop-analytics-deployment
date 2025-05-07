@@ -37,7 +37,6 @@ Each materialized view can be: created, edited, dropped.<br>
     DROP MATERIALIZED VIEW IF EXISTS $MATERIALIZED_VIEW_NAME;
     CREATE MATERIALIZED VIEW $MATERIALIZED_VIEW_NAME AS ...;
     ```
-<br>
 
 2. Unfortunately, Amazon Redshift does not provide the capability to alter a materialized view.<br>
 So, to alter a materialized view, it's necessary to drop it and create it again.<br>
