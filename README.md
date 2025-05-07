@@ -5,7 +5,7 @@ This repository contains the **/views** folder useful to create materialized vie
 Specifically, materialized views are created by using a GitHub Actions workflow that deploys a Kubernetes job which runs Flyway migrations.<br>
 
 In general, Flyway manages migrations through two types of .sql files: versioned and repeatable.<br>
-Repeatable files (whose names adopts the R__ prefix) does not have a version number and can be executed an indefinite number of times.<br>
+Repeatable files (whose names adopt the R__ prefix) don't have a version number and can be executed an indefinite number of times.<br>
 Flyway executes repeatable files every time their content changes: this is done by calculating a checksum.<br>
 In other words, everytime a repeatable file changes, Flyway notices its checksum has changed and executes it again.<br><br>
 
