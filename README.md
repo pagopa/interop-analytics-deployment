@@ -45,4 +45,4 @@ In fact, everytime a repeatable file changes, Flyway notices its checksum has ch
 Since we use a strategy made of ```DROP MATERIALIZED VIEW IF EXISTS ...``` + ```CREATE MATERIALIZED VIEW ...``` statements, Flyway will drop the materialized view and creates a new one with the same name.<br>
 You just have to **edit** the ```CREATE MATERIALIZED VIEW ...``` statement with the new one.<br>
 
-3. To drop a materialized view, you have to edit the repeatable file by **removing** the ```CREATE MATERIALIZED VIEW ...``` statament and **keeping** only the ```DROP MATERIALIZED VIEW IF EXISTS ...``` statement.
+3. To drop a materialized view, you have to edit the repeatable file by **removing** the ```CREATE MATERIALIZED VIEW ...``` statement and **keeping** only the ```DROP MATERIALIZED VIEW IF EXISTS ...``` statement.
