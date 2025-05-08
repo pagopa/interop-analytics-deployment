@@ -1,0 +1,10 @@
+CREATE SCHEMA IF NOT EXISTS views;
+
+CREATE TABLE IF NOT EXISTS views.test_table (
+    id INT PRIMARY KEY,
+    foo TEXT
+);
+
+DROP MATERIALIZED VIEW IF EXISTS views.mv_1;
+
+CREATE MATERIALIZED VIEW views.mv_1 AS SELECT * FROM views.test_table;

@@ -1,0 +1,38 @@
+name: "interop-be-apply-mv"
+
+cronjob:
+  schedule: "0 0 31 2 *"
+  timeZone: "Europe/Rome"
+  concurrencyPolicy: "Forbid"
+  suspend: true
+  activeDeadlineSeconds: 3600
+  failedJobsHistoryLimit: 1
+  successfulJobsHistoryLimit: 1
+
+  image: 
+    repositoryPrefix: docker.io
+    repositoryName: "flyway/flyway"
+  
+  command:
+    - /bin/sh
+    - -c
+    - |
+        echo "Downloading Redshift JDBC driver..." &&
+        curl -L -o /flyway/drivers/RedshiftJDBC.jar https://s3.amazonaws.com/redshift-downloads/drivers/jdbc/2.1.0.32/redshift-jdbc42-2.1.0.32.jar &&
+        echo "Download completed." &&
+        until [ -f /flyway/views/copy_completed.txt ]; do echo 'Waiting for ./views folder to be copied...'; sleep 5; done &&
+        echo "Copy completed successfully." &&
+        echo "Starting Flyway migrations..." &&
+        flyway migrate
+
+  env:
+    FLYWAY_URL: jdbc:redshift://$(DB_HOST):$(DB_PORT)/$(DB_NAME)
+    FLYWAY_SCHEMAS: "views"
+    FLYWAY_LOCATIONS: "filesystem:/flyway/views"
+  envFromConfigmaps:
+    DB_HOST: "common-redshift.DB_HOST"
+    DB_PORT: "common-redshift.DB_PORT"
+    DB_NAME: "common-redshift.DB_NAME"
+  envFromSecrets:
+    FLYWAY_USER: "redshift-flyway-user.username"
+    FLYWAY_PASSWORD: "redshift-flyway-user.password"
