@@ -1,5 +1,7 @@
 CREATE SCHEMA IF NOT EXISTS views;
 
+GRANT USAGE ON SCHEMA views TO readonly_group;
+
 DROP MATERIALIZED VIEW IF EXISTS views.mv_2;
 
 CREATE MATERIALIZED VIEW views.mv_2 AS SELECT * FROM views.test_table;
