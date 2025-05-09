@@ -6,11 +6,8 @@ cronjob:
   concurrencyPolicy: "Forbid"
   suspend: true
   activeDeadlineSeconds: 3600
-<<<<<<< HEAD
-=======
   failedJobsHistoryLimit: 1
   successfulJobsHistoryLimit: 1
->>>>>>> main
 
   image: 
     repositoryPrefix: docker.io
