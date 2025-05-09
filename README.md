@@ -29,7 +29,7 @@ Combining both solutions, the /views folder that stores the migration files has 
 
 
 
-### Life cycle
+### Lifecycle
 A materialized view can be: created, edited, dropped.<br>
 
 1. In order to create a materialized view, you have to **create a new repeatable file** containing the following statements:<br>
