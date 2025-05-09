@@ -34,6 +34,7 @@ A materialized view can be: created, edited, dropped.<br>
 
 1. In order to create a materialized view, you have to **create a new repeatable file** containing the following statements:<br>
     ```
+    CREATE SCHEMA IF NOT EXISTS $SCHEMA_NAME$;
     DROP MATERIALIZED VIEW IF EXISTS $MATERIALIZED_VIEW_NAME;
     CREATE MATERIALIZED VIEW $MATERIALIZED_VIEW_NAME AS ...;
     ```
