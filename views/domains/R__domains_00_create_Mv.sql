@@ -1,5 +1,7 @@
 CREATE SCHEMA IF NOT EXISTS views;
 
+GRANT USAGE ON SCHEMA views TO readonly_group;
+
 CREATE TABLE IF NOT EXISTS views.test_table (
     id INT PRIMARY KEY,
     foo TEXT
