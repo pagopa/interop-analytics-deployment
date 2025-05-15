@@ -51,7 +51,7 @@ You just have to **edit** the ```CREATE MATERIALIZED VIEW ...``` statement with 
 
 ### Dropping a materialized view
 Suppose you've created a materialized view called ```mv_1``` by running the ```R_domains_00_mv.sql``` file.<br>
-Next, suppose you want to drop the ```mv_1``` view by modifying the ```R_domains_00_mv.sql``` file and keeping only the statement ```DROP MATERIALIZED VIEW IF EXISTS $SCHEMA_NAME.mv_1```;<br><br>
+Next, suppose you've dropped the ```mv_1``` view by modifying the ```R_domains_00_mv.sql``` file and keeping only the statement ```DROP MATERIALIZED VIEW IF EXISTS $SCHEMA_NAME.mv_1```;<br><br>
 At this point, if you delete the ```R_domains_00_mv.sql``` file from the ```/views``` directory and re-run Flyway, you will get a validation error because the migration remains tracked in the flyway history table but the file is missing:
 ```
 ERROR: Validate failed: Migrations have failed validation
