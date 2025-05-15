@@ -46,4 +46,23 @@ In fact, everytime a repeatable file changes, Flyway notices its checksum has ch
 Since we use a strategy made of ```DROP MATERIALIZED VIEW IF EXISTS ...``` + ```CREATE MATERIALIZED VIEW ...``` statements, Flyway will drop the materialized view and creates a new one with the same name.<br>
 You just have to **edit** the ```CREATE MATERIALIZED VIEW ...``` statement with the new one.<br>
 
-3. To drop a materialized view, you have to edit the repeatable file by **removing** the ```CREATE MATERIALIZED VIEW ...``` statement and **keeping** only the ```DROP MATERIALIZED VIEW IF EXISTS ...``` statement.
+3. To drop a materialized view, you have to edit the repeatable file by **removing** the ```CREATE MATERIALIZED VIEW ...``` statement and **keeping** only the ```DROP MATERIALIZED VIEW IF EXISTS ...``` statement.<br><br>
+
+
+### Dropping a materialized view
+Suppose you've created a materialized view called ```mv_1``` by running the ```R_domains_00_mv.sql``` file.<br>
+Next, suppose you want to drop the ```mv_1``` view by modifying the ```R_domains_00_mv.sql``` file and keeping only the statement ```DROP MATERIALIZED VIEW IF EXISTS $SCHEMA_NAME.mv_1```;<br><br>
+At this point, if you delete the ```R_domains_00_mv.sql``` file from the ```/views``` directory and re-run Flyway, you will get a validation error because the migration remains tracked in the flyway history table but the file is missing:
+```
+ERROR: Validate failed: Migrations have failed validation
+Detected applied migration not resolved locally: domains 00 mv.
+If you removed this migration intentionally, run repair to mark the migration as deleted.
+```
+So, when you drop a materialized view, you still need to keep the .sql file in the ```/views``` directory of the repository.<br><br>
+
+As alternative, if you want to mandatory delete the .sql file from the repository, you must first act on the flyway history table by deleting all the records that reference such file.<br>
+For example, if you want to delete the ```R_domains_00_mv.sql```, first run:
+```
+DELETE FROM $SCHEMA_NAME.flyway_schema_history WHERE script = 'domains/R__domains_00_mv.sql';
+```
+Then, you can re-deploy the automation that enables Flyway to run the migrations that create the materialized views.
