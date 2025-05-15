@@ -65,4 +65,4 @@ For example, if you want to delete the ```R_domains_00_mv.sql``` file, first run
 ```
 DELETE FROM $SCHEMA_NAME.flyway_schema_history WHERE script = 'domains/R__domains_00_mv.sql';
 ```
-Then, you can re-deploy the automation that enables Flyway to run the migrations that create the materialized views.
+Then, you can delete the file from the directory and re-deploy the automation that enables Flyway to run the migrations that create the materialized views.
