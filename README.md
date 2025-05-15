@@ -61,7 +61,7 @@ If you removed this migration intentionally, run repair to mark the migration as
 So, when you drop a materialized view, you still need to keep the .sql file in the ```/views``` directory of the repository.<br><br>
 
 As alternative, if you want to mandatory delete the .sql file from the repository, you must first act on the flyway history table by deleting all the records that reference such file.<br>
-For example, if you want to delete the ```R_domains_00_mv.sql```, first run:
+For example, if you want to delete the ```R_domains_00_mv.sql``` file, first run:
 ```
 DELETE FROM $SCHEMA_NAME.flyway_schema_history WHERE script = 'domains/R__domains_00_mv.sql';
 ```
