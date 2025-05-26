@@ -9,7 +9,7 @@ service:
 configmap:
   SERVICE_NAME: pagopa-interop-jwt-audit-analytics-writer
   SQS_NOTIFICATION_ENDPOINT: https://sqs.eu-south-1.amazonaws.com/505630707203/interop-analytics-jwt-audit-dev
-  S3_BUCKET: interop-jwt-audit-analytics-bucket
+  S3_BUCKET: interop-generated-jwt-details-dev-es1
   BATCH_SIZE: 500
 
 deployment:
@@ -31,7 +31,9 @@ deployment:
     envFromSecrets:
       FLYWAY_USER: "redshift-flyway-user.username"
       FLYWAY_PASSWORD: "redshift-flyway-user.password"
-
+  env:
+    LOG_LEVEL: "debug"
+    
   envFromConfigmaps:
     DB_HOST: "common-redshift.DB_HOST"
     DB_NAME: "common-redshift.DB_NAME"

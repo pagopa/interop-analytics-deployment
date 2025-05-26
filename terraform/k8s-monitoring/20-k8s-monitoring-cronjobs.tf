@@ -12,7 +12,7 @@ resource "aws_cloudwatch_metric_alarm" "cronjob_errors" {
   alarm_name        = format("k8s-cronjob-%s-errors-%s", each.key, var.k8s_namespace)
   alarm_description = format("Cronjob errors alarm for %s in %s namespace", each.key, var.k8s_namespace)
 
-  alarm_actions = [data.aws_sns_topic.platform_alarms.arn]
+  alarm_actions = [data.aws_sns_topic.analytics_alarms.arn]
 
   metric_name = try(data.external.cloudwatch_log_metric_filters.result.metricName, null)
   namespace   = try(data.external.cloudwatch_log_metric_filters.result.metricNamespace, null)

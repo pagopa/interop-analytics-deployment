@@ -11,6 +11,10 @@ on:
         description: 'Kubectl apply wait timeout in seconds for Deployments'
         required: true
         type: number
+      apply_mv:
+        description: 'Run Flyway migrations for applying materialized views on Redshift'
+        required: true
+        type: boolean
   
 defaults:
   run:
@@ -101,7 +105,7 @@ jobs:
           set -euo pipefail
           
           export PROJECT_DIR=$(pwd)
-          $SCRIPTS_FOLDER/helmTemplate-svc-single.sh --debug --environment ${{ inputs.environment }} --microservice $MICROSERVICE_NAME -i $PROJECT_DIR/commons/${{ inputs.environment }}/images.yaml --output console
+          $SCRIPTS_FOLDER/helmTemplate-svc-single.sh --enable-templating-lookup --debug --environment ${{ inputs.environment }} --microservice $MICROSERVICE_NAME -i $PROJECT_DIR/commons/${{ inputs.environment }}/images.yaml --output console
       - name: Kubectl Diff
         id: kubectl_diff
         env: 
@@ -112,7 +116,7 @@ jobs:
           set +e
           export PROJECT_DIR=$(pwd)
 
-          $SCRIPTS_FOLDER/kubectlDiff-svc-single-standalone.sh --skip-dep --environment ${{ inputs.environment }} --microservice $MICROSERVICE_NAME -i $PROJECT_DIR/commons/${{ inputs.environment }}/images.yaml --output console
+          $SCRIPTS_FOLDER/kubectlDiff-svc-single-standalone.sh --enable-templating-lookup --skip-dep --environment ${{ inputs.environment }} --microservice $MICROSERVICE_NAME -i $PROJECT_DIR/commons/${{ inputs.environment }}/images.yaml --output console
 
           DIFF_EXIT_CODE=$?
           set -e
@@ -137,13 +141,13 @@ jobs:
           TIMEOUT="${TIMEOUT_SECONDS}s"
 
           export PROJECT_DIR=$(pwd)
-          $SCRIPTS_FOLDER/helmTemplate-svc-single.sh --debug -e ${{ inputs.environment }} -m $MICROSERVICE_NAME -i $PROJECT_DIR/commons/${{ inputs.environment }}/images.yaml --output console > template.yaml
+          $SCRIPTS_FOLDER/helmTemplate-svc-single.sh --enable-templating-lookup --debug -e ${{ inputs.environment }} -m $MICROSERVICE_NAME -i $PROJECT_DIR/commons/${{ inputs.environment }}/images.yaml --output console > template.yaml
 
           K8S_NAMESPACE=$(cat template.yaml | yq 'select(.kind == "Deployment") | .metadata.namespace')
           MICROSERVICE_FULLNAME=$(cat template.yaml | yq 'select(.kind == "Deployment") | .metadata.name')
           
           echo "INFO - Apply changes for $MICROSERVICE_FULLNAME."
-          "$SCRIPTS_FOLDER/kubectlApply-svc-single-standalone.sh" --debug --skip-dep --environment "$K8S_NAMESPACE" -m "$MICROSERVICE_NAME" -i $PROJECT_DIR/commons/$K8S_NAMESPACE/images.yaml --output console
+          "$SCRIPTS_FOLDER/kubectlApply-svc-single-standalone.sh" --enable-templating-lookup --debug --skip-dep --environment "$K8S_NAMESPACE" -m "$MICROSERVICE_NAME" -i $PROJECT_DIR/commons/$K8S_NAMESPACE/images.yaml --output console
 
           DESIRED_REPLICAS=$(kubectl get deployment "$MICROSERVICE_FULLNAME" -n "$K8S_NAMESPACE" -o jsonpath='{.spec.replicas}')
           echo "INFO - Desired replicas: $DESIRED_REPLICAS"
@@ -234,11 +238,67 @@ jobs:
           set -euo pipefail
 
           export PROJECT_DIR=$(pwd)
-
-          TEMPLATE=$($SCRIPTS_FOLDER/helmTemplate-cron-single.sh --debug --environment ${{ inputs.environment }} --job $CRONJOB_NAME -i $PROJECT_DIR/commons/${{ inputs.environment }}/images.yaml --output console)
+          $SCRIPTS_FOLDER/helmTemplate-cron-single.sh --debug --environment ${{ inputs.environment }} --job $CRONJOB_NAME -i $PROJECT_DIR/commons/${{ inputs.environment }}/images.yaml --output console > template.yaml
           
-          K8S_NAMESPACE=$(echo $TEMPLATE | yq 'select(.kind == "CronJob") | .metadata.namespace')
-          CRONJOB_FULLNAME=$(echo $TEMPLATE | yq 'select(.kind == "CronJob") | .metadata.name')
+          K8S_NAMESPACE=$(cat template.yaml | yq 'select(.kind == "CronJob") | .metadata.namespace')
+          CRONJOB_FULLNAME=$(cat template.yaml | yq 'select(.kind == "CronJob") | .metadata.name')
   
           echo "INFO - Apply changes for $CRONJOB_FULLNAME."
           $SCRIPTS_FOLDER/kubectlApply-cron-single-standalone.sh --debug --skip-dep --environment $K8S_NAMESPACE -j $CRONJOB_NAME -i $PROJECT_DIR/commons/$K8S_NAMESPACE/images.yaml --output console 
+
+  create_apply_mv_job:
+    name: Create apply-mv Kubernetes job
+    runs-on: [ self-hosted, "run_id:${{ inputs.environment }}-${{ github.run_id }}" ]
+    environment: ${{ inputs.environment }}
+    needs: [workflow_setup, deploy_common_configmaps, deploy_cj]
+    if: ${{ inputs.apply_mv && contains(fromJson(needs.workflow_setup.outputs.cronjobs), 'apply-mv') }}
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29
+
+      - name: Set kubeconfig
+        run: |
+          aws eks update-kubeconfig --region ${{ secrets.AWS_REGION }} --name ${{ secrets.EKS_CLUSTER_NAME }}
+
+      - name: Create job
+        id: create_job
+        run: |
+          set -euo pipefail
+
+          JOB_NAME="interop-be-apply-mv-$(date +%s)"
+          kubectl create job --from=cronjob/interop-be-apply-mv "$JOB_NAME" -n ${{ inputs.environment }}
+          echo "job_name=$JOB_NAME" >> "$GITHUB_OUTPUT"
+    
+      - name: Copy ./views folder to Pod
+        run: |
+          set -euo pipefail
+
+          JOB_NAME="${{ steps.create_job.outputs.job_name }}"
+          echo "Checking Job status..."
+          POD_NAME=$(kubectl get pods -n ${{ inputs.environment }} --selector=batch.kubernetes.io/job-name=$JOB_NAME -o jsonpath="{.items[0].metadata.name}")
+
+          kubectl wait --for=condition=Ready pod/"$POD_NAME" -n ${{ inputs.environment }} --timeout=120s
+          if [ $? -ne 0 ]; then
+            echo "Timeout reached while waiting for the Pod to be running."
+            exit 1
+          fi
+
+          CONTAINER_NAME=$(kubectl get pod "$POD_NAME" -n ${{ inputs.environment }} -o jsonpath="{.spec.containers[0].name}")
+          echo "Pod $POD_NAME is running"
+          echo "Container $CONTAINER_NAME is running in Pod $POD_NAME"
+
+          echo "Copying ./views folder to Pod..."
+          kubectl cp ./views "$POD_NAME":/flyway/views -c "$CONTAINER_NAME" -n ${{ inputs.environment }}
+          if [ $? -ne 0 ]; then
+            echo "Failed to copy ./views folder to Container running in Pod."
+            exit 1
+          else
+            kubectl exec -n ${{ inputs.environment }} "$POD_NAME" -c "$CONTAINER_NAME" -- touch /flyway/views/copy_completed.txt
+            if [ $? -ne 0 ]; then
+              echo "Failed to create /flyway/views/copy_completed.txt file."
+              exit 1
+            else
+              echo "Copy completed successfully."
+            fi
+          fi
