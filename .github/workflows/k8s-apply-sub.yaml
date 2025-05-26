@@ -11,6 +11,10 @@ on:
         description: 'Kubectl apply wait timeout in seconds for Deployments'
         required: true
         type: number
+      apply_mv:
+        description: 'If true, it runs Flyway migrations for applying Materialized Views on Redshift'
+        required: true
+        type: boolean
   
 defaults:
   run:
@@ -247,7 +251,7 @@ jobs:
     runs-on: [ self-hosted, "run_id:${{ inputs.environment }}-${{ github.run_id }}" ]
     environment: ${{ inputs.environment }}
     needs: [workflow_setup, deploy_common_configmaps, deploy_cj]
-    if: ${{ contains(fromJson(needs.workflow_setup.outputs.cronjobs), 'apply-mv') }}
+    if: ${{ inputs.apply_mv && contains(fromJson(needs.workflow_setup.outputs.cronjobs), 'apply-mv') }}
     steps:
       - name: Checkout
         id: checkout

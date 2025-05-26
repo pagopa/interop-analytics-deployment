@@ -8,6 +8,8 @@ cronjob:
   activeDeadlineSeconds: 3600
   failedJobsHistoryLimit: 1
   successfulJobsHistoryLimit: 1
+  restartPolicy: Never
+  backoffLimit: 0
 
   image: 
     repositoryPrefix: docker.io
