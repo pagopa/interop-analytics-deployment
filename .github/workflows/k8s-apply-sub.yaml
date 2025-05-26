@@ -12,7 +12,7 @@ on:
         required: true
         type: number
       apply_mv:
-        description: 'If true, it runs Flyway migrations for applying Materialized Views on Redshift'
+        description: 'If true, it creates a Kubernetes job that executes Flyway migrations for applying Materialized Views on Redshift'
         required: true
         type: boolean
   
@@ -246,8 +246,8 @@ jobs:
           echo "INFO - Apply changes for $CRONJOB_FULLNAME."
           $SCRIPTS_FOLDER/kubectlApply-cron-single-standalone.sh --debug --skip-dep --environment $K8S_NAMESPACE -j $CRONJOB_NAME -i $PROJECT_DIR/commons/$K8S_NAMESPACE/images.yaml --output console 
 
-  create_apply_mv_cronjob:
-    name: Create apply-mv cronjob
+  create_apply_mv_job:
+    name: Create apply-mv Kubernetes job
     runs-on: [ self-hosted, "run_id:${{ inputs.environment }}-${{ github.run_id }}" ]
     environment: ${{ inputs.environment }}
     needs: [workflow_setup, deploy_common_configmaps, deploy_cj]

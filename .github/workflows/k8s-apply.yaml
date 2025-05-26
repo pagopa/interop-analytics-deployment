@@ -28,7 +28,7 @@ on:
         default: true
         type: boolean
       apply_mv:
-        description: 'If true, it runs Flyway migrations for applying Materialized Views on Redshift'
+        description: 'If true, it creates a Kubernetes job that executes Flyway migrations for applying Materialized Views on Redshift'
         required: true
         default: false
         type: boolean
