@@ -4,7 +4,7 @@ metadata:
   name: common-flyway-domains-schema
   namespace: dev-analytics
 data:
-  V1__Domains_Schema.sql: |-
+  V1__domains_Schema.sql: |-
     CREATE SCHEMA IF NOT EXISTS domains;
 
     GRANT USAGE ON SCHEMA domains TO 
