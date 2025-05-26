@@ -9,7 +9,6 @@ service:
 configmap:
 
 deployment:
-  replicas: 0
   flywayInitContainer:
     create: true
     version: "11.4.0"
