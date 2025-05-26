@@ -154,7 +154,7 @@ jobs:
     with:
       environment: ${{ inputs.environment }}
       timeout_seconds: ${{ vars.ROLLOUT_TIMEOUT_SECONDS || 300 }}
-      manage_materialized_views: ${{ inputs.apply_mv }}
+      apply_mv: ${{ inputs.apply_mv }}
 
   delete_runner:
     name: Delete Self-Hosted Runner
