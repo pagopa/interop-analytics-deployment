@@ -8,7 +8,8 @@ data:
     CREATE SCHEMA IF NOT EXISTS domains;
 
     GRANT USAGE ON SCHEMA domains TO 
-      interop_be_domains_analytics_writer_${NAMESPACE};
+      interop_be_domains_analytics_writer_${NAMESPACE},
+      tracing_be_processing_${NAMESPACE};
 
     GRANT USAGE ON SCHEMA domains TO GROUP
       readonly_group;
@@ -23,12 +24,18 @@ data:
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.agreement TO
       interop_be_domains_analytics_writer_${NAMESPACE};
 
+    GRANT SELECT ON TABLE domains.agreement TO
+      tracing_be_processing_${NAMESPACE};
+
     CREATE TABLE IF NOT EXISTS domains.catalog (
       ...
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.catalog TO
       interop_be_domains_analytics_writer_${NAMESPACE};
+
+    GRANT SELECT ON TABLE domains.catalog TO
+      tracing_be_processing_${NAMESPACE};
 
     CREATE TABLE IF NOT EXISTS domains.delegation (
       ...
@@ -37,9 +44,15 @@ data:
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.delegation TO
       interop_be_domains_analytics_writer_${NAMESPACE};
 
+    GRANT SELECT ON TABLE domains.delegation TO
+      tracing_be_processing_${NAMESPACE};
+
     CREATE TABLE IF NOT EXISTS domains.purpose (
       ...
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.purpose TO
       interop_be_domains_analytics_writer_${NAMESPACE};
+
+    GRANT SELECT ON TABLE domains.purpose TO
+      tracing_be_processing_${NAMESPACE};
