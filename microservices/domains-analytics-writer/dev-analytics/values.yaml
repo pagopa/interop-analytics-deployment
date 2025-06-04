@@ -11,7 +11,6 @@ configmap:
   KAFKA_GROUP_ID: "{{.Values.namespace}}-domains-analytics-writer"
 
 deployment:
-  replicas: 0
   flywayInitContainer:
     create: true
     version: "11.4.0"
@@ -37,7 +36,7 @@ deployment:
     MAX_WAIT_KAFKA_BATCH_MILLIS: "common-kafka.KAFKA_MAX_WAIT_BATCH_MILLIS"
     MESSAGES_TO_READ_PER_BATCH: "common-kafka.KAFKA_MESSAGES_TO_READ_PER_BATCH"
     CATALOG_TOPIC: "common-kafka.CATALOG_TOPIC"
-    AUTHORIZATION_TOPIC: "common-kafka.AUTHORIZATION_TOPIC" // TODO: aggiungere tutti i topic in common-kafka
+    AUTHORIZATION_TOPIC: "common-kafka.AUTHORIZATION_TOPIC"
     AGREEMENT_TOPIC: "common-kafka.AGREEMENT_TOPIC"
     ATTRIBUTE_TOPIC: "common-kafka.ATTRIBUTE_TOPIC"
     PURPOSE_TOPIC: "common-kafka.PURPOSE_TOPIC"
@@ -47,11 +46,12 @@ deployment:
     ANALYTICS_SQL_DB_HOST: "common-redshift.DB_HOST"
     ANALYTICS_SQL_DB_NAME: "common-redshift.DB_NAME"
     ANALYTICS_SQL_DB_PORT: "common-redshift.DB_PORT"
-    ANALYTICS_SQL_DB_SCHEMA_NAME: "common-redshift.DB_DOMAINS_SCHEMA" // TODO: aggiungere su common-redshift
+    ANALYTICS_SQL_DB_SCHEMA_NAME: "common-redshift.DB_DOMAINS_SCHEMA"
     ANALYTICS_SQL_DB_USE_SSL: "common-redshift.DB_USE_SSL"
   envFromSecrets:
     ANALYTICS_SQL_DB_USERNAME: "redshift-domains-analytics-writer-user.username"
     ANALYTICS_SQL_DB_PASSWORD: "redshift-domains-analytics-writer-user.password"
   envFromFieldRef:
+    AWS_ROLE_SESSION_NAME: "metadata.name"
     KAFKA_CLIENT_ID: "metadata.name"
     MERGE_TABLE_SUFFIX: "metadata.uid"
