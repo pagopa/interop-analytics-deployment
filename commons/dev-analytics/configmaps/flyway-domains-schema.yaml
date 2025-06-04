@@ -8,8 +8,7 @@ data:
     CREATE SCHEMA IF NOT EXISTS domains;
 
     GRANT USAGE ON SCHEMA domains TO 
-      interop_be_domains_analytics_writer_${NAMESPACE},
-      tracing_be_processing_${NAMESPACE};
+      interop_be_domains_analytics_writer_${NAMESPACE};
 
     GRANT USAGE ON SCHEMA domains TO GROUP
       readonly_group;
