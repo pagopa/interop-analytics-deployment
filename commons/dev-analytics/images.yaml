@@ -8,6 +8,8 @@ images:
       tag: "develop"
     application-audit-archiver:
       tag: "develop"
+    domains-analytics-writer:
+      tag: "develop"
   jobs:
     apply-mv:
       tag: "11.4.0"
