@@ -2,9 +2,9 @@ CREATE SCHEMA IF NOT EXISTS views;
 
 GRANT USAGE ON SCHEMA views TO GROUP readonly_group;
 
-DROP MATERIALIZED VIEW IF EXISTS views.mv_service_endpoint_method_ms_elapsed;
+DROP MATERIALIZED VIEW IF EXISTS views.mv_client_tenant_authserver_ips;
 
-CREATE MATERIALIZED VIEW views.mv_service_endpoint_method_ms_elapsed AUTO REFRESH YES AS 
+CREATE MATERIALIZED VIEW views.mv_client_tenant_authserver_ips AUTO REFRESH YES AS 
 select  main.tenant_name, main.client_name, main.ips, latest_ts.latest_ts, oldest_ts.oldest_ts from (select t."name" tenant_name , gta.client_id client_id, c."name" client_name  , bra.requester_ip_address ips 
 from application.begin_request_audit bra
 inner join jwt.generated_token_audit gta on bra.correlation_id = gta.correlation_id
