@@ -51,6 +51,7 @@ jobs:
           echo "- run_k8s_workflow: \`${{ inputs.run_k8s_workflow }}\`" >> $GITHUB_STEP_SUMMARY
           echo "- run_tf_apply_monitoring_workflow: \`${{ inputs.run_tf_apply_monitoring_workflow }}\`" >> $GITHUB_STEP_SUMMARY
           echo "- run_tf_apply_secrets_workflow: \`${{ inputs.run_tf_apply_secrets_workflow }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- apply_mv: \`${{ inputs.apply_mv }}\`" >> $GITHUB_STEP_SUMMARY
 
   initChecks:
     runs-on: ubuntu-22.04
