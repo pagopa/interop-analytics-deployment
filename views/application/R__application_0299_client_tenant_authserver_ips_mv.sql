@@ -6,7 +6,7 @@ DROP MATERIALIZED VIEW IF EXISTS views.mv_client_tenant_authserver_ips;
 
 CREATE MATERIALIZED VIEW views.mv_client_tenant_authserver_ips AS 
 select  main.tenant_name, main.client_name, main.ips, latest_ts.latest_ts, oldest_ts.oldest_ts from sub_views.mv_client_tenant_authserver_ips__main main
-left join sub_views.mv_client_tenant_authserver_ips__latest_ts latest_ts
+inner join sub_views.mv_client_tenant_authserver_ips__latest_ts latest_ts
 on main.client_id = latest_ts.client_id and main.ips = latest_ts.ips
-left join sub_views.mv_client_tenant_authserver_ips__oldest_ts oldest_ts
+inner join sub_views.mv_client_tenant_authserver_ips__oldest_ts oldest_ts
 on main.client_id = oldest_ts.client_id and main.ips = oldest_ts.ips
