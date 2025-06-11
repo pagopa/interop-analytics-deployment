@@ -30,8 +30,6 @@ deployment:
       FLYWAY_USER: "redshift-flyway-user.username"
       FLYWAY_PASSWORD: "redshift-flyway-user.password"
 
-  env:
-    TOPIC_STARTING_OFFSET: "earliest"
   envFromConfigmaps:
     KAFKA_BROKERS: "common-kafka.KAFKA_BROKERS"
     AVERAGE_KAFKA_MESSAGE_SIZE_IN_BYTES: "common-kafka.KAFKA_AVERAGE_MESSAGE_SIZE_IN_BYTES"
