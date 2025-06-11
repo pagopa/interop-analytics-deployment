@@ -2,6 +2,8 @@ CREATE SCHEMA IF NOT EXISTS sub_views;
 
 GRANT USAGE ON SCHEMA sub_views TO GROUP readonly_group;
 
+DROP MATERIALIZED VIEW IF EXISTS sub_views.mv_client_tenant_authserver_ips__main;
+
 CREATE MATERIALIZED VIEW sub_views.mv_client_tenant_authserver_ips__main AUTO REFRESH YES as
 select t."name" tenant_name , gta.client_id client_id, c."name" client_name  , bra.requester_ip_address ips 
 from application.begin_request_audit bra
