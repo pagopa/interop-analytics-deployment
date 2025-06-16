@@ -10,21 +10,46 @@ Flyway executes repeatable files every time their content changes: this is done 
 In other words, everytime a repeatable file changes, Flyway notices its checksum has changed and executes it again.<br><br>
 
 
-### Folder structure
-Repeatable files are executed in **alphabetical order** with respect to the name.<br>
-Because of this, it's possible to apply an execution order by adding a cardinal number in the file name after the R__ prefix (e.g. R__00_mv.sql).<br>
+### Naming convention and folder structure
+If a materialized view B is based on a materialized view A, then A must be **created before** B.<br>
+Moreover, A must be **refreshed before** B as well.<br>
 
-However, multiple files in **different subfolders** having the **same name** will conflict when Flyway tries to execute them (e.g. /views/domains/R__mv.sql and /views/jwt/R__mv.sql).<br>
-This problem can be solved by adding the name of the subfolder (in which the file is located) to the file name (e.g. /views/domains/R__domains_mv.sql and /views/jwt/R__jwt_mv.sql).<br>
+To enforce such order, it's necessary to adopt a **naming convention** to be used in both the file's name and the view's name.<br>
 
-Combining both solutions, the /views folder that stores the migration files has a structure like the following:<br>
+####
+The necessity of using a naming convention in the file's name is related to how Flyway applies repeatable migrations.<br>
+In fact, repeatable files are executed in **alphabetical order** with respect to the name.<br>
+By adding a cardinal number in the file's name after the R__ prefix (e.g. ```R__00_A_mv.sql```), it's possible to enforce an order in the Flyway's migration execution.<br>
+
+Note: multiple files in **different subfolders** having the **same name** will conflict when Flyway tries to execute them (e.g. ```/views/domains/R__00_A_mv.sql``` and ```/views/jwt/R__00_A_mv.sql```).<br>
+This problem can be solved by adding the name of the subfolder (in which the file is located) to the file's name (e.g. ```/views/domains/R__domains_00_A_mv.sql``` and ```/views/jwt/R__jwt_00_A_mv.sql```).<br>
+
+####
+The necessity of using a naming convention in the view's name is related to how the refreshing mechanism works.<br>
+Redshift provides materialized views that can be refreshed automatically.<br>
+However, there are some limitations: a materialized view that is based on another materialized view can't be refreshed automatically.<br>
+To overcome this issue, it has been developed a mechanism to refresh materialized views (for which auto-refresh is disabled) in a **scheduled way**.<br>
+This scheduled refresh mechanism relies on EventBridge to run a scheduled query on the STV_MV_INFO system table to get a list of materialized view to be refreshed.<br>
+Ideally, we can gather materialized views into logical layers:
+- layer 0 gathers all the materialized views based on data stored in tables (for which auto-refresh is enabled);
+- layer 1 gathers all the **intermediate** materialized views based on materialized views in layer 0 (for which auto-refresh is disabled);
+- ...
+- layer X gathers all the **intermediate** materialized views based on materialized views in layer X-1 (for which auto-refresh is disabled).
+
+Note: materialized views belonging to the same layer are not based on each others, so they can be refreshed in a parallel way.<br>
+
+Eventually, by adding a cardinal number (representing the logical layer) in the views's name (e.g. ```$SCHEMA_NAME.mv_00_A```), it's possible to enforce a refreshing order for the materialized views.<br>
+
+####
+Because of what we've said, the /views folder that stores the migration files will have a structure like the following:
 - /views
     - /domains
-        - R__domains_00_mv.sql
-        - R__domains_01_mv.sql
+        - R__domains_00_A_mv.sql
+        - R__domains_00_B_mv.sql
+        - R__domains_01_A_mv.sql (must be executed after the migration in ```R__domains_00_A_mv.sql```)
     - /jwt
-        - R__jwt_00_mv.sql
-        - R__jwt_01_mv.sql
+        - R__jwt_00_A_mv.sql
+        - R__jwt_00_B_mv.sql
     - ...<br><br>
 
 
