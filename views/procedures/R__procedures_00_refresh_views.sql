@@ -21,7 +21,7 @@ BEGIN
         FROM 
             STV_MV_INFO
         WHERE 
-            schema = 'views' OR schema = 'sub_views'
+            (schema = 'views' OR schema = 'sub_views')
             AND is_stale = 't' 
             AND autorefresh = 'f'
         ORDER BY
