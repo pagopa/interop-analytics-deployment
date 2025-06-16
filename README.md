@@ -31,17 +31,17 @@ However, there are some limitations: a materialized view that is based on anothe
 To overcome this issue, it has been developed a mechanism to refresh materialized views (for which auto-refresh is disabled) in a **scheduled way**.<br>
 This scheduled refresh mechanism relies on EventBridge to run a scheduled query on the STV_MV_INFO system table to get a list of materialized view to be refreshed.<br>
 Ideally, we can gather materialized views into logical layers:
-- layer 0 gathers all the **root** materialized views based on data stored in tables;
-- layer 1 gathers all the **intermediate** materialized views based on materialized views in layer 0;
+- layer 0 gathers all the materialized views based on data stored in tables (for which auto-refresh is enabled);
+- layer 1 gathers all the **intermediate** materialized views based on materialized views in layer 0 (for which auto-refresh is disabled);
 - ...
-- layer X gathers all the **intermediate** materialized views based on materialized views in layer X-1.
+- layer X gathers all the **intermediate** materialized views based on materialized views in layer X-1 (for which auto-refresh is disabled).
 
 Note: materialized views belonging to the same layer are not based on each others, so they can be refreshed in a parallel way.<br>
 
 Eventually, by adding a cardinal number in the views's name (e.g. ```$SCHEMA_NAME.mv_00_A```), it's possible to enforce a refreshing order for the materialized views.<br>
 
 ####
-Combining what we've said, the /views folder that stores the migration files will have a structure like the following:
+Because of what we've said, the /views folder that stores the migration files will have a structure like the following:
 - /views
     - /domains
         - R__domains_00_A_mv.sql
