@@ -738,6 +738,7 @@ data:
       created_at TIMESTAMP WITH TIME ZONE NOT NULL,
       risk_analysis_form_id VARCHAR(36) UNIQUE NOT NULL,
       risk_analysis_form_version VARCHAR(2048) NOT NULL,
+      tenant_kind VARCHAR(2048) NOT NULL,
       deleted BOOLEAN,
       PRIMARY KEY (id)
     );
