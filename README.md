@@ -29,7 +29,7 @@ The necessity of using a naming convention in the view's name is related to how 
 Redshift provides materialized views that can be refreshed automatically.<br>
 However, there are some limitations: a materialized view that is based on another materialized view can't be refreshed automatically.<br>
 To overcome this issue, it has been developed a mechanism to refresh materialized views (for which auto-refresh is disabled) in a **scheduled way**.<br>
-This scheduled refresh mechanism relies on EventBridge to perform a scheduled query on the STV_MV_INFO system table to get a list of materialized view to be refreshed.<br>
+This scheduled refresh mechanism relies on EventBridge to run a scheduled query on the STV_MV_INFO system table to get a list of materialized view to be refreshed.<br>
 Ideally, we can gather materialized views into logical layers:
 - layer 0 gathers all the **root** materialized views based on data stored in tables;
 - layer 1 gathers all the **intermediate** materialized views based on materialized views in layer 0;
