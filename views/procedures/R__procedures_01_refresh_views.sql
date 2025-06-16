@@ -21,9 +21,11 @@ BEGIN
         FROM 
             STV_MV_INFO
         WHERE 
-            schema = 'views' 
+            schema = 'views' OR schema = 'sub_views'
             AND is_stale = 't' 
             AND autorefresh = 'f'
+        ORDER BY
+            name ASC
     LOOP
         statement := 'REFRESH MATERIALIZED VIEW ' || quote_ident(result.schema) || '.' || quote_ident(result.name) || ';';
         RAISE INFO 'Performing: %', statement;
