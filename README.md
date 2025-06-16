@@ -46,7 +46,7 @@ Combining what we've said, the /views folder that stores the migration files wil
     - /domains
         - R__domains_00_A_mv.sql
         - R__domains_00_B_mv.sql
-        - R__domains_01_A_mv.sql
+        - R__domains_01_A_mv.sql (must be executed after the migration in ```R__domains_00_A_mv.sql```)
     - /jwt
         - R__jwt_00_A_mv.sql
         - R__jwt_00_B_mv.sql
