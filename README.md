@@ -38,7 +38,7 @@ Ideally, we can gather materialized views into logical layers:
 
 Note: materialized views belonging to the same layer are not based on each others, so they can be refreshed in a parallel way.<br>
 
-Eventually, by adding a cardinal number in the views's name (e.g. ```$SCHEMA_NAME.mv_00_A```), it's possible to enforce a refreshing order for the materialized views.<br>
+Eventually, by adding a cardinal number (representing the logical layer) in the views's name (e.g. ```$SCHEMA_NAME.mv_00_A```), it's possible to enforce a refreshing order for the materialized views.<br>
 
 ####
 Because of what we've said, the /views folder that stores the migration files will have a structure like the following:
