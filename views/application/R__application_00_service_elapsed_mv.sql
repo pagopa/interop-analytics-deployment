@@ -11,6 +11,6 @@ DATE_PART(year, (CONVERT_TIMEZONE('Europe/Rome',  TIMESTAMP 'epoch' + (bra.times
 DATE_PART(month, (CONVERT_TIMEZONE('Europe/Rome',  TIMESTAMP 'epoch' + (bra.timestamp / 1000) * INTERVAL '1 second'))) as month, 
 DATE_PART(day, (CONVERT_TIMEZONE('Europe/Rome',  TIMESTAMP 'epoch' + (bra.timestamp / 1000) * INTERVAL '1 second'))) as day, 
 bra.service, bra.endpoint, bra.http_method, era."timestamp" - bra."timestamp" as ms_avg_elapsed 
-from interop_dev.application.begin_request_audit bra inner join interop_dev.application.end_request_audit era on bra.span_id = era.span_id
+from interop_dev.application.begin_request_audit bra inner join interop_dev.application.end_request_audit era on bra.span_id = era.span_id;
 
 GRANT SELECT ON TABLE views.mv_00_service_endpoint_method_ms_elapsed TO interop_analytics_quicksight_user;
