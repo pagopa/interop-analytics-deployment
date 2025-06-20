@@ -1,4 +1,4 @@
-name: K8s Apply (sub)
+name: Deploy (sub)
 
 on: 
   workflow_call:
@@ -11,6 +11,11 @@ on:
         description: 'Kubectl apply wait timeout in seconds for Deployments'
         required: true
         type: number
+      force_restart:
+        description: 'Force Deployment Rollout Restart'
+        required: true
+        default: false
+        type: boolean
       apply_mv:
         description: 'Run Flyway migrations for applying materialized views on Redshift'
         required: true
@@ -41,6 +46,7 @@ jobs:
         run: |
           echo "microservices=$(find microservices -type f -path "*/$TARGET_ENVIRONMENT/values.yaml" -exec dirname {} \; | awk -F'/' '{print $2}' | jq -R -s -c 'split("\n")[:-1]')" >> "$GITHUB_OUTPUT"
           echo "cronjobs=$(find jobs -type f -path "*/$TARGET_ENVIRONMENT/values.yaml" -exec dirname {} \; | awk -F'/' '{print $2}' | jq -R -s -c 'split("\n")[:-1]')" >> "$GITHUB_OUTPUT"
+
 
   deploy_common_configmaps:
     name: Deploy Common Configmaps
@@ -105,25 +111,24 @@ jobs:
           set -euo pipefail
           
           export PROJECT_DIR=$(pwd)
-          $SCRIPTS_FOLDER/helmTemplate-svc-single.sh --enable-templating-lookup --debug --environment ${{ inputs.environment }} --microservice $MICROSERVICE_NAME -i $PROJECT_DIR/commons/${{ inputs.environment }}/images.yaml --output console
-      - name: Kubectl Diff
-        id: kubectl_diff
+          $SCRIPTS_FOLDER/helmTemplate-svc-single.sh --debug --environment ${{ inputs.environment }} --microservice $MICROSERVICE_NAME -i $PROJECT_DIR/commons/${{ inputs.environment }}/images.yaml --output console
+      - name: Diff
+        id: diff
         env: 
           MICROSERVICE_NAME: ${{ matrix.microservice }}
         run: |
           set -euo pipefail
 
-          set +e
           export PROJECT_DIR=$(pwd)
 
-          $SCRIPTS_FOLDER/kubectlDiff-svc-single-standalone.sh --enable-templating-lookup --skip-dep --environment ${{ inputs.environment }} --microservice $MICROSERVICE_NAME -i $PROJECT_DIR/commons/${{ inputs.environment }}/images.yaml --output console
-
+          set +e
+          $SCRIPTS_FOLDER/helmDiff-svc-single-standalone.sh --skip-dep --environment ${{ inputs.environment }} --microservice $MICROSERVICE_NAME -i $PROJECT_DIR/commons/${{ inputs.environment }}/images.yaml
           DIFF_EXIT_CODE=$?
           set -e
           
           if [[ $DIFF_EXIT_CODE == 0 ]]; then
             echo "Diff Output: No diff has been found for ${MICROSERVICE_NAME}"
-          elif [[ $DIFF_EXIT_CODE == 1 ]]; then
+          elif [[ $DIFF_EXIT_CODE == 1 || $DIFF_EXIT_CODE == 2 ]]; then
             echo "Diff Output: Diff has been found for ${MICROSERVICE_NAME}"
           else
             echo "::error title=Diff Error::Error occurred during diff, exit code $DIFF_EXIT_CODE"
@@ -134,20 +139,31 @@ jobs:
           MICROSERVICE_NAME: ${{ matrix.microservice }}
           TIMEOUT_SECONDS: ${{ inputs.timeout_seconds }}
           FORCE_ROLLOUT: ${{ inputs.force_restart }}
-
+          ENABLE_FORCE_UPGRADE: ${{ vars.HELM_FORCE_UPGRADE_MICROSERVICES_CSV == '*' || contains(vars.HELM_FORCE_UPGRADE_MICROSERVICES_CSV, matrix.microservice) }}
         run: |
           set -euo pipefail
+          
+          echo "matrix.microservice: ${{ matrix.microservice }}"
+          echo "vars.HELM_FORCE_UPGRADE_MICROSERVICES_CSV: ${{ vars.HELM_FORCE_UPGRADE_MICROSERVICES_CSV }}"
+          echo "ENABLE_FORCE_UPGRADE: $ENABLE_FORCE_UPGRADE"
 
           TIMEOUT="${TIMEOUT_SECONDS}s"
 
           export PROJECT_DIR=$(pwd)
-          $SCRIPTS_FOLDER/helmTemplate-svc-single.sh --enable-templating-lookup --debug -e ${{ inputs.environment }} -m $MICROSERVICE_NAME -i $PROJECT_DIR/commons/${{ inputs.environment }}/images.yaml --output console > template.yaml
+          $SCRIPTS_FOLDER/helmTemplate-svc-single.sh --debug -e ${{ inputs.environment }} -m $MICROSERVICE_NAME -i $PROJECT_DIR/commons/${{ inputs.environment }}/images.yaml --output console > template.yaml
 
           K8S_NAMESPACE=$(cat template.yaml | yq 'select(.kind == "Deployment") | .metadata.namespace')
           MICROSERVICE_FULLNAME=$(cat template.yaml | yq 'select(.kind == "Deployment") | .metadata.name')
           
           echo "INFO - Apply changes for $MICROSERVICE_FULLNAME."
-          "$SCRIPTS_FOLDER/kubectlApply-svc-single-standalone.sh" --enable-templating-lookup --debug --skip-dep --environment "$K8S_NAMESPACE" -m "$MICROSERVICE_NAME" -i $PROJECT_DIR/commons/$K8S_NAMESPACE/images.yaml --output console
+
+          HELM_UPGRADE_OPTIONS="--debug --skip-dep --output console"
+          if [[ "$ENABLE_FORCE_UPGRADE" == "true" ]]; then
+            echo "Force upgrade requested for $MICROSERVICE_FULLNAME"
+            HELM_UPGRADE_OPTIONS=$HELM_UPGRADE_OPTIONS" --force"
+          fi
+
+          "$SCRIPTS_FOLDER/helmUpgrade-svc-single-standalone.sh" $HELM_UPGRADE_OPTIONS --environment "$K8S_NAMESPACE" -m "$MICROSERVICE_NAME" -i $PROJECT_DIR/commons/$K8S_NAMESPACE/images.yaml
 
           DESIRED_REPLICAS=$(kubectl get deployment "$MICROSERVICE_FULLNAME" -n "$K8S_NAMESPACE" -o jsonpath='{.spec.replicas}')
           echo "INFO - Desired replicas: $DESIRED_REPLICAS"
@@ -209,8 +225,8 @@ jobs:
           
           export PROJECT_DIR=$(pwd)
           $SCRIPTS_FOLDER/helmTemplate-cron-single.sh --debug --environment ${{ inputs.environment }} --job $CRONJOB_NAME -i $PROJECT_DIR/commons/${{ inputs.environment }}/images.yaml --output console   
-      - name: Kubectl Diff
-        id: kubectl_diff
+      - name: Diff
+        id: diff
         env: 
           CRONJOB_NAME: ${{ matrix.cronjob }}
         run: |
@@ -219,13 +235,14 @@ jobs:
           export PROJECT_DIR=$(pwd)
 
           set +e
-          $SCRIPTS_FOLDER/kubectlDiff-cron-single-standalone.sh --skip-dep --environment ${{ inputs.environment }} --job $CRONJOB_NAME -i $PROJECT_DIR/commons/${{ inputs.environment }}/images.yaml --output console
+          $SCRIPTS_FOLDER/helmDiff-cron-single-standalone.sh --skip-dep --environment ${{ inputs.environment }} --job $CRONJOB_NAME -i $PROJECT_DIR/commons/${{ inputs.environment }}/images.yaml
+          
           DIFF_EXIT_CODE=$?
           set -e
           
           if [[ $DIFF_EXIT_CODE == 0 ]]; then
             echo "Diff Output: No diff has been found for ${CRONJOB_NAME}"
-          elif [[ $DIFF_EXIT_CODE == 1 ]]; then
+          elif [[ $DIFF_EXIT_CODE == 1 || $DIFF_EXIT_CODE == 2 ]]; then
             echo "Diff Output: Diff has been found for ${CRONJOB_NAME}"
           else
             echo "::error title=Diff Error::Error occurred during diff, exit code $DIFF_EXIT_CODE"
@@ -234,17 +251,30 @@ jobs:
       - name: Deploy
         env:
           CRONJOB_NAME: ${{ matrix.cronjob }}
+          ENABLE_FORCE_UPGRADE: ${{ vars.HELM_FORCE_UPGRADE_CRONJOBS_CSV == '*' || contains(vars.HELM_FORCE_UPGRADE_CRONJOBS_CSV, matrix.cronjob) }}
         run: |
           set -euo pipefail
 
+          echo "matrix.cronjob: ${{ matrix.cronjob }}"
+          echo "vars.HELM_FORCE_UPGRADE_CRONJOBS_CSV: ${{ vars.HELM_FORCE_UPGRADE_CRONJOBS_CSV }}"
+          echo "ENABLE_FORCE_UPGRADE: $ENABLE_FORCE_UPGRADE"
+
           export PROJECT_DIR=$(pwd)
-          $SCRIPTS_FOLDER/helmTemplate-cron-single.sh --debug --environment ${{ inputs.environment }} --job $CRONJOB_NAME -i $PROJECT_DIR/commons/${{ inputs.environment }}/images.yaml --output console > template.yaml
+
+          $SCRIPTS_FOLDER/helmTemplate-cron-single.sh --debug -e ${{ inputs.environment }} --job $CRONJOB_NAME -i $PROJECT_DIR/commons/${{ inputs.environment }}/images.yaml --output console > template.yaml
           
           K8S_NAMESPACE=$(cat template.yaml | yq 'select(.kind == "CronJob") | .metadata.namespace')
           CRONJOB_FULLNAME=$(cat template.yaml | yq 'select(.kind == "CronJob") | .metadata.name')
   
           echo "INFO - Apply changes for $CRONJOB_FULLNAME."
-          $SCRIPTS_FOLDER/kubectlApply-cron-single-standalone.sh --debug --skip-dep --environment $K8S_NAMESPACE -j $CRONJOB_NAME -i $PROJECT_DIR/commons/$K8S_NAMESPACE/images.yaml --output console 
+
+          HELM_UPGRADE_OPTIONS="--debug --skip-dep --output console"
+          if [[ "$ENABLE_FORCE_UPGRADE" == "true" ]]; then
+            echo "Force upgrade requested for $CRONJOB_FULLNAME"
+            HELM_UPGRADE_OPTIONS=$HELM_UPGRADE_OPTIONS" --force"
+          fi
+
+          $SCRIPTS_FOLDER/helmUpgrade-cron-single-standalone.sh $HELM_UPGRADE_OPTIONS --environment $K8S_NAMESPACE -j $CRONJOB_NAME -i $PROJECT_DIR/commons/$K8S_NAMESPACE/images.yaml
 
   create_apply_mv_job:
     name: Create apply-mv Kubernetes job
