@@ -152,7 +152,7 @@ jobs:
       ecs_task_id: ${{ steps.start_runner.outputs.ecs_task_id }}
     strategy:
       matrix:
-        index: [1,2,3,4,5,6,7,8,9,10]
+        index: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
       fail-fast: false
     steps:
       - name: Start GitHub Runner
@@ -196,7 +196,7 @@ jobs:
     needs: [ initChecks, create_runner, tf_apply_secrets ]
     secrets: inherit
     if: ${{ always() && (inputs.run_k8s_workflow && ((!inputs.run_tf_apply_secrets_workflow && needs.tf_apply_secrets.result == 'skipped') || (inputs.run_tf_apply_secrets_workflow && needs.tf_apply_secrets.result == 'success'))) }}
-    uses: pagopa/interop-infra-commons/.github/workflows/common-k8s-deploy.yaml@feature/github-deploy-workflow #TODO cambiare con il tag corretto
+    uses: pagopa/interop-infra-commons/.github/workflows/common-k8s-deploy.yaml@v1.20.0
     with:
       environment: ${{ inputs.environment }}
       timeout_seconds: 300
@@ -206,15 +206,88 @@ jobs:
       use_kubectl_diff: ${{ vars.USE_KUBECTL_DIFF }}
       use_kubectl_apply: ${{ vars.USE_KUBECTL_APPLY }}
 
+  compute_cronjobs:
+    name: Setup steps
+    runs-on: [ self-hosted, "run_id:${{ inputs.environment }}-${{ github.run_id }}" ]
+    environment: ${{ inputs.environment }}
+    env:
+      TARGET_ENVIRONMENT: ${{ inputs.environment }}
+    outputs:
+      cronjobs: ${{ steps.compute_cronjobs.outputs.cronjobs }}
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29
+      - id: compute_cronjobs
+        run: |
+          echo "cronjobs=$(find jobs -type f -path "*/$TARGET_ENVIRONMENT/values.yaml" -exec dirname {} \; | awk -F'/' '{print $2}' | jq -R -s -c 'split("\n")[:-1]')" >> "$GITHUB_OUTPUT"
+
+  create_apply_mv_job:
+    name: Create apply-mv Kubernetes job
+    runs-on: [ self-hosted, "run_id:${{ inputs.environment }}-${{ github.run_id }}" ]
+    environment: ${{ inputs.environment }}
+    needs: [ deploy, compute_cronjobs ]
+    if: ${{ inputs.apply_mv && contains(fromJson(needs.compute_cronjobs.outputs.cronjobs), 'apply-mv') }}
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29
+
+      - name: Set kubeconfig
+        run: |
+          aws eks update-kubeconfig --region ${{ secrets.AWS_REGION }} --name ${{ secrets.EKS_CLUSTER_NAME }}
+
+      - name: Create job
+        id: create_job
+        run: |
+          set -euo pipefail
+
+          JOB_NAME="interop-be-apply-mv-$(date +%s)"
+          kubectl create job --from=cronjob/interop-be-apply-mv "$JOB_NAME" -n ${{ inputs.environment }}
+          echo "job_name=$JOB_NAME" >> "$GITHUB_OUTPUT"
+    
+      - name: Copy ./views folder to Pod
+        run: |
+          set -euo pipefail
+
+          JOB_NAME="${{ steps.create_job.outputs.job_name }}"
+          echo "Checking Job status..."
+          POD_NAME=$(kubectl get pods -n ${{ inputs.environment }} --selector=batch.kubernetes.io/job-name=$JOB_NAME -o jsonpath="{.items[0].metadata.name}")
+
+          kubectl wait --for=condition=Ready pod/"$POD_NAME" -n ${{ inputs.environment }} --timeout=120s
+          if [ $? -ne 0 ]; then
+            echo "Timeout reached while waiting for the Pod to be running."
+            exit 1
+          fi
+
+          CONTAINER_NAME=$(kubectl get pod "$POD_NAME" -n ${{ inputs.environment }} -o jsonpath="{.spec.containers[0].name}")
+          echo "Pod $POD_NAME is running"
+          echo "Container $CONTAINER_NAME is running in Pod $POD_NAME"
+
+          echo "Copying ./views folder to Pod..."
+          kubectl cp ./views "$POD_NAME":/flyway/views -c "$CONTAINER_NAME" -n ${{ inputs.environment }}
+          if [ $? -ne 0 ]; then
+            echo "Failed to copy ./views folder to Container running in Pod."
+            exit 1
+          else
+            kubectl exec -n ${{ inputs.environment }} "$POD_NAME" -c "$CONTAINER_NAME" -- touch /flyway/views/copy_completed.txt
+            if [ $? -ne 0 ]; then
+              echo "Failed to create /flyway/views/copy_completed.txt file."
+              exit 1
+            else
+              echo "Copy completed successfully."
+            fi
+          fi
+
   delete_runner:
     name: Delete Self-Hosted Runner
-    needs: [ create_runner, deploy, tf_apply_secrets ]
+    needs: [ create_runner, deploy, tf_apply_secrets, create_apply_mv_job ]
     if: ${{ always() && ( (inputs.run_k8s_workflow && ((!inputs.run_tf_apply_secrets_workflow && needs.tf_apply_secrets.result == 'skipped') || inputs.run_tf_apply_secrets_workflow)) || inputs.run_tf_apply_secrets_workflow ) }}
     runs-on: ubuntu-22.04
     environment: ${{ inputs.environment }}
     strategy:
       matrix:
-        index: [1,2,3,4,5,6,7,8,9,10]
+        index: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
       fail-fast: false
     steps:
       - name: Stop Github Runner
