@@ -201,9 +201,6 @@ jobs:
       environment: ${{ inputs.environment }}
       timeout_seconds: 300
       infra_commons_tag: ${{ needs.initChecks.outputs.infra_commons_tag_computed }}
-      helm_upgrade_no_wait: ${{ vars.HELM_UPGRADE_NO_WAIT }}
-      use_kubectl_diff: ${{ vars.USE_KUBECTL_DIFF }}
-      use_kubectl_apply: ${{ vars.USE_KUBECTL_APPLY }}
 
   run_apply_mv_job:
     name: Create apply-mv Kubernetes job
