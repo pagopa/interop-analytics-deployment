@@ -19,6 +19,8 @@ group by
   eservice_id  
 ;
 
+GRANT SELECT ON TABLE views.mv_01_eservice_not_used_after_ts__last_issued_at TO interop_analytics_quicksight_user;
+
 COMMENT ON VIEW views.mv_01_eservice_not_used_after_ts__last_issued_at 
 is 'This view show how many eservice for each tenant are unused from a timestamp since now. \n Traffic generated from producer is exluded. \n Only deleted eservice are excluded. '
 ;

@@ -24,6 +24,7 @@ group by
   eservice_id
 ;
 
+GRANT SELECT ON TABLE views.mv_01_avg_first_token_delta_by_eservice__final TO interop_analytics_quicksight_user;
 
 COMMENT ON VIEW views.mv_01_avg_first_token_delta_by_eservice__final
 is 'This view show, for each eservice, the average delta time between agreement accepted time and fist detached JWT issued_at time.\n Self tenant invocation are included.'

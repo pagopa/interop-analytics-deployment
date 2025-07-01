@@ -26,6 +26,8 @@ group by
   consumer_name
 ;
 
+GRANT SELECT ON TABLE views.mv_02_client_without_token__final TO interop_analytics_quicksight_user;
+
 comment on view views_test.mv_02_client_without_token__final 
 is 'This view show, for each consumer tenant: how many active client are registered; \n how many of them have requested at least one token; the ratio in percentage format. '
 

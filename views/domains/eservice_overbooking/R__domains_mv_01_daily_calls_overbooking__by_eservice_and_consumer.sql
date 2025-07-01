@@ -32,6 +32,8 @@ group by
   consumer_name
 ;
 
+GRANT SELECT ON TABLE views.mv_01_daily_calls_overbooking__by_eservice_and_consumer TO interop_analytics_quicksight_user;
+
 COMMENT ON VIEW views.mv_01_daily_calls_overbooking__by_eservice_and_consumer
 is 'This view show, for each eservice and consumer, the ratio between: the sum of daily call "promised" for each purpose\n and the total daily calls for each consumer declared by the producer.'
 ;

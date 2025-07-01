@@ -19,6 +19,8 @@ group by
   client_id  
 ;
 
+GRANT SELECT ON TABLE views.mv_01_client_not_used_after_ts__last_issued_at TO interop_analytics_quicksight_user;
+
 COMMENT ON VIEW views.mv_01_client_not_used_after_ts__last_issued_at 
 is 'This view show, for each client, the epoch timestamp of last issued token. \n The last_issued_at field assume value -1 for clients that have never detachd a JWT.'
 ;
