@@ -3,7 +3,7 @@ CREATE SCHEMA IF NOT EXISTS views;
 GRANT USAGE ON SCHEMA views TO GROUP readonly_group;
 GRANT USAGE ON SCHEMA views TO interop_analytics_quicksight_user;
 
-DROP MATERIALIZED VIEW IF EXISTS views.mv_00_service_endpoint_method_ms_elapsed;
+DROP MATERIALIZED VIEW IF EXISTS views.mv_00_service_endpoint_method_ms_elapsed CASCADE;
 
 CREATE MATERIALIZED VIEW views.mv_00_service_endpoint_method_ms_elapsed AUTO REFRESH YES AS 
 select 
