@@ -3,7 +3,7 @@ CREATE SCHEMA IF NOT EXISTS views;
 GRANT USAGE ON SCHEMA views TO GROUP readonly_group;
 GRANT USAGE ON SCHEMA views TO interop_analytics_quicksight_user;
 
-DROP MATERIALIZED VIEW views.mv_01_daily_calls_overbooking__by_eservice_and_consumer CASCADE;
+DROP MATERIALIZED VIEW IF EXISTS views.mv_01_daily_calls_overbooking__by_eservice_and_consumer CASCADE;
 
 CREATE MATERIALIZED VIEW views.mv_01_daily_calls_overbooking__by_eservice_and_consumer AS
 select

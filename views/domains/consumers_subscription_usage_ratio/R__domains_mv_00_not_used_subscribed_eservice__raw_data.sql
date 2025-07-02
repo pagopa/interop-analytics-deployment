@@ -2,7 +2,7 @@ CREATE SCHEMA IF NOT EXISTS sub_views;
 
 GRANT USAGE ON SCHEMA sub_views TO GROUP readonly_group;
 
-DROP MATERIALIZED VIEW sub_views.mv_00_not_used_subscribed_eservice__raw_data CASCADE;
+DROP MATERIALIZED VIEW IF EXISTS sub_views.mv_00_not_used_subscribed_eservice__raw_data CASCADE;
 
 -- We need to know which eservice was authorized and which wasn't.
 -- But we can't use lateral (left or right) join; due to a limitation 
