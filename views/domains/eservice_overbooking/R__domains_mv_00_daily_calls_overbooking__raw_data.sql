@@ -2,7 +2,7 @@ CREATE SCHEMA IF NOT EXISTS sub_views;
 
 GRANT USAGE ON SCHEMA sub_views TO GROUP readonly_group;
 
-DROP MATERIALIZED VIEW sub_views.mv_00_daily_calls_overbooking__raw_data CASCADE;
+DROP MATERIALIZED VIEW IF EXISTS sub_views.mv_00_daily_calls_overbooking__raw_data CASCADE;
 
 -- This " sub view" link every active purpose version with its eservice descriptor to extract:
 --  - eservice_descriptor.daily_calls_per_consumer

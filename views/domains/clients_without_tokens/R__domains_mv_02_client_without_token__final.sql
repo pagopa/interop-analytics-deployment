@@ -3,7 +3,7 @@ CREATE SCHEMA IF NOT EXISTS views;
 GRANT USAGE ON SCHEMA views TO GROUP readonly_group;
 GRANT USAGE ON SCHEMA views TO interop_analytics_quicksight_user;
 
-DROP MATERIALIZED VIEW views.mv_02_client_without_token__final CASCADE;
+DROP MATERIALIZED VIEW IF EXISTS views.mv_02_client_without_token__final CASCADE;
 
 CREATE MATERIALIZED VIEW views.mv_02_client_without_token__final AS
 select
