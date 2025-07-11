@@ -1,0 +1,25 @@
+name: "interop-be-application-audit-archiver"
+
+serviceAccount:
+  roleArn: "arn:aws:iam::505630707203:role/interop-be-application-audit-archiver-qa"
+
+service:
+  create: false
+
+configmap:
+  SERVICE_NAME: pagopa-interop-application-audit-archiver-qa
+  S3_BUCKET: interop-application-audit-archive-qa-es1
+  KAFKA_GROUP_ID: "{{.Values.namespace}}-application-audit-archiver"
+  GZ_COMPRESSION_LEVEL: 6
+
+deployment:
+  envFromConfigmaps:
+    KAFKA_BROKERS: "common-kafka.KAFKA_BROKERS"
+    KAFKA_AVERAGE_MESSAGE_SIZE_IN_BYTES: "common-kafka.KAFKA_AVERAGE_MESSAGE_SIZE_IN_BYTES"
+    KAFKA_MAX_WAIT_BATCH_MILLIS: "common-kafka.KAFKA_MAX_WAIT_BATCH_MILLIS"
+    KAFKA_MESSAGES_TO_READ_PER_BATCH: "common-kafka.KAFKA_MESSAGES_TO_READ_PER_BATCH"
+    KAFKA_TOPIC_STARTING_OFFSET: "common-kafka.KAFKA_TOPIC_STARTING_OFFSET"
+    KAFKA_TOPIC: "common-kafka.APPLICATION_AUDIT_TOPIC"
+  envFromFieldRef:
+    AWS_ROLE_SESSION_NAME: "metadata.name"
+    KAFKA_CLIENT_ID: "metadata.name"
