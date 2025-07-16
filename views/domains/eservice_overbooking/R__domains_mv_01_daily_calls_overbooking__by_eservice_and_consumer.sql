@@ -1,7 +1,7 @@
 CREATE SCHEMA IF NOT EXISTS views;
 
 GRANT USAGE ON SCHEMA views TO GROUP readonly_group;
-GRANT USAGE ON SCHEMA views TO interop_analytics_quicksight_user;
+GRANT USAGE ON SCHEMA views TO ${NAMESPACE}_quicksight_user;
 
 DROP MATERIALIZED VIEW IF EXISTS views.mv_01_daily_calls_overbooking__by_eservice_and_consumer CASCADE;
 
@@ -32,7 +32,7 @@ group by
   consumer_name
 ;
 
-GRANT SELECT ON TABLE views.mv_01_daily_calls_overbooking__by_eservice_and_consumer TO interop_analytics_quicksight_user;
+GRANT SELECT ON TABLE views.mv_01_daily_calls_overbooking__by_eservice_and_consumer TO ${NAMESPACE}_quicksight_user;
 
 COMMENT ON VIEW views.mv_01_daily_calls_overbooking__by_eservice_and_consumer
 is 'This view show, for each eservice and consumer, the ratio between: the sum of daily call "promised" for each purpose\n and the total daily calls for each consumer declared by the producer.'

@@ -1,7 +1,7 @@
 CREATE SCHEMA IF NOT EXISTS views;
 
 GRANT USAGE ON SCHEMA views TO GROUP readonly_group;
-GRANT USAGE ON SCHEMA views TO interop_analytics_quicksight_user;
+GRANT USAGE ON SCHEMA views TO ${NAMESPACE}_quicksight_user;
 
 DROP MATERIALIZED VIEW IF EXISTS views.mv_02_not_used_subscribed_eservice__final CASCADE;
 
@@ -28,7 +28,7 @@ group by
   consumer_name
 ;
 
-GRANT SELECT ON TABLE views.mv_02_not_used_subscribed_eservice__final TO interop_analytics_quicksight_user;
+GRANT SELECT ON TABLE views.mv_02_not_used_subscribed_eservice__final TO ${NAMESPACE}_quicksight_user;
 
 COMMENT ON VIEW views.mv_02_not_used_subscribed_eservice__final
 is 'For each consumer show the number of subscribed eservices; \n the number of distinct eservices with, at least, one detached token;\n the ration as percentage.\n N.B.: tenant self invocations are included'
