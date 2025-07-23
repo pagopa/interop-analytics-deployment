@@ -8,7 +8,7 @@ DROP MATERIALIZED VIEW IF EXISTS views.mv_00_auth_usage__data__ko_calls CASCADE;
 CREATE MATERIALIZED VIEW views.mv_00_auth_usage__data__ko_calls AUTO REFRESH YES as
 select 
   (( (erasa.timestamp - erasa.execution_time_ms) / ( 60 * 1000 )) * 60) as epoch_of_the_second_when_the_minute_slot_is_started,
-  timestamp 'epoch' + (( (erasa.timestamp - erasa.execution_time_ms) / ( 60 * 1000 )) * 60) * interval '1 second' as minute_slot,
+  timestamptz 'epoch' + (( (erasa.timestamp - erasa.execution_time_ms) / ( 60 * 1000 )) * 60) * interval '1 second' as minute_slot,
   t_c.name as consumer_name,
   c.name as client_name,
   count( erasa.span_id ) as calls_quantity,
