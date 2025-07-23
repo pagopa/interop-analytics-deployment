@@ -1,0 +1,31 @@
+CREATE SCHEMA IF NOT EXISTS views;
+
+GRANT USAGE ON SCHEMA views TO GROUP readonly_group;
+GRANT USAGE ON SCHEMA views TO interop_analytics_quicksight_user;
+
+DROP MATERIALIZED VIEW IF EXISTS views.mv_00_auth_usage__data__ko_calls CASCADE;
+
+CREATE MATERIALIZED VIEW views.mv_00_auth_usage__data__ko_calls AUTO REFRESH YES as
+select 
+  (( (erasa.timestamp - erasa.execution_time_ms) / ( 60 * 1000 )) * 60) as epoch_of_the_second_when_the_minute_slot_is_started,
+  timestamp 'epoch' + (( (erasa.timestamp - erasa.execution_time_ms) / ( 60 * 1000 )) * 60) * interval '1 second' as minute_slot,
+  t_c.name as consumer_name,
+  c.name as client_name,
+  count( erasa.span_id ) as calls_quantity,
+  sum( case when erasa.http_response_status like '4%' then 1 else 0 end ) as quantity_4xx,
+  sum( case when erasa.http_response_status like '5%' then 1 else 0 end ) as quantity_5xx,
+  sum( erasa.execution_time_ms ) as total_execution_time
+from 
+  application.end_request_auth_server_audit erasa 
+  join domains.client c on c.id = erasa.client_id
+  join domains.tenant t_c on t_c.id = c.consumer_id
+where
+  erasa.http_response_status != '200'
+group by
+  epoch_of_the_second_when_the_minute_slot_is_started,
+  consumer_name,
+  client_name
+;
+
+GRANT SELECT ON TABLE views.mv_00_auth_usage__data__ko_calls TO interop_analytics_quicksight_user;
+
