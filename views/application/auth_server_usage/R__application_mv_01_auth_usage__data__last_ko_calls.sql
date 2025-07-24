@@ -17,7 +17,7 @@ CREATE MATERIALIZED VIEW views.mv_01_auth_usage__data__last_ko_calls AUTO REFRES
     date_trunc( 'minute', getdate() ) as to_ts,
     5 as period_length_minutes
   from 
-    views_test.mv_00_auth_usage__data__ko_calls
+    views.mv_00_auth_usage__data__ko_calls
   where 
     minute_slot between date_add('minute', -1 * 5, date_trunc( 'minute', getdate() ) )  
                     and date_trunc( 'minute', getdate() )
@@ -36,7 +36,7 @@ UNION ALL
     date_trunc( 'minute', getdate() ) as to_ts,
     10 as period_length_minutes
   from 
-    views_test.mv_00_auth_usage__data__ko_calls
+    views.mv_00_auth_usage__data__ko_calls
   where 
     minute_slot between date_add('minute', -1 * 10, date_trunc( 'minute', getdate() ) )  
                     and date_trunc( 'minute', getdate() )
@@ -55,7 +55,7 @@ UNION ALL
     date_trunc( 'minute', getdate() ) as to_ts,
     15 as period_length_minutes
   from 
-    views_test.mv_00_auth_usage__data__ko_calls
+    views.mv_00_auth_usage__data__ko_calls
   where 
     minute_slot between date_add('minute', -1 * 15, date_trunc( 'minute', getdate() ) )  
                     and date_trunc( 'minute', getdate() )
