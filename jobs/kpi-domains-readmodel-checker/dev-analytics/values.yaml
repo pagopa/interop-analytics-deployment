@@ -1,0 +1,34 @@
+name: "interop-be-kpi-domains-readmodel-checker"
+
+cronjob:
+  schedule: "0 2 * * *"
+  timeZone: "Europe/Rome"
+  failedJobsHistoryLimit: 2
+  successfulJobsHistoryLimit: 0
+  restartPolicy: OnFailure
+
+  envFromConfigmaps:
+    ANALYTICS_SQL_DB_HOST: "common-redshift.DB_HOST"
+    ANALYTICS_SQL_DB_NAME: "common-redshift.DB_NAME"
+    ANALYTICS_SQL_DB_PORT: "common-redshift.DB_PORT"
+    ANALYTICS_SQL_DB_SCHEMA_NAME: "common-redshift.DB_DOMAINS_SCHEMA"
+    ANALYTICS_SQL_DB_USE_SSL: "common-redshift.DB_USE_SSL"
+    READMODEL_SQL_DB_HOST: "common-read-model-sql.DB_HOST_RO"
+    READMODEL_SQL_DB_PORT: "common-read-model-sql.DB_PORT"
+    READMODEL_SQL_DB_NAME: "common-read-model-sql.DB_NAME"
+    READMODEL_SQL_DB_USE_SSL: "common-read-model-sql.DB_USE_SSL"
+    READMODEL_SQL_DB_SCHEMA_AGREEMENT: "common-read-model-sql.DB_SCHEMA_AGREEMENT"
+    READMODEL_SQL_DB_SCHEMA_ATTRIBUTE: "common-read-model-sql.DB_SCHEMA_ATTRIBUTE"
+    READMODEL_SQL_DB_SCHEMA_CATALOG: "common-read-model-sql.DB_SCHEMA_CATALOG"
+    READMODEL_SQL_DB_SCHEMA_CLIENT_JWK_KEY: "common-read-model-sql.DB_SCHEMA_CLIENT_JWK_KEY"
+    READMODEL_SQL_DB_SCHEMA_CLIENT: "common-read-model-sql.DB_SCHEMA_CLIENT"
+    READMODEL_SQL_DB_SCHEMA_DELEGATION: "common-read-model-sql.DB_SCHEMA_DELEGATION"
+    READMODEL_SQL_DB_SCHEMA_ESERVICE_TEMPLATE: "common-read-model-sql.DB_SCHEMA_ESERVICE_TEMPLATE"
+    READMODEL_SQL_DB_SCHEMA_PRODUCER_JWK_KEY: "common-read-model-sql.DB_SCHEMA_PRODUCER_JWK_KEY"
+    READMODEL_SQL_DB_SCHEMA_PRODUCER_KEYCHAIN: "common-read-model-sql.DB_SCHEMA_PRODUCER_KEYCHAIN"
+    READMODEL_SQL_DB_SCHEMA_PURPOSE: "common-read-model-sql.DB_SCHEMA_PURPOSE"
+    READMODEL_SQL_DB_SCHEMA_TENANT: "common-read-model-sql.DB_SCHEMA_TENANT"
+
+  envFromSecrets:
+    ANALYTICS_SQL_DB_USERNAME: "kpi-domains-readmodel-checker-user.username"
+    ANALYTICS_SQL_DB_PASSWORD: "kpi-domains-readmodel-checker-user.password"
