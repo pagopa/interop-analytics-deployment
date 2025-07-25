@@ -93,7 +93,8 @@ data:
       organization_id VARCHAR(36),
       http_response_status INTEGER NOT NULL,
       execution_time_ms BIGINT NOT NULL,
-      client_id VARCHAR(36)
+      client_id VARCHAR(36),
+      client_kind VARCHAR(255)
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE application.begin_request_audit TO
