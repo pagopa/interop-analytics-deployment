@@ -4,6 +4,13 @@ GRANT USAGE ON SCHEMA sub_views TO GROUP readonly_group;
 
 DROP MATERIALIZED VIEW IF EXISTS sub_views.mv_01_auth_usage__checks__union CASCADE;
 
+-- Based on "keep logic into the RedShift, not into QuickSight" tenant 
+-- I choose to make the UNION of two different data set here. I need to 
+-- work around the following limitations:
+--  - Incremental refresh do not support `outer join` and
+--    `epoch_of_the_second_when_the_minute_slot_is_started` is not guaranteed to be the 
+--    same in both sub_views.
+--  - Incremental refresh do not support `union all` and `group by` in the same view
 CREATE MATERIALIZED VIEW sub_views.mv_01_auth_usage__checks__union AUTO REFRESH YES as
 select 
   token_issued,

@@ -8,6 +8,8 @@ DROP MATERIALIZED VIEW IF EXISTS views.mv_02_auth_usage__grouped_checks CASCADE;
 CREATE MATERIALIZED VIEW views.mv_02_auth_usage__grouped_checks AUTO REFRESH YES as
 select
   -- Every token must be related to a call
+  -- We can't use outer join and check for relation null-ness;
+  -- we obtain the number of "not related" by difference "total - related".
   sum( token_issued ) - sum( token_related_to_calls ) as token_without_related_call, 
   -- Every token must have not null correlation_id
   sum( token_issued_without_correlation_id ) as token_issued_without_correlation_id, 
