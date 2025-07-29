@@ -9,7 +9,7 @@ on:
         type: string
       timeout_seconds:
         description: 'Kubectl apply wait timeout in seconds for Deployments'
-        required: true
+        required: false
         type: number
         default: 300
   
