@@ -28,6 +28,10 @@ on:
         required: true
         default: true
         type: boolean
+      apply_mv:
+        description: 'Run Flyway migrations for applying materialized views on Redshift'
+        required: true
+        type: boolean
 
 permissions:
   id-token: write
@@ -194,6 +198,14 @@ jobs:
     with:
       environment: ${{ inputs.environment }}
       infra_commons_tag: ${{ needs.initChecks.outputs.infra_commons_tag_computed }}
+
+  apply_mv:
+    needs: [initChecks, create_runner, tf_apply_secrets, deploy]
+    if: ${{ always() && (inputs.apply_mv && ((!inputs.run_tf_apply_secrets_workflow && needs.tf_apply_secrets.result == 'skipped') || (inputs.run_tf_apply_secrets_workflow && needs.tf_apply_secrets.result == 'success'))) }}
+    secrets: inherit
+    uses: ./.github/workflows/apply-mv.yaml
+    with:
+      environment: ${{ inputs.environment }}
 
   delete_runner:
     name: Delete Self-Hosted Runner

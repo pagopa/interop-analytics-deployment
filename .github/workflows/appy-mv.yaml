@@ -1,0 +1,79 @@
+name: Apply Materialized Views
+
+on: 
+  workflow_call:
+    inputs:
+      environment:
+        description: 'Environment to run apply against'
+        required: true
+        type: string
+      timeout_seconds:
+        description: 'Kubectl apply wait timeout in seconds for Deployments'
+        required: true
+        type: number
+        default: 300
+  
+defaults:
+  run:
+    shell: bash
+
+env:
+  SCRIPTS_FOLDER: "./interop-infra-commons/scripts/helm"
+
+jobs:  
+  create_apply_mv_job:
+    name: Create apply-mv Kubernetes job
+    runs-on: [ self-hosted, "run_id:${{ inputs.environment }}-${{ github.run_id }}" ]
+    environment: ${{ inputs.environment }}
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29
+
+      - name: Set kubeconfig
+        run: |
+          aws eks update-kubeconfig --region ${{ secrets.AWS_REGION }} --name ${{ secrets.EKS_CLUSTER_NAME }}
+
+      - name: Create job
+        id: create_job
+        run: |
+          set -euo pipefail
+
+          JOB_NAME="interop-be-apply-mv-$(date +%s)"
+          kubectl create job --from=cronjob/interop-be-apply-mv "$JOB_NAME" -n ${{ inputs.environment }}
+          echo "job_name=$JOB_NAME" >> "$GITHUB_OUTPUT"
+    
+      - name: Copy ./views folder to Pod
+        env:
+          TIMEOUT_SECONDS: ${{ inputs.timeout_seconds }}
+        run: |
+          set -euo pipefail
+
+          JOB_NAME="${{ steps.create_job.outputs.job_name }}"
+          echo "Checking Job status..."
+          POD_NAME=$(kubectl get pods -n ${{ inputs.environment }} --selector=batch.kubernetes.io/job-name=$JOB_NAME -o jsonpath="{.items[0].metadata.name}")
+
+          kubectl wait --for=condition=Ready pod/"$POD_NAME" -n ${{ inputs.environment }} --timeout="${TIMEOUT_SECONDS}s"
+          if [ $? -ne 0 ]; then
+            echo "Timeout reached while waiting for the Pod to be running."
+            exit 1
+          fi
+
+          CONTAINER_NAME=$(kubectl get pod "$POD_NAME" -n ${{ inputs.environment }} -o jsonpath="{.spec.containers[0].name}")
+          echo "Pod $POD_NAME is running"
+          echo "Container $CONTAINER_NAME is running in Pod $POD_NAME"
+
+          echo "Copying ./views folder to Pod..."
+          kubectl cp ./views "$POD_NAME":/flyway/views -c "$CONTAINER_NAME" -n ${{ inputs.environment }}
+          if [ $? -ne 0 ]; then
+            echo "Failed to copy ./views folder to Container running in Pod."
+            exit 1
+          else
+            kubectl exec -n ${{ inputs.environment }} "$POD_NAME" -c "$CONTAINER_NAME" -- touch /flyway/views/copy_completed.txt
+            if [ $? -ne 0 ]; then
+              echo "Failed to create /flyway/views/copy_completed.txt file."
+              exit 1
+            else
+              echo "Copy completed successfully."
+            fi
+          fi
