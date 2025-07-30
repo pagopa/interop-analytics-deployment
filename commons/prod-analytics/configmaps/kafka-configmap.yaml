@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: common-kafka
+  namespace: prod-analytics
+data:
+  KAFKA_BROKERS: "b-3.interopplatformevents.2doelu.c2.kafka.eu-south-1.amazonaws.com:9098,b-2.interopplatformevents.2doelu.c2.kafka.eu-south-1.amazonaws.com:9098,b-1.interopplatformevents.2doelu.c2.kafka.eu-south-1.amazonaws.com:9098"
+  KAFKA_AVERAGE_MESSAGE_SIZE_IN_BYTES: "1000"
+  KAFKA_MAX_WAIT_BATCH_MILLIS: "60000"
+  KAFKA_MESSAGES_TO_READ_PER_BATCH: "1000"
+  KAFKA_TOPIC_STARTING_OFFSET: "earliest"
+  APPLICATION_AUDIT_TOPIC: "prod_application.audit"
+  CATALOG_TOPIC: "event-store.prod_catalog.events"
+  AUTHORIZATION_TOPIC: "event-store.prod_authorization.events"
+  AGREEMENT_TOPIC: "event-store.prod_agreement.events"
+  ATTRIBUTE_TOPIC: "event-store.prod_attribute_registry.events"
+  PURPOSE_TOPIC: "event-store.prod_purpose.events"
+  TENANT_TOPIC: "event-store.prod_tenant.events"
+  DELEGATION_TOPIC: "event-store.prod_delegation.events"
+  ESERVICE_TEMPLATE_TOPIC: "event-store.prod_eservice_template.events"

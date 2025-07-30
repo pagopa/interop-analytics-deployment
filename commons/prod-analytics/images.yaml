@@ -1,0 +1,16 @@
+images:
+  microservices:
+    jwt-audit-analytics-writer:
+      tag: "develop"
+    alb-logs-analytics-writer:
+      tag: "develop"
+    application-audit-analytics-writer:
+      tag: "develop"
+    application-audit-archiver:
+      tag: "develop"
+    domains-analytics-writer:
+      tag: "develop"
+  jobs:
+    apply-mv:
+      tag: "11.4.0"
+      digest: "sha256:9d2ff3965b0bafd5f21ff3679ac29c8fcb7190eb79faabb6f0a046e3677b1402"

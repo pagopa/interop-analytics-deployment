@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: common-flyway-infra-schema
+  namespace: prod-analytics
+data:
+  V1__infra_Schema.sql: |-
+    CREATE SCHEMA IF NOT EXISTS infra;
+
+    GRANT USAGE ON SCHEMA infra TO
+      interop_be_alb_logs_analytics_writer_${NAMESPACE};
+
+    GRANT USAGE ON SCHEMA infra TO GROUP
+      readonly_group;
+
+    GRANT CREATE, ALTER, DROP ON SCHEMA infra TO 
+      interop_be_alb_logs_analytics_writer_${NAMESPACE};
+
+    CREATE TABLE IF NOT EXISTS infra.alb_logs_audit (
+      trace_id VARCHAR(255) NOT NULL,
+      type VARCHAR(255) NOT NULL,
+      time VARCHAR(255) NOT NULL,
+      elb VARCHAR(255) NOT NULL,
+      client VARCHAR(50) NOT NULL,
+      target VARCHAR(255),
+      request_processing_time VARCHAR(255) NOT NULL,
+      target_processing_time VARCHAR(255) NOT NULL,
+      response_processing_time VARCHAR(255) NOT NULL,
+      elb_status_code VARCHAR(255) NOT NULL,
+      target_status_code VARCHAR(255),
+      received_bytes BIGINT NOT NULL,
+      sent_bytes BIGINT NOT NULL,
+      request VARCHAR(1024) NOT NULL,
+      user_agent VARCHAR(512),
+      ssl_cipher VARCHAR(255),
+      ssl_protocol VARCHAR(255),
+      target_group_arn VARCHAR(512),
+      domain_name VARCHAR(255),
+      chosen_cert_arn VARCHAR(512),
+      matched_rule_priority VARCHAR(255),
+      request_creation_time VARCHAR(255),
+      actions_executed VARCHAR(512),
+      redirect_url VARCHAR(1024),
+      error_reason VARCHAR(255),
+      target_port_list VARCHAR(1024),
+      target_status_code_list VARCHAR(1024),
+      classification VARCHAR(255),
+      classification_reason VARCHAR(255),
+      conn_trace_id VARCHAR(255)
+    );
+
+    GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE infra.alb_logs_audit TO
+      interop_be_alb_logs_analytics_writer_${NAMESPACE};
