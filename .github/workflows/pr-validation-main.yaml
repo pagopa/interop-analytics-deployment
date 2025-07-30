@@ -61,7 +61,7 @@ jobs:
       matrix:
         environment: [dev-analytics]
     secrets: inherit
-    uses: pagopa/interop-infra-commons/.github/workflows/common-deployment-values-validation.yaml@359432bdb2b61c26fd2a2a79e5aded2da1848809 # v1.27.0
+    uses: pagopa/interop-infra-commons/.github/workflows/common-deployment-values-validation.yaml@df5c25f95f648c00a0a41e7626ed7c74f12454da # v1.27.2
     with:
       infra_commons_tag: ${{ needs.extract-infra-commons-tag.outputs.resolved_infra_commons_tag }}
       environment: ${{ matrix.environment }}
