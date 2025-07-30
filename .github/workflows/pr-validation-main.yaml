@@ -59,7 +59,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        environment: [att, dev, qa, uat]
+        environment: [dev-analytics]
     secrets: inherit
     uses: pagopa/interop-infra-commons/.github/workflows/common-deployment-values-validation.yaml@359432bdb2b61c26fd2a2a79e5aded2da1848809 # v1.27.0
     with:
