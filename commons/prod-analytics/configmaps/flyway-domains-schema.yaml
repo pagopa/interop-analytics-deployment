@@ -8,13 +8,13 @@ data:
     CREATE SCHEMA IF NOT EXISTS domains;
 
     GRANT USAGE ON SCHEMA domains TO 
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     GRANT USAGE ON SCHEMA domains TO GROUP
       readonly_group;
 
     GRANT CREATE, ALTER, DROP ON SCHEMA domains TO 
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE IF NOT EXISTS domains.attribute (
       id VARCHAR(36),
@@ -30,7 +30,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.attribute TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE domains.eservice (
       id VARCHAR(36),
@@ -50,7 +50,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.eservice TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE domains.eservice_descriptor (
       id VARCHAR(36),
@@ -76,7 +76,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.eservice_descriptor TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE domains.eservice_descriptor_template_version_ref (
       eservice_template_version_id VARCHAR(36),
@@ -93,7 +93,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.eservice_descriptor_template_version_ref TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE domains.eservice_descriptor_rejection_reason (
       eservice_id VARCHAR(36) NOT NULL REFERENCES domains.eservice (id),
@@ -106,7 +106,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.eservice_descriptor_rejection_reason TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE domains.eservice_descriptor_interface (
       id VARCHAR(36),
@@ -125,7 +125,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.eservice_descriptor_interface TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE domains.eservice_descriptor_document (
       id VARCHAR(36),
@@ -144,7 +144,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.eservice_descriptor_document TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE domains.eservice_descriptor_attribute (
       attribute_id VARCHAR(36) NOT NULL,
@@ -160,7 +160,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.eservice_descriptor_attribute TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE domains.eservice_risk_analysis (
       id VARCHAR(36),
@@ -176,7 +176,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.eservice_risk_analysis TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE domains.eservice_risk_analysis_answer (
       id VARCHAR(36),
@@ -191,7 +191,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.eservice_risk_analysis_answer TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE domains.agreement (
       id VARCHAR(36),
@@ -214,7 +214,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.agreement TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE domains.agreement_stamp (
       agreement_id VARCHAR(36) NOT NULL REFERENCES domains.agreement(id),
@@ -228,7 +228,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.agreement_stamp TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE domains.agreement_attribute (
       agreement_id VARCHAR(36) NOT NULL REFERENCES domains.agreement(id),
@@ -240,7 +240,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.agreement_attribute TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE domains.agreement_consumer_document (
       id VARCHAR(36),
@@ -256,7 +256,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.agreement_consumer_document TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE domains.agreement_contract (
       id VARCHAR(36),
@@ -272,7 +272,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.agreement_contract TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE IF NOT EXISTS domains.purpose (
       id VARCHAR(36),
@@ -293,7 +293,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.purpose TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE IF NOT EXISTS domains.purpose_risk_analysis_form (
       id VARCHAR(36),
@@ -306,7 +306,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.purpose_risk_analysis_form TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE IF NOT EXISTS domains.purpose_risk_analysis_answer (
       id VARCHAR(36),
@@ -322,7 +322,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.purpose_risk_analysis_answer TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE IF NOT EXISTS domains.purpose_version (
       id VARCHAR(36),
@@ -340,7 +340,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.purpose_version TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE IF NOT EXISTS domains.purpose_version_document (
       id VARCHAR(36),
@@ -355,7 +355,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.purpose_version_document TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE IF NOT EXISTS domains.delegation (
       id VARCHAR(36),
@@ -373,7 +373,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.delegation TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE IF NOT EXISTS domains.delegation_stamp (
       delegation_id VARCHAR(36) NOT NULL REFERENCES domains.delegation (id),
@@ -386,7 +386,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.delegation_stamp TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE IF NOT EXISTS domains.delegation_contract_document (
       id VARCHAR(36),
@@ -404,7 +404,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.delegation_contract_document TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE IF NOT EXISTS domains.tenant (
       id VARCHAR(36),
@@ -423,7 +423,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.tenant TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE IF NOT EXISTS domains.tenant_mail (
       id VARCHAR(2048),
@@ -438,7 +438,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.tenant_mail TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE IF NOT EXISTS domains.tenant_certified_attribute (
       attribute_id VARCHAR(36) NOT NULL,
@@ -451,7 +451,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.tenant_certified_attribute TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE IF NOT EXISTS domains.tenant_declared_attribute (
       attribute_id VARCHAR(36),
@@ -465,7 +465,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.tenant_declared_attribute TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE IF NOT EXISTS domains.tenant_verified_attribute (
       attribute_id VARCHAR(36),
@@ -477,7 +477,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.tenant_verified_attribute TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE IF NOT EXISTS domains.tenant_verified_attribute_verifier (
       tenant_id VARCHAR(36) NOT NULL REFERENCES domains.tenant (id),
@@ -494,7 +494,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.tenant_verified_attribute_verifier TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE IF NOT EXISTS domains.tenant_verified_attribute_revoker (
       tenant_id VARCHAR(36) NOT NULL REFERENCES domains.tenant (id),
@@ -512,7 +512,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.tenant_verified_attribute_revoker TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE IF NOT EXISTS domains.tenant_feature (
       tenant_id VARCHAR(36) NOT NULL REFERENCES domains.tenant (id),
@@ -525,7 +525,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.tenant_feature TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE IF NOT EXISTS domains.client (
       id VARCHAR(36),
@@ -541,7 +541,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.client TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE IF NOT EXISTS domains.client_user (
       metadata_version INTEGER NOT NULL,
@@ -552,7 +552,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.client_user TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE IF NOT EXISTS domains.client_purpose (
       metadata_version INTEGER NOT NULL,
@@ -563,7 +563,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.client_purpose TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE IF NOT EXISTS domains.client_key (
       metadata_version INTEGER NOT NULL,
@@ -581,7 +581,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.client_key TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE IF NOT EXISTS domains.producer_keychain (
       id VARCHAR(36),
@@ -595,7 +595,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.producer_keychain TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE IF NOT EXISTS domains.producer_keychain_user (
       metadata_version INTEGER NOT NULL,
@@ -606,7 +606,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.producer_keychain_user TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE IF NOT EXISTS domains.producer_keychain_eservice (
       metadata_version INTEGER NOT NULL,
@@ -617,7 +617,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.producer_keychain_eservice TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE IF NOT EXISTS domains.producer_keychain_key (
       metadata_version INTEGER NOT NULL,
@@ -634,7 +634,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.producer_keychain_key TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE IF NOT EXISTS domains.eservice_template (
       id VARCHAR(36),
@@ -652,7 +652,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.eservice_template TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE IF NOT EXISTS domains.eservice_template_version (
       id VARCHAR(36),
@@ -674,7 +674,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.eservice_template_version TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE IF NOT EXISTS domains.eservice_template_version_interface (
       id VARCHAR(36),
@@ -692,7 +692,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.eservice_template_version_interface TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE IF NOT EXISTS domains.eservice_template_version_document (
       id VARCHAR(36),
@@ -710,7 +710,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.eservice_template_version_document TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE IF NOT EXISTS domains.eservice_template_version_attribute (
       attribute_id VARCHAR(36) NOT NULL,
@@ -725,7 +725,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.eservice_template_version_attribute TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE IF NOT EXISTS domains.eservice_template_risk_analysis (
       id VARCHAR(36),
@@ -741,7 +741,7 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.eservice_template_risk_analysis TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;
 
     CREATE TABLE IF NOT EXISTS domains.eservice_template_risk_analysis_answer (
       id VARCHAR(36),
@@ -756,4 +756,4 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.eservice_template_risk_analysis_answer TO
-      ${NAMESPACE}_interop_be_domains_analytics_writer;
+      ${NAMESPACE}_domains_analytics_writer_user;

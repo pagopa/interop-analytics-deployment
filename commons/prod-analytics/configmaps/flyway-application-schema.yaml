@@ -8,13 +8,13 @@ data:
     CREATE SCHEMA IF NOT EXISTS application;
 
     GRANT USAGE ON SCHEMA application TO
-      ${NAMESPACE}_interop_be_application_audit_analytics_writer;
+      ${NAMESPACE}_application_audit_analytics_writer_user;
 
     GRANT USAGE ON SCHEMA application TO GROUP
       readonly_group;
 
     GRANT CREATE, ALTER, DROP ON SCHEMA application TO 
-      ${NAMESPACE}_interop_be_application_audit_analytics_writer;
+      ${NAMESPACE}_application_audit_analytics_writer_user;
 
     CREATE TABLE IF NOT EXISTS application.begin_request_audit (
       correlation_id VARCHAR(36),
@@ -97,13 +97,13 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE application.begin_request_audit TO
-      ${NAMESPACE}_interop_be_application_audit_analytics_writer;
+      ${NAMESPACE}_application_audit_analytics_writer_user;
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE application.end_request_audit TO
-      ${NAMESPACE}_interop_be_application_audit_analytics_writer;
+      ${NAMESPACE}_application_audit_analytics_writer_user;
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE application.end_request_session_token_exchange_audit TO
-      ${NAMESPACE}_interop_be_application_audit_analytics_writer;
+      ${NAMESPACE}_application_audit_analytics_writer_user;
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE application.end_request_auth_server_audit TO
-      ${NAMESPACE}_interop_be_application_audit_analytics_writer;
+      ${NAMESPACE}_application_audit_analytics_writer_user;
