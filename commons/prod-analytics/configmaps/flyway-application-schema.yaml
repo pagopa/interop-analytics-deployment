@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: common-flyway-application-schema
-  namespace: dev-analytics
+  namespace: prod-analytics
 data:
   V1__application_Schema.sql: |-
     CREATE SCHEMA IF NOT EXISTS application;
@@ -93,8 +93,7 @@ data:
       organization_id VARCHAR(36),
       http_response_status INTEGER NOT NULL,
       execution_time_ms BIGINT NOT NULL,
-      client_id VARCHAR(36),
-      client_kind VARCHAR(255)
+      client_id VARCHAR(36)
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE application.begin_request_audit TO
