@@ -28,6 +28,8 @@ cronjob:
         flyway migrate
 
   env:
+    FLYWAY_PLACEHOLDER_REPLACEMENT: true
+    FLYWAY_PLACEHOLDERS_NAMESPACE: "prod"
     FLYWAY_URL: jdbc:redshift://$(DB_HOST):$(DB_PORT)/$(DB_NAME)
     FLYWAY_SCHEMAS: "views"
     FLYWAY_LOCATIONS: "filesystem:/flyway/views"
