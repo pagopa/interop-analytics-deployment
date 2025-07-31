@@ -1,14 +1,14 @@
 name: "interop-be-jwt-audit-analytics-writer"
 
 serviceAccount:
-  roleArn: "arn:aws:iam::505630707203:role/interop-be-jwt-audit-analytics-writer-prod"
+  roleArn: "arn:aws:iam::697818730278:role/interop-be-jwt-audit-analytics-writer-prod"
 
 service:
   create: false
 
 configmap:
   SERVICE_NAME: pagopa-interop-jwt-audit-analytics-writer
-  SQS_NOTIFICATION_ENDPOINT: https://sqs.eu-south-1.amazonaws.com/505630707203/interop-analytics-jwt-audit-prod
+  SQS_NOTIFICATION_ENDPOINT: https://sqs.eu-south-1.amazonaws.com/697818730278/interop-analytics-jwt-audit-prod
   S3_BUCKET: interop-generated-jwt-details-prod-es1
   BATCH_SIZE: 500
 

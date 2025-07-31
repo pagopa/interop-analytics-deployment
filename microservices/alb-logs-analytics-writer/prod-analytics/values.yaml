@@ -1,14 +1,14 @@
 name: "interop-be-alb-logs-analytics-writer"
 
 serviceAccount:
-  roleArn: "arn:aws:iam::505630707203:role/interop-be-alb-logs-analytics-writer-prod"
+  roleArn: "arn:aws:iam::697818730278:role/interop-be-alb-logs-analytics-writer-prod"
 
 service:
   create: false
 
 configmap:
   SERVICE_NAME: pagopa-interop-alb-logs-analytics-writer
-  SQS_NOTIFICATION_ENDPOINT: https://sqs.eu-south-1.amazonaws.com/505630707203/interop-analytics-alb-logs-prod
+  SQS_NOTIFICATION_ENDPOINT: https://sqs.eu-south-1.amazonaws.com/697818730278/interop-analytics-alb-logs-prod
   S3_BUCKET: interop-alb-logs-prod-es1
 
 deployment:

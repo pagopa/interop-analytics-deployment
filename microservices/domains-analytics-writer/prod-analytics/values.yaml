@@ -1,7 +1,7 @@
 name: "interop-be-domains-analytics-writer"
 
 serviceAccount:
-  roleArn: "arn:aws:iam::505630707203:role/interop-be-domains-analytics-writer-prod"
+  roleArn: "arn:aws:iam::697818730278:role/interop-be-domains-analytics-writer-prod"
 
 service:
   create: false
