@@ -1,0 +1,13 @@
+images:
+  microservices:
+    jwt-audit-analytics-writer:
+      tag: "develop"
+    alb-logs-analytics-writer:
+      tag: "develop"
+    application-audit-analytics-writer:
+      tag: "develop"
+    application-audit-archiver:
+      tag: "develop"
+    domains-analytics-writer:
+      tag: "develop"
+  jobs:
