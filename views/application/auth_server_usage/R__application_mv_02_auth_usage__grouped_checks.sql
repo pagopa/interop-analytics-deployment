@@ -1,7 +1,7 @@
 CREATE SCHEMA IF NOT EXISTS views;
 
 GRANT USAGE ON SCHEMA views TO GROUP readonly_group;
-GRANT USAGE ON SCHEMA views TO interop_analytics_quicksight_user;
+GRANT USAGE ON SCHEMA views TO ${NAMESPACE}_quicksight_user;
 
 DROP MATERIALIZED VIEW IF EXISTS views.mv_02_auth_usage__grouped_checks CASCADE;
 
@@ -24,5 +24,5 @@ group by
   epoch_of_the_second_when_the_minute_slot_is_started
 ;
 
-GRANT SELECT ON TABLE views.mv_02_auth_usage__grouped_checks TO interop_analytics_quicksight_user;
+GRANT SELECT ON TABLE views.mv_02_auth_usage__grouped_checks TO ${NAMESPACE}_quicksight_user;
 

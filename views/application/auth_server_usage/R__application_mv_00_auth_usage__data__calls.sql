@@ -1,7 +1,7 @@
 CREATE SCHEMA IF NOT EXISTS views;
 
 GRANT USAGE ON SCHEMA views TO GROUP readonly_group;
-GRANT USAGE ON SCHEMA views TO interop_analytics_quicksight_user;
+GRANT USAGE ON SCHEMA views TO ${NAMESPACE}_quicksight_user;
 
 DROP MATERIALIZED VIEW IF EXISTS views.mv_00_auth_usage__data__calls CASCADE;
 
@@ -33,5 +33,5 @@ group by
   client_name
 ;
 
-GRANT SELECT ON TABLE views.mv_00_auth_usage__data__ko_calls TO interop_analytics_quicksight_user;
+GRANT SELECT ON TABLE views.mv_00_auth_usage__data__ko_calls TO ${NAMESPACE}_quicksight_user;
 
