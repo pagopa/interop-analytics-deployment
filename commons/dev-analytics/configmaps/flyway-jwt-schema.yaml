@@ -60,3 +60,9 @@ data:
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE jwt.client_assertion_audit TO
       ${NAMESPACE}_jwt_audit_analytics_writer_user;
+
+  V1.0.1__Client_Assertion_Id_resize.sql: |-
+    ALTER TABLE jwt.generated_token_audit
+      ALTER COLUMN client_assertion_jwt_id TYPE VARCHAR(255) NOT NULL;
+    ALTER TABLE jwt.client_assertion_audit
+      ALTER COLUMN jwt_id TYPE VARCHAR(255) NOT NULL;
