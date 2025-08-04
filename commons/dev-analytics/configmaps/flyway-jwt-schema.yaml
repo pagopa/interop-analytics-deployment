@@ -63,6 +63,6 @@ data:
 
   V1.0.1__Client_Assertion_Id_resize.sql: |-
     ALTER TABLE jwt.generated_token_audit
-      ALTER COLUMN client_assertion_jwt_id TYPE VARCHAR(255) NOT NULL;
+      ALTER COLUMN client_assertion_jwt_id TYPE VARCHAR(255);
     ALTER TABLE jwt.client_assertion_audit
-      ALTER COLUMN jwt_id TYPE VARCHAR(255) NOT NULL;
+      ALTER COLUMN jwt_id TYPE VARCHAR(255);
