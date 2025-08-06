@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: common-read-model-sql
-  namespace: dev
+  namespace: dev-analytics
 data:
   DB_HOST_RO: "interop-platform-data-dev.cluster-ro-cevisn7oellx.eu-south-1.rds.amazonaws.com"
   DB_PORT: "5432"
