@@ -13,7 +13,7 @@ data:
     GRANT USAGE ON SCHEMA domains TO GROUP
       readonly_group;
 
-    GRANT USAGE ON SCHEMA domains TO GROUP
+    GRANT USAGE ON SCHEMA domains TO
       ${NAMESPACE}_domains_readmodel_checker_user;
 
     GRANT CREATE, ALTER, DROP ON SCHEMA domains TO 
