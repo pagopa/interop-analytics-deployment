@@ -32,3 +32,5 @@ cronjob:
   envFromSecrets:
     ANALYTICS_SQL_DB_USERNAME: "kpi-domains-readmodel-checker-user.username"
     ANALYTICS_SQL_DB_PASSWORD: "kpi-domains-readmodel-checker-user.password"
+    READMODEL_SQL_DB_USERNAME: "kpi-domains-readmodel-checker-user.username"
+    READMODEL_SQL_DB_PASSWORD: "kpi-domains-readmodel-checker-user.password"
