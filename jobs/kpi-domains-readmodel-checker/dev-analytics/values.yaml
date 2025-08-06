@@ -30,7 +30,7 @@ cronjob:
     READMODEL_SQL_DB_SCHEMA_TENANT: "common-read-model-sql.DB_SCHEMA_TENANT"
 
   envFromSecrets:
-    ANALYTICS_SQL_DB_USERNAME: "kpi-domains-readmodel-checker-user.username"
-    ANALYTICS_SQL_DB_PASSWORD: "kpi-domains-readmodel-checker-user.password"
-    READMODEL_SQL_DB_USERNAME: "kpi-domains-readmodel-checker-user.username"
-    READMODEL_SQL_DB_PASSWORD: "kpi-domains-readmodel-checker-user.password"
+    ANALYTICS_SQL_DB_USERNAME: "domains-readmodel-checker-user.username"
+    ANALYTICS_SQL_DB_PASSWORD: "domains-readmodel-checker-user.password"
+    READMODEL_SQL_DB_USERNAME: "redshift-domains-readmodel-checker-user.username"
+    READMODEL_SQL_DB_PASSWORD: "redshift-domains-readmodel-checker-user.password"
