@@ -13,6 +13,9 @@ data:
     GRANT USAGE ON SCHEMA domains TO GROUP
       readonly_group;
 
+    GRANT USAGE ON SCHEMA domains TO
+      ${NAMESPACE}_domains_readmodel_checker_user;
+
     GRANT CREATE, ALTER, DROP ON SCHEMA domains TO 
       ${NAMESPACE}_domains_analytics_writer_user;
 
@@ -757,3 +760,6 @@ data:
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.eservice_template_risk_analysis_answer TO
       ${NAMESPACE}_domains_analytics_writer_user;
+
+    GRANT SELECT ON ALL TABLES IN SCHEMA domains TO
+      ${NAMESPACE}_domains_readmodel_checker_user;
