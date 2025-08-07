@@ -758,7 +758,7 @@ data:
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.eservice_template_risk_analysis_answer TO
       ${NAMESPACE}_domains_analytics_writer_user;
 
-  V1.0.1__domains_Schema.sql: |-
+  V2__grant_domains_readmodel_checker_user.sql: |-
     GRANT USAGE ON SCHEMA domains TO
       ${NAMESPACE}_domains_readmodel_checker_user;
 
