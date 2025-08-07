@@ -4,7 +4,7 @@ cronjob:
   schedule: "0 2 * * *"
   timeZone: "Europe/Rome"
   failedJobsHistoryLimit: 2
-  successfulJobsHistoryLimit: 0
+  successfulJobsHistoryLimit: 1
   restartPolicy: OnFailure
 
   envFromConfigmaps:
