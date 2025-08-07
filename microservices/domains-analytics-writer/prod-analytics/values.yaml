@@ -1,13 +1,13 @@
 name: "interop-be-domains-analytics-writer"
 
 serviceAccount:
-  roleArn: "arn:aws:iam::505630707203:role/interop-be-domains-analytics-writer-dev"
+  roleArn: "arn:aws:iam::697818730278:role/interop-be-domains-analytics-writer-prod"
 
 service:
   create: false
 
 configmap:
-  SERVICE_NAME: pagopa-interop-domains-analytics-writer-dev
+  SERVICE_NAME: pagopa-interop-domains-analytics-writer-prod
   KAFKA_GROUP_ID: "{{.Values.namespace}}-domains-analytics-writer"
 
 deployment:
@@ -19,7 +19,7 @@ deployment:
     env:
       FLYWAY_CREATE_SCHEMAS: true
       FLYWAY_PLACEHOLDER_REPLACEMENT: true
-      FLYWAY_PLACEHOLDERS_NAMESPACE: "dev"
+      FLYWAY_PLACEHOLDERS_NAMESPACE: "prod"
       FLYWAY_URL: jdbc:redshift://$(DB_HOST):$(DB_PORT)/$(DB_NAME)
       FLYWAY_SCHEMAS: "domains"
     envFromConfigmaps:

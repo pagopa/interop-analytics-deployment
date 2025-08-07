@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: common-flyway-infra-schema
-  namespace: dev-analytics
+  namespace: prod-analytics
 data:
   V1__infra_Schema.sql: |-
     CREATE SCHEMA IF NOT EXISTS infra;

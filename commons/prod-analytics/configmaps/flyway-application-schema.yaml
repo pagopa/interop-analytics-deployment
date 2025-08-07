@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: common-flyway-application-schema
-  namespace: dev-analytics
+  namespace: prod-analytics
 data:
   V1__application_Schema.sql: |-
     CREATE SCHEMA IF NOT EXISTS application;

@@ -1,7 +1,7 @@
 CREATE SCHEMA IF NOT EXISTS views;
 
 GRANT USAGE ON SCHEMA views TO GROUP readonly_group;
-GRANT USAGE ON SCHEMA views TO interop_analytics_quicksight_user;
+GRANT USAGE ON SCHEMA views TO ${NAMESPACE}_quicksight_user;
 
 DROP MATERIALIZED VIEW IF EXISTS views.mv_02_eservice_without_token__final CASCADE;
 
@@ -26,7 +26,7 @@ group by
   producer_name
 ;
 
-GRANT SELECT ON TABLE views.mv_02_eservice_without_token__final TO interop_analytics_quicksight_user;
+GRANT SELECT ON TABLE views.mv_02_eservice_without_token__final TO ${NAMESPACE}_quicksight_user;
 
 COMMENT ON VIEW views.mv_02_eservice_without_token__final 
 is 'This view show how many unused eservice each tenant has. \n Traffic generated from producer is exluded. \n Only deleted eservice are excluded. '

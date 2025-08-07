@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: common-redshift
+  namespace: prod-analytics
+data:
+  DB_HOST: "interop-analytics-prod.cwexxa0fwsr9.eu-south-1.redshift.amazonaws.com"
+  DB_PORT: "5439"
+  DB_NAME: "interop_prod"
+  DB_USE_SSL: "true"
+  DB_JWT_SCHEMA: "jwt"
+  DB_DOMAINS_SCHEMA: "domains"
+  DB_ALB_LOGS_SCHEMA: "infra"
+  DB_APPLICATION_SCHEMA: "application"

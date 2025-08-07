@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: common-flyway-jwt-schema
-  namespace: dev-analytics
+  namespace: prod-analytics
 data:
   V1__jwt_Schema.sql: |-
     CREATE SCHEMA IF NOT EXISTS jwt;
