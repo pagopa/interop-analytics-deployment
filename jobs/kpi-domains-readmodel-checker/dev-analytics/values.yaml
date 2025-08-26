@@ -1,7 +1,7 @@
 name: "interop-be-kpi-domains-readmodel-checker"
 
 cronjob:
-  schedule: "0 2 * * *"
+  schedule: "0 20 * * *"
   timeZone: "Europe/Rome"
   failedJobsHistoryLimit: 2
   successfulJobsHistoryLimit: 1
