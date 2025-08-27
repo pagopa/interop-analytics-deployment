@@ -2,7 +2,12 @@ CREATE SCHEMA IF NOT EXISTS sub_views;
 
 GRANT USAGE ON SCHEMA sub_views TO GROUP readonly_group;
 
-
+-- - This procedure need to persist information for later use by QuickSight user; that user has
+--   only select rights. For this reason it use a table to save its result.
+--   https://documentation.red-gate.com/fd/repeatable-migrations-273973335.html assert that versioned
+--   migrations are executed before repeatable ones: this ensure the table presence.
+-- - This procedure has SECURITY DEFINER flag so we are not required to give INSERT and DELETE
+--   grants on table views.last_mv_refresh_info to the mv_refresher user.
 CREATE OR REPLACE PROCEDURE sub_views.update_last_mv_refresh_info(
   schema_list IN VARCHAR(MAX)
 )
@@ -66,4 +71,3 @@ SECURITY DEFINER;
 
 GRANT EXECUTE ON procedure sub_views.update_last_mv_refresh_info( schema_list IN VARCHAR(MAX) ) 
       TO ${NAMESPACE}_mv_refresher_user;
-

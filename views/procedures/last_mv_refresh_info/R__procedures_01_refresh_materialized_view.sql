@@ -2,6 +2,11 @@ CREATE SCHEMA IF NOT EXISTS sub_views;
 
 GRANT USAGE ON SCHEMA sub_views TO GROUP readonly_group;
 
+-- - This procedure has SECURITY DEFINER flag because
+--   "Only the owner of a materialized view can perform a REFRESH MATERIALIZED VIEW"
+--   See https://docs.aws.amazon.com/redshift/latest/dg/materialized-view-refresh-sql-command.html#mv_REFRESH_MARTERIALIZED_VIEW_usage
+-- - We can't change view owner to keep flyway migration working.
+-- - For security reason both flyway and refresher user can't be "superusers"
 
 CREATE OR REPLACE PROCEDURE sub_views.refresh_materialized_view(schema_name VARCHAR, view_name VARCHAR)
 AS $$
