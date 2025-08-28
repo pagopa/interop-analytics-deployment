@@ -32,6 +32,10 @@ BEGIN
             SVV_MV_INFO
           where
               is_stale = 't'
+            -- - I need to ask refresh also to "auto-refresh-materialized-views" to ensure refresh "now" 
+            --   and not "when redshift want"; just in case an higher level materialized view depend on it
+            --   and need very fresh data.
+            -- AND autorefresh = 'f'  -- Intentionally commented out and kept for documentation purpose
             and 
               -- Split string to arrays and use them as second parameter of an in operator is too complex
               -- I use some string matching
