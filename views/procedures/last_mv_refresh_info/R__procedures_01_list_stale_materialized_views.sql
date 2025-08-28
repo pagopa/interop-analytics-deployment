@@ -5,7 +5,7 @@ GRANT USAGE ON SCHEMA sub_views TO GROUP readonly_group;
 -- - This procedure need to return a result set to a lambda that use RedShift-data-API. We prefer
 --   to use a temporary table and do not use cursors. This procedure must be called with
 --   ExecuteBatchStatement API call with two statement:
---      CALL sub_views.list_need_refresh_views( 'views, sub_views' );
+--      CALL sub_views.list_stale_materialized_views( 'views, sub_views' );
 --      SELECT mv_schema, mv_name, mv_level FROM list_need_refresh_views_results ORDER BY mv_level
 -- - This procedure has SECURITY DEFINER flag because only the
 --   materialized views owner or superuser can see information
@@ -14,7 +14,7 @@ GRANT USAGE ON SCHEMA sub_views TO GROUP readonly_group;
 
 -- Save result in temporary table list_need_refresh_views_results
 -- Do not use concurrently in the same session
-CREATE OR REPLACE PROCEDURE sub_views.list_need_refresh_views(schema_list IN VARCHAR(MAX) )
+CREATE OR REPLACE PROCEDURE sub_views.list_stale_materialized_views(schema_list IN VARCHAR(MAX) )
 AS $$
 BEGIN
   
@@ -53,5 +53,5 @@ END;
 $$ LANGUAGE plpgsql
 SECURITY DEFINER;
 
-GRANT EXECUTE ON procedure sub_views.list_need_refresh_views(schema_list IN VARCHAR(MAX) ) 
+GRANT EXECUTE ON procedure sub_views.list_stale_materialized_views(schema_list IN VARCHAR(MAX) ) 
       TO ${NAMESPACE}_mv_refresher_user;
