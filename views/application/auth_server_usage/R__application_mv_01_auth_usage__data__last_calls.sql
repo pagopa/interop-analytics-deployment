@@ -9,6 +9,8 @@ DROP MATERIALIZED VIEW IF EXISTS views.mv_01_auth_usage__data__last_calls CASCAD
 --  Last 5 entire minutes. At 14:05:06 this interval is [ 14:00:00, 14:05:00 [
 --  Last 15 entire minutes. At 14:05:06 this interval is [ 13:50:00, 14:05:00 [
 --  Last 30 entire minutes. At 14:05:06 this interval is [ 13:35:00, 14:05:00 [
+-- N.B.: this view in not an "incremental refresh one" it will be recomputed at 
+--       every "refresh lambda" execution
 CREATE MATERIALIZED VIEW views.mv_01_auth_usage__data__last_calls as
   select 
     consumer_name,
