@@ -5,7 +5,7 @@ GRANT USAGE ON SCHEMA views TO ${NAMESPACE}_quicksight_user;
 
 DROP MATERIALIZED VIEW IF EXISTS views.mv_02_auth_usage__grouped_checks CASCADE;
 
-CREATE MATERIALIZED VIEW views.mv_02_auth_usage__grouped_checks AUTO REFRESH YES as
+CREATE MATERIALIZED VIEW views.mv_02_auth_usage__grouped_checks as
 select
   -- Every token must be related to a call
   -- We can't use outer join and check for relation null-ness;

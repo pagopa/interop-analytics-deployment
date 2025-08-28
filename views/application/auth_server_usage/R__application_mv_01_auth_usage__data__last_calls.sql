@@ -6,10 +6,10 @@ GRANT USAGE ON SCHEMA views TO ${NAMESPACE}_quicksight_user;
 DROP MATERIALIZED VIEW IF EXISTS views.mv_01_auth_usage__data__last_calls CASCADE;
 
 -- Repeat the same query with three time different time period 
---  Last 5 entire minutes. At 14:05:06 ithis interval is [ 14:00:00, 14:05:00 [
---  Last 15 entire minutes. At 14:05:06 ithis interval is [ 13:50:00, 14:05:00 [
---  Last 30 entire minutes. At 14:05:06 ithis interval is [ 13:35:00, 14:05:00 [
-CREATE MATERIALIZED VIEW views.mv_01_auth_usage__data__last_calls AUTO REFRESH YES as
+--  Last 5 entire minutes. At 14:05:06 this interval is [ 14:00:00, 14:05:00 [
+--  Last 15 entire minutes. At 14:05:06 this interval is [ 13:50:00, 14:05:00 [
+--  Last 30 entire minutes. At 14:05:06 this interval is [ 13:35:00, 14:05:00 [
+CREATE MATERIALIZED VIEW views.mv_01_auth_usage__data__last_calls as
   select 
     consumer_name,
     client_name,
