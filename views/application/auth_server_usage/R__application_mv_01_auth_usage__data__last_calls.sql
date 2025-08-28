@@ -3,7 +3,7 @@ CREATE SCHEMA IF NOT EXISTS views;
 GRANT USAGE ON SCHEMA views TO GROUP readonly_group;
 GRANT USAGE ON SCHEMA views TO ${NAMESPACE}_quicksight_user;
 
-DROP MATERIALIZED VIEW IF EXISTS views.mv_01_auth_usage__data__last_ko_calls CASCADE;
+DROP MATERIALIZED VIEW IF EXISTS views.mv_01_auth_usage__data__last_calls CASCADE;
 
 -- Repeat the same query with three time different time period 
 --  Last 5 entire minutes. At 14:05:06 ithis interval is [ 14:00:00, 14:05:00 [
@@ -77,5 +77,5 @@ UNION ALL
     client_name
 ;
 
-GRANT SELECT ON TABLE views.mv_01_auth_usage__data__last_ko_calls TO ${NAMESPACE}_quicksight_user;
+GRANT SELECT ON TABLE views.mv_01_auth_usage__data__last_calls TO ${NAMESPACE}_quicksight_user;
 

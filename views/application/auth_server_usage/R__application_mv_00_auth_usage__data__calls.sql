@@ -33,5 +33,5 @@ group by
   client_name
 ;
 
-GRANT SELECT ON TABLE views.mv_00_auth_usage__data__ko_calls TO ${NAMESPACE}_quicksight_user;
+GRANT SELECT ON TABLE views.mv_00_auth_usage__data__calls TO ${NAMESPACE}_quicksight_user;
 
