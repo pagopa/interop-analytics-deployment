@@ -872,7 +872,7 @@ data:
       RENAME TO purpose_template_eservice_descriptor;
 
     ALTER TABLE domains.purpose_template_eservice_descriptor
-      ADD COLUMN IF NOT EXISTS created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+      ADD COLUMN IF NOT EXISTS created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT,
       ADD COLUMN IF NOT EXISTS deleted BOOLEAN;
 
     ALTER TABLE domains.purpose_template_risk_analysis_form
