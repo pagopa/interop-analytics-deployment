@@ -857,3 +857,42 @@ data:
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.purpose_template_risk_analysis_answer_annotation_document TO
           ${NAMESPACE}_domains_analytics_writer_user;
+  V3.1__fix_purpose_template_feature_columns.sql: |-
+    ALTER TABLE domains.purpose_template
+    RENAME COLUMN name TO target_description;
+
+    ALTER TABLE domains.purpose_template
+      RENAME COLUMN target TO target_tenant_kind;
+
+    ALTER TABLE domains.purpose_template
+      ADD COLUMN IF NOT EXISTS deleted BOOLEAN;
+
+    ALTER TABLE domains.purpose_template_eservice_descriptor_version
+      RENAME TO purpose_template_eservice_descriptor;
+
+    ALTER TABLE domains.purpose_template_eservice_descriptor
+      ADD COLUMN IF NOT EXISTS created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+      ADD COLUMN IF NOT EXISTS deleted BOOLEAN;
+
+    ALTER TABLE domains.purpose_template_risk_analysis_form
+      ADD COLUMN IF NOT EXISTS deleted BOOLEAN;
+
+    ALTER TABLE domains.purpose_template_risk_analysis_answer
+      ALTER COLUMN value TYPE VARCHAR(65535) USING array_to_string(value, ','),
+      ALTER COLUMN suggested_values TYPE VARCHAR(65535) USING array_to_string(suggested_values, ',');
+
+    ALTER TABLE domains.purpose_template_risk_analysis_answer
+      DROP COLUMN IF EXISTS assistive_text;
+
+    ALTER TABLE domains.purpose_template_risk_analysis_answer
+      ADD COLUMN IF NOT EXISTS deleted BOOLEAN;
+
+    ALTER TABLE domains.purpose_template_risk_analysis_answer_annotation
+      DROP COLUMN IF EXISTS urls;
+
+    ALTER TABLE domains.purpose_template_risk_analysis_answer_annotation
+      ADD COLUMN IF NOT EXISTS deleted BOOLEAN;
+
+    ALTER TABLE domains.purpose_template_risk_analysis_answer_annotation_document
+      ADD COLUMN IF NOT EXISTS pretty_name VARCHAR(2048),
+      ADD COLUMN IF NOT EXISTS deleted BOOLEAN;
