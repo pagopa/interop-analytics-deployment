@@ -854,6 +854,7 @@ data:
       annotation_id VARCHAR(36) NOT NULL REFERENCES domains.purpose_template_risk_analysis_answer_annotation (id),
       "name" VARCHAR(2048) NOT NULL,
       pretty_name VARCHAR(2048), 
+      pretty_name VARCHAR(2048), 
       content_type VARCHAR(2048) NOT NULL,
       "path" VARCHAR(2048) NOT NULL,
       created_at TIMESTAMP WITH TIME ZONE NOT NULL,
@@ -863,42 +864,3 @@ data:
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.purpose_template_risk_analysis_answer_annotation_document TO
           ${NAMESPACE}_domains_analytics_writer_user;
-  V3.1__fix_purpose_template_feature_columns.sql: |-
-    ALTER TABLE domains.purpose_template
-    RENAME COLUMN name TO target_description;
-
-    ALTER TABLE domains.purpose_template
-      RENAME COLUMN target TO target_tenant_kind;
-
-    ALTER TABLE domains.purpose_template
-      ADD COLUMN deleted BOOLEAN;
-
-    ALTER TABLE domains.purpose_template_eservice_descriptor_version
-      RENAME TO purpose_template_eservice_descriptor;
-
-    ALTER TABLE domains.purpose_template_eservice_descriptor
-      ADD COLUMN created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT,
-      ADD COLUMN deleted BOOLEAN;
-
-    ALTER TABLE domains.purpose_template_risk_analysis_form
-      ADD COLUMN deleted BOOLEAN;
-
-    ALTER TABLE domains.purpose_template_risk_analysis_answer
-      ALTER COLUMN value TYPE VARCHAR(65535) USING array_to_string(value, ','),
-      ALTER COLUMN suggested_values TYPE VARCHAR(65535) USING array_to_string(suggested_values, ',');
-
-    ALTER TABLE domains.purpose_template_risk_analysis_answer
-      DROP COLUMN assistive_text;
-
-    ALTER TABLE domains.purpose_template_risk_analysis_answer
-      ADD COLUMN deleted BOOLEAN;
-
-    ALTER TABLE domains.purpose_template_risk_analysis_answer_annotation
-      DROP COLUMN urls;
-
-    ALTER TABLE domains.purpose_template_risk_analysis_answer_annotation
-      ADD COLUMN deleted BOOLEAN;
-
-    ALTER TABLE domains.purpose_template_risk_analysis_answer_annotation_document
-      ADD COLUMN pretty_name VARCHAR(2048),
-      ADD COLUMN deleted BOOLEAN;
