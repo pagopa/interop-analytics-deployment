@@ -10,7 +10,7 @@ DROP MATERIALIZED VIEW IF EXISTS sub_views.mv_00_daily_calls_overbooking__raw_da
 --  - purpose_version.daily_calls
 -- for aggregation in multiple "higher level" materialized view
 
-CREATE MATERIALIZED VIEW sub_views.mv_00_daily_calls_overbooking__raw_data AUTO REFRESH YES AS 
+CREATE MATERIALIZED VIEW sub_views.mv_00_daily_calls_overbooking__raw_data AUTO REFRESH NO AS 
 select 
   t_p."name" as producer_name,
   ed.eservice_id,

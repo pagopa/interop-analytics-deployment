@@ -5,7 +5,7 @@ GRANT USAGE ON SCHEMA views TO ${NAMESPACE}_quicksight_user;
 
 DROP MATERIALIZED VIEW IF EXISTS views.mv_00_auth_usage__data__calls CASCADE;
 
-CREATE MATERIALIZED VIEW views.mv_00_auth_usage__data__calls AUTO REFRESH YES as
+CREATE MATERIALIZED VIEW views.mv_00_auth_usage__data__calls AUTO REFRESH NO as
 select 
   -- Compute the start time and use that for time bucketing.
   -- Bucket time by minutes and remove the millisecond factor from the epoch.

@@ -12,7 +12,7 @@ DROP MATERIALIZED VIEW IF EXISTS sub_views.mv_00_client_without_token__raw_data 
 --  can assume 0 or 1 value. Making sum of the usage_weight field as a result 
 --  we can assume that clients with total usage_weight equals 0 are clients 
 --  never used to detach some JWT.
-CREATE MATERIALIZED VIEW sub_views.mv_00_client_without_token__raw_data AUTO REFRESH YES AS 
+CREATE MATERIALIZED VIEW sub_views.mv_00_client_without_token__raw_data AUTO REFRESH NO AS 
   select 
     t.name as consumer_name,
     c.id as client_id,

@@ -14,7 +14,7 @@ DROP MATERIALIZED VIEW IF EXISTS sub_views.mv_00_eservice_without_token__raw_dat
 --  can assume 0 or 1 value. Making sum of the usage_weight field as a result 
 --  we can assume that eservices with total usage_weight equals 0 are eservices
 --  never invoked by tenants different from the eservice owner.
-CREATE MATERIALIZED VIEW sub_views.mv_00_eservice_without_token__raw_data AUTO REFRESH YES AS 
+CREATE MATERIALIZED VIEW sub_views.mv_00_eservice_without_token__raw_data AUTO REFRESH NO AS 
   select 
     t.name as producer_name,
     e.id as eservice_id,

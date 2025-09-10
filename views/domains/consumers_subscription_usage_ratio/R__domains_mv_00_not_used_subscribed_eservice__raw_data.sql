@@ -11,7 +11,7 @@ DROP MATERIALIZED VIEW IF EXISTS sub_views.mv_00_not_used_subscribed_eservice__r
 --  one for each JWT was authorizing that eservice; each record has required_jwt field that 
 --  can assume 0 or 1 value, 0 if the record is not related to any JWT. The result is
 --  that eservices with sum(required_jwt) == 0 are never used.
-CREATE MATERIALIZED VIEW sub_views.mv_00_not_used_subscribed_eservice__raw_data AUTO REFRESH YES AS
+CREATE MATERIALIZED VIEW sub_views.mv_00_not_used_subscribed_eservice__raw_data AUTO REFRESH NO AS
 select
   t.name as consumer_name,
   p.eservice_id,

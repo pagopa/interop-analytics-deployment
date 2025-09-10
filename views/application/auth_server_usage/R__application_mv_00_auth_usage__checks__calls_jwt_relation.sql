@@ -8,7 +8,7 @@ DROP MATERIALIZED VIEW IF EXISTS sub_views.mv_00_auth_usage__checks__calls_jwt_r
 -- This view also pin out the tokens that have null correlation_id.
 -- To use incremental refresh we can't use outer join. This query count the number of 
 -- token in a minute and the number of token related to a call in the same minute.
-CREATE MATERIALIZED VIEW sub_views.mv_00_auth_usage__checks__calls_jwt_relation AUTO REFRESH YES as
+CREATE MATERIALIZED VIEW sub_views.mv_00_auth_usage__checks__calls_jwt_relation AUTO REFRESH NO as
 select 
   1 as token_issued,
   ( case when gta.jwt_id is null then 1 else 0 end ) as token_issued_without_correlation_id,

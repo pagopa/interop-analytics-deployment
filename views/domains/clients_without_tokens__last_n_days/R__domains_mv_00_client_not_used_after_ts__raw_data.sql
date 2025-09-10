@@ -11,7 +11,7 @@ DROP MATERIALIZED VIEW IF EXISTS sub_views.mv_00_client_not_used_after_ts__raw_d
 --  one for each JWT of that clients; each record has issued_at field that 
 --  can assume -1 value for records not associated to any JWT. As a result clients 
 --  that have never detached any JWT have max(issued_at) == -1
-CREATE MATERIALIZED VIEW sub_views.mv_00_client_not_used_after_ts__raw_data AUTO REFRESH YES AS 
+CREATE MATERIALIZED VIEW sub_views.mv_00_client_not_used_after_ts__raw_data AUTO REFRESH NO AS 
 select 
   t.name as consumer_name,
   c.id as client_id,

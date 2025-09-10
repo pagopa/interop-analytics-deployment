@@ -14,7 +14,7 @@ DROP MATERIALIZED VIEW IF EXISTS sub_views.mv_00_eservice_not_used_after_ts__raw
 --  assume -1 value for records not related to a JWT. So we can assume that eservices 
 --  that have max(issued_at) == -1 are never called by tenants different from the owner 
 --  because there is no effective authorized calls.
-CREATE MATERIALIZED VIEW sub_views.mv_00_eservice_not_used_after_ts__raw_data AUTO REFRESH YES AS 
+CREATE MATERIALIZED VIEW sub_views.mv_00_eservice_not_used_after_ts__raw_data AUTO REFRESH NO AS 
 select 
   t.name as producer_name,
   e.id as eservice_id,
