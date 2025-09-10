@@ -4,7 +4,7 @@ GRANT USAGE ON SCHEMA sub_views TO GROUP readonly_group;
 
 DROP MATERIALIZED VIEW IF EXISTS sub_views.mv_00_client_tenant_authserver_ips__latest_ts CASCADE;
 
-CREATE MATERIALIZED VIEW sub_views.mv_00_client_tenant_authserver_ips__latest_ts AUTO REFRESH YES as
+CREATE MATERIALIZED VIEW sub_views.mv_00_client_tenant_authserver_ips__latest_ts AUTO REFRESH NO as
 select gta.client_id, bra.requester_ip_address ips, max(bra.timestamp) as latest_ts from application.begin_request_audit bra
 inner join jwt.generated_token_audit gta on bra.correlation_id = gta.correlation_id
 where bra.service = 'authorization-server'

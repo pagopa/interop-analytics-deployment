@@ -5,7 +5,7 @@ GRANT USAGE ON SCHEMA views TO ${NAMESPACE}_quicksight_user;
 
 DROP MATERIALIZED VIEW IF EXISTS views.mv_00_service_endpoint_method_ms_elapsed CASCADE;
 
-CREATE MATERIALIZED VIEW views.mv_00_service_endpoint_method_ms_elapsed AUTO REFRESH YES AS 
+CREATE MATERIALIZED VIEW views.mv_00_service_endpoint_method_ms_elapsed AUTO REFRESH NO AS 
 select 
 DATE_PART(year, (CONVERT_TIMEZONE('Europe/Rome',  TIMESTAMP 'epoch' + (bra.timestamp / 1000) * INTERVAL '1 second'))) as year, 
 DATE_PART(month, (CONVERT_TIMEZONE('Europe/Rome',  TIMESTAMP 'epoch' + (bra.timestamp / 1000) * INTERVAL '1 second'))) as month, 

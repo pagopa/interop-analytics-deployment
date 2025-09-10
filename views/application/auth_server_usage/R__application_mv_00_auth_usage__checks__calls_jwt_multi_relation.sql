@@ -4,7 +4,7 @@ GRANT USAGE ON SCHEMA sub_views TO GROUP readonly_group;
 
 DROP MATERIALIZED VIEW IF EXISTS sub_views.mv_00_auth_usage__checks__calls_jwt_multi_relation CASCADE;
 
-CREATE MATERIALIZED VIEW sub_views.mv_00_auth_usage__checks__calls_jwt_multi_relation AUTO REFRESH YES as
+CREATE MATERIALIZED VIEW sub_views.mv_00_auth_usage__checks__calls_jwt_multi_relation AUTO REFRESH NO as
 select
   gta.correlation_id,
   (case when count( gta.jwt_id ) > 1 then 1 else 0 end ) as calls_associated_to_more_than_one_token,
