@@ -71,8 +71,9 @@ BEGIN
       v.mv_level,
       v.incremental_refresh_not_supported,
       r.refresh_start_time as last_refresh_start_time,
-      extract(epoch from r.refresh_start_time) as last_refresh_start_time_epoch,
       r.refresh_end_time as last_refresh_end_time,
+      -- extract give null output for null input
+      extract(epoch from r.refresh_start_time) as last_refresh_start_time_epoch,
       extract(epoch from r.refresh_end_time) as last_refresh_end_time_epoch
     from
       views_to_refresh v
