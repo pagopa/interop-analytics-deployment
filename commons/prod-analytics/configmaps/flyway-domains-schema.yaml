@@ -863,18 +863,3 @@ data:
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.purpose_template_risk_analysis_answer_annotation_document TO
           ${NAMESPACE}_domains_analytics_writer_user;
-
-  V4__integrate_adeguamento_llgg_feature.sql: |-
-    ALTER TABLE IF EXISTS domains.eservice ADD COLUMN IF NOT EXISTS personal_data BOOLEAN;
-    ALTER TABLE IF EXISTS domains.eservice_template ADD COLUMN IF NOT EXISTS personal_data BOOLEAN;
-
-    CREATE TABLE IF NOT EXISTS domains.purpose_version_stamp (
-      purpose_id VARCHAR(36) NOT NULL REFERENCES domains.purpose(id),
-      purpose_version_id VARCHAR(36) NOT NULL REFERENCES domains.purpose_version(id),
-      metadata_version INTEGER NOT NULL,
-      who VARCHAR(36) NOT NULL,
-      "when" TIMESTAMP WITH TIME ZONE NOT NULL,
-      kind VARCHAR(2048) NOT NULL,
-      deleted BOOLEAN,
-      PRIMARY KEY (purpose_version_id, kind)
-    );
