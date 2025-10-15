@@ -22,17 +22,20 @@ BEGIN
   
   create temporary table list_need_refresh_views_results AS 
   (
-    with
-      views_to_refresh as (
+    with recursive
+      recursive_stale_materialized_views( mv_schema, mv_name, incremental_refresh_not_supported, dist ) as (
         select
           trim(schema_name) as mv_schema,
           trim(name) as mv_name,
           (state <> 1 ) as incremental_refresh_not_supported,
-          cast(REGEXP_REPLACE( name, 'mv_([0-9][0-9]).*', '$1') as integer) as mv_level
+          0 as dist
         from
           SVV_MV_INFO
         where
-          is_stale = 't'
+            is_stale = 't'
+          and
+            -- do not handle cross database references
+            database_name = current_database() 
           -- - I need to ask refresh also to "auto-refresh-materialized-views" to ensure refresh "now"
           --   and not "when redshift want"; just in case an higher level materialized view depend on it
           --   and need very fresh data.
@@ -41,9 +44,22 @@ BEGIN
             -- Split string to arrays and use them as second parameter of an "in" operator is too complex
             -- We use some string matching
             -- example ',views,sub_views,' with no spaces
-          quote_ident(',' + regexp_replace( schema_list, '\\s', '')  + ',')
-            like
-            ('%,' + schema_name + ',%')
+            quote_ident(',' + regexp_replace( schema_list, '\\s', '')  + ',')
+              like
+              ('%,' + schema_name + ',%')
+        union all
+        select
+          trim(dep.schema_name) as mv_schema,
+          trim(dep."name") as mv_name, 
+          b.incremental_refresh_not_supported,
+          b.dist + 1 as dist
+        from
+          SVV_MV_DEPENDENCY dep
+          join recursive_stale_materialized_views b
+              on trim(dep.dependent_schema_name) = b.mv_schema 
+                  and trim(dep.dependent_name) = b.mv_name
+        where
+          dist < 100
       ),
       refresh_history as (
         SELECT
@@ -64,6 +80,19 @@ BEGIN
           refresh_history
         where
           nr = 1
+      ),
+      views_to_refresh as (
+        select
+          mv_schema,
+          mv_name,
+          try_cast(REGEXP_REPLACE( trim(mv_name), 'mv_([0-9][0-9]).*', '$1') as integer) as mv_level,
+          bool_or( incremental_refresh_not_supported ) as incremental_refresh_not_supported,
+          max(dist) as dist
+        from recursive_stale_materialized_views
+        group by
+          mv_schema,
+          mv_name,
+          mv_level
       )
     select
       v.mv_schema,
@@ -74,10 +103,13 @@ BEGIN
       r.refresh_end_time as last_refresh_end_time,
       -- extract give null output for null input
       extract(epoch from r.refresh_start_time) as last_refresh_start_time_epoch,
-      extract(epoch from r.refresh_end_time) as last_refresh_end_time_epoch
+      extract(epoch from r.refresh_end_time) as last_refresh_end_time_epoch,
+      v.dist
     from
       views_to_refresh v
       left join last_refresh r on r.mv_schema  = v.mv_schema and r.mv_name  = v.mv_name
+      where
+        v.mv_level is not null
   );
   
   GRANT SELECT ON list_need_refresh_views_results to ${NAMESPACE}_mv_refresher_user;
