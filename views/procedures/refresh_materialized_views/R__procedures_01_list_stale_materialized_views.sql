@@ -59,7 +59,9 @@ BEGIN
               on trim(dep.dependent_schema_name) = b.mv_schema 
                   and trim(dep.dependent_name) = b.mv_name
         where
-          dist < 100
+          -- We support no more than one hundred dependency level between materialized views.
+          -- It must be enough. 
+          dist < 100 
       ),
       refresh_history as (
         SELECT
