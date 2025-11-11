@@ -18,3 +18,4 @@ data:
   TENANT_TOPIC: "event-store.qa_tenant.events"
   DELEGATION_TOPIC: "event-store.qa_delegation.events"
   ESERVICE_TEMPLATE_TOPIC: "event-store.qa_eservice_template.events"
+  PURPOSE_TEMPLATE_TOPIC: "event-store.qa_purpose_template.events"

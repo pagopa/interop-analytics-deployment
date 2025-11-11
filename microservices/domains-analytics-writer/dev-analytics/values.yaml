@@ -45,6 +45,7 @@ deployment:
     TENANT_TOPIC: "common-kafka.TENANT_TOPIC"
     DELEGATION_TOPIC: "common-kafka.DELEGATION_TOPIC"
     ESERVICE_TEMPLATE_TOPIC: "common-kafka.ESERVICE_TEMPLATE_TOPIC"
+    PURPOSE_TEMPLATE_TOPIC: "common-kafka.PURPOSE_TEMPLATE_TOPIC"
     ANALYTICS_SQL_DB_HOST: "common-redshift.DB_HOST"
     ANALYTICS_SQL_DB_NAME: "common-redshift.DB_NAME"
     ANALYTICS_SQL_DB_PORT: "common-redshift.DB_PORT"
