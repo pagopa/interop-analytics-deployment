@@ -69,7 +69,7 @@ data:
 
   V1.0.2__Client_Assertion_Add_raw_timestamps.sql: |-
     ALTER TABLE jwt.client_assertion_audit
-      ADD COLUMN issued_at_raw DOUBLE PRECISION NOT NULL;
+      ADD COLUMN issued_at_raw DOUBLE PRECISION NOT NULL DEFAULT '-1.0';
 
     ALTER TABLE jwt.client_assertion_audit
-      ADD COLUMN expiration_time_raw DOUBLE PRECISION NOT NULL;
+      ADD COLUMN expiration_time_raw DOUBLE PRECISION NOT NULL DEFAULT '-1.0';
