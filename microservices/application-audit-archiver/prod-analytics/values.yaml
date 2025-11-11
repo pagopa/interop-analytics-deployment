@@ -13,6 +13,7 @@ configmap:
   GZ_COMPRESSION_LEVEL: 6
 
 deployment:
+  replicas: 0
   envFromConfigmaps:
     KAFKA_BROKERS: "common-kafka.KAFKA_BROKERS"
     KAFKA_AVERAGE_MESSAGE_SIZE_IN_BYTES: "common-kafka.KAFKA_AVERAGE_MESSAGE_SIZE_IN_BYTES"

@@ -11,6 +11,7 @@ configmap:
   KAFKA_GROUP_ID: "{{.Values.namespace}}-application-audit-analytics-writer"
 
 deployment:
+  replicas: 0
   flywayInitContainer:
     create: true
     version: "11.4.0"
