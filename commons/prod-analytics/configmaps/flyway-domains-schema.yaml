@@ -878,3 +878,7 @@ data:
       deleted BOOLEAN,
       PRIMARY KEY (purpose_version_id, kind)
     );
+
+  V4.1__integrate_adeguamento_llgg_feature_add_grants.sql: |-
+    GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.purpose_version_stamp TO
+          ${NAMESPACE}_domains_analytics_writer_user;
