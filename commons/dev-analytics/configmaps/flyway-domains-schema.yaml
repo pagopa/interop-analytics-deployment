@@ -883,7 +883,7 @@ data:
     ALTER TABLE domains.agreement_contract
       ADD COLUMN signed_at TIMESTAMP WITH TIME ZONE;
 
-    CREATE TABLE domains.agreement_signed_contract (
+    CREATE TABLE IF NOT EXISTS domains.agreement_signed_contract (
       id VARCHAR(36),
       agreement_id VARCHAR(36) UNIQUE NOT NULL REFERENCES domains.agreement(id),
       metadata_version INTEGER NOT NULL,
