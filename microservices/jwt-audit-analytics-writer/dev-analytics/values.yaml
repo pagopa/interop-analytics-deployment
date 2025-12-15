@@ -14,7 +14,7 @@ configmap:
   DB_INGEST_MODE: COPY
   SQS_RECEIVE_MSGS_CALLS: 100
   SQS_RECEIVE_MSGS_CONCURRENCY: 10
-  S3_COPY_BUCKET: interop-generated-jwt-details-{{.Values.local.env}}-es1
+  S3_COPY_BUCKET: interop-analytics-etl-jwt-audit-{{.Values.local.env}}-es1
   S3_DELETE_AFTER_COPY: true
   GZ_COMPRESSION_LEVEL: 3
   MAX_DAYS_TOLERANCE_FOR_DUPLICATE_DELAY: 60
