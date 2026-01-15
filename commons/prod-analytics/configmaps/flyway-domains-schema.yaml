@@ -883,7 +883,7 @@ data:
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.purpose_version_stamp TO
           ${NAMESPACE}_domains_analytics_writer_user;
 
-  V5__fix_previous_missing_tables_and_added_purposetemplate_document_tables_.sql:
+  V5__fix_previous_missing_tables_and_added_purposetemplate_document_tables.sql:
     |-
     CREATE TABLE IF NOT EXISTS domains.purpose_template (
       id VARCHAR(36),
