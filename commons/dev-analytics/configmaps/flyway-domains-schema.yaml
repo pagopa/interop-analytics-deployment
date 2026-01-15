@@ -1055,7 +1055,7 @@ data:
 
     CREATE TABLE IF NOT EXISTS domains.purpose_template_risk_analysis_form_document (
       id UUID,
-      purpose_template_id UUID NOT NULL REFERENCES domains.purpose_template (id) ON DELETE CASCADE,
+      purpose_template_id UUID NOT NULL REFERENCES domains.purpose_template (id),
       metadata_version INTEGER NOT NULL,
       risk_analysis_form_id UUID NOT NULL REFERENCES domains.purpose_template_risk_analysis_form (id) ON DELETE CASCADE,
       name VARCHAR NOT NULL,
@@ -1072,7 +1072,7 @@ data:
 
     CREATE TABLE IF NOT EXISTS domains.purpose_template_risk_analysis_form_signed_document (
       id UUID,
-      purpose_template_id UUID NOT NULL REFERENCES domains.purpose_template (id) ON DELETE CASCADE,
+      purpose_template_id UUID NOT NULL REFERENCES domains.purpose_template (id),
       metadata_version INTEGER NOT NULL,
       risk_analysis_form_id UUID NOT NULL REFERENCES domains.purpose_template_risk_analysis_form (id) ON DELETE CASCADE,
       name VARCHAR NOT NULL,
