@@ -939,7 +939,7 @@ data:
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.delegation_signed_contract_document TO
       ${NAMESPACE}_domains_analytics_writer_user;
 
-  V6__fix_previous_missing_tables_and_added_purposetemplate_document_tables_.sql:
+  V6__fix_previous_missing_tables_and_added_purposetemplate_document_tables.sql:
     |-
     CREATE TABLE IF NOT EXISTS domains.purpose_template (
       id VARCHAR(36),
