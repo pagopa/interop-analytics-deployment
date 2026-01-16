@@ -1063,8 +1063,7 @@ data:
       content_type VARCHAR(2048) NOT NULL,
       path VARCHAR(2048) NOT NULL,
       created_at TIMESTAMP WITH TIME ZONE NOT NULL,
-      PRIMARY KEY (id),
-      FOREIGN KEY (purpose_template_id, metadata_version) REFERENCES domains.purpose_template (id, metadata_version) DEFERRABLE INITIALLY DEFERRED
+      PRIMARY KEY (id)
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.purpose_template_risk_analysis_form_document TO
@@ -1081,8 +1080,7 @@ data:
       path VARCHAR(2048) NOT NULL,
       created_at TIMESTAMP WITH TIME ZONE NOT NULL,
       signed_at TIMESTAMP WITH TIME ZONE NOT NULL,
-      PRIMARY KEY (id),
-      FOREIGN KEY (purpose_template_id, metadata_version) REFERENCES domains.purpose_template (id, metadata_version) DEFERRABLE INITIALLY DEFERRED
+      PRIMARY KEY (id)
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.purpose_template_risk_analysis_form_signed_document TO
