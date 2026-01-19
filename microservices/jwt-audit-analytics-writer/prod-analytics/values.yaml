@@ -11,6 +11,14 @@ configmap:
   SQS_NOTIFICATION_ENDPOINT: https://sqs.eu-south-1.amazonaws.com/697818730278/interop-analytics-jwt-audit-prod
   S3_BUCKET: interop-generated-jwt-details-prod-es1
   BATCH_SIZE: 500
+  DB_INGEST_MODE: COPY
+  SQS_RECEIVE_MSGS_CALLS: 100
+  SQS_RECEIVE_MSGS_CONCURRENCY: 10
+  S3_COPY_BUCKET: interop-analytics-etl-jwt-audit-{{.Values.local.env}}-es1
+  S3_DELETE_AFTER_COPY: true
+  GZ_COMPRESSION_LEVEL: 3
+  MAX_DAYS_TOLERANCE_FOR_DUPLICATE_DELAY: 0
+  REDSHIFT_COPY_IAM_ROLE_ARN: arn:aws:iam::{{.Values.local.awsAccountId}}:role/interop-analytics-redshift-s3-copy-{{.Values.local.env}}
 
 deployment:
   flywayInitContainer:
