@@ -18,3 +18,7 @@ deployment:
       memory: "2Gi"
   env:
     LOG_LEVEL: "info"
+
+local:
+  awsAccountId: "697818730278"
+  env: "prod"
