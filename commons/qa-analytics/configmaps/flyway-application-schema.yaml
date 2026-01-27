@@ -108,3 +108,16 @@ data:
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE application.end_request_auth_server_audit TO
       ${NAMESPACE}_application_audit_analytics_writer_user;
+
+  V1.1__resize_CorrelationId_columns.sql: |-
+    ALTER TABLE application.begin_request_audit
+      ALTER COLUMN correlation_id TYPE VARCHAR(255);
+
+    ALTER TABLE application.end_request_audit
+      ALTER COLUMN correlation_id TYPE VARCHAR(255);
+
+    ALTER TABLE application.end_request_session_token_exchange_audit
+      ALTER COLUMN correlation_id TYPE VARCHAR(255);
+
+    ALTER TABLE application.end_request_auth_server_audit
+      ALTER COLUMN correlation_id TYPE VARCHAR(255);
