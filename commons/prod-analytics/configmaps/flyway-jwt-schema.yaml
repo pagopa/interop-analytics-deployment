@@ -78,5 +78,5 @@ data:
     ALTER TABLE jwt.client_assertion_audit
       ADD COLUMN origin_file_reference VARCHAR(255);
 
-    ALTER TABLE jwt.jwt.generated_token_audit
+    ALTER TABLE jwt.generated_token_audit
       ADD COLUMN origin_file_reference VARCHAR(255);
