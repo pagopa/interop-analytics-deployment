@@ -73,3 +73,10 @@ data:
 
     ALTER TABLE jwt.client_assertion_audit
       ADD COLUMN expiration_time_raw DOUBLE PRECISION NOT NULL DEFAULT '-1.0';
+
+  V1.0.3__Add_origin_file_reference.sql: |-
+    ALTER TABLE jwt.client_assertion_audit
+      ADD COLUMN origin_file_reference VARCHAR(255);
+
+    ALTER TABLE jwt.generated_token_audit
+      ADD COLUMN origin_file_reference VARCHAR(255);
