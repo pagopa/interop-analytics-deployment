@@ -9,6 +9,13 @@ service:
 configmap:
   SERVICE_NAME: pagopa-interop-application-audit-analytics-writer-dev
   KAFKA_GROUP_ID: "{{.Values.namespace}}-application-audit-analytics-writer"
+  ACCUMULATOR_MAX_MESSAGES: 1000000
+  ACCUMULATOR_FLUSH_TIMEOUT_MS: 60000
+  S3_COPY_BUCKET: interop-analytics-etl-application-audit-{{.Values.local.env}}-es1
+  S3_DELETE_AFTER_COPY: true
+  REDSHIFT_COPY_IAM_ROLE_ARN: "arn:aws:iam::000000000000:role/RedshiftCopy"
+  GZ_COMPRESSION_LEVEL: 3
+  DB_INGEST_MODE: "COPY"
 
 deployment:
   flywayInitContainer:
