@@ -13,7 +13,7 @@ configmap:
   ACCUMULATOR_FLUSH_TIMEOUT_MS: 60000
   S3_COPY_BUCKET: interop-analytics-etl-application-audit-{{.Values.local.env}}-es1
   S3_DELETE_AFTER_COPY: true
-  REDSHIFT_COPY_IAM_ROLE_ARN: "arn:aws:iam::000000000000:role/RedshiftCopy"
+  REDSHIFT_COPY_IAM_ROLE_ARN: "arn:aws:iam::505630707203:role/interop-analytics-redshift-s3-copy-dev"
   GZ_COMPRESSION_LEVEL: 3
   DB_INGEST_MODE: "COPY"
 
