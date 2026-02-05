@@ -37,6 +37,13 @@ deployment:
     envFromSecrets:
       FLYWAY_USER: "redshift-flyway-user.username"
       FLYWAY_PASSWORD: "redshift-flyway-user.password"
+    resources:
+      limits:
+        cpu: "500m"
+        memory: "1Gi"
+      requests:
+        cpu: "10m"
+        memory: "64Mi"
 
   envFromConfigmaps:
     KAFKA_BROKERS: "common-kafka.KAFKA_BROKERS"
@@ -57,3 +64,10 @@ deployment:
     AWS_ROLE_SESSION_NAME: "metadata.name"
     KAFKA_CLIENT_ID: "metadata.name"
     MERGE_TABLE_SUFFIX: "metadata.uid"
+  resources:
+    limits:
+      cpu: "2"
+      memory: "8Gi"
+    requests:
+      cpu: "1"
+      memory: "4Gi"
