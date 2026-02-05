@@ -21,6 +21,7 @@ configmap:
   REDSHIFT_COPY_IAM_ROLE_ARN: arn:aws:iam::{{.Values.local.awsAccountId}}:role/interop-analytics-redshift-s3-copy-{{.Values.local.env}}
 
 deployment:
+  replicas: 0
   flywayInitContainer:
     create: true
     version: "11.4.0"
