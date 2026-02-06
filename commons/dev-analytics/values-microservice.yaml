@@ -19,6 +19,10 @@ deployment:
   env:
     LOG_LEVEL: "info"
 
+local:
+  awsAccountId: "505630707203"
+  env: "dev"
+
 autoscaling:
   keda:
     create: true

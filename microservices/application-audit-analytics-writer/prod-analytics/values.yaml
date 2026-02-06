@@ -9,9 +9,16 @@ service:
 configmap:
   SERVICE_NAME: pagopa-interop-application-audit-analytics-writer-prod
   KAFKA_GROUP_ID: "{{.Values.namespace}}-application-audit-analytics-writer"
+  ACCUMULATOR_MAX_MESSAGES: 1000000
+  ACCUMULATOR_FLUSH_TIMEOUT_MS: 60000
+  S3_COPY_BUCKET: interop-analytics-etl-application-audit-{{.Values.local.env}}-es1
+  S3_DELETE_AFTER_COPY: true
+  REDSHIFT_COPY_IAM_ROLE_ARN: "arn:aws:iam::697818730278:role/interop-analytics-redshift-s3-copy-{{.Values.local.env}}"
+  GZ_COMPRESSION_LEVEL: 3
+  DB_INGEST_MODE: "COPY"
 
 deployment:
-  replicas: 0
+  replicas: 1
   flywayInitContainer:
     create: true
     version: "11.4.0"
@@ -30,6 +37,13 @@ deployment:
     envFromSecrets:
       FLYWAY_USER: "redshift-flyway-user.username"
       FLYWAY_PASSWORD: "redshift-flyway-user.password"
+    resources:
+      limits:
+        cpu: "500m"
+        memory: "1Gi"
+      requests:
+        cpu: "10m"
+        memory: "64Mi"
 
   envFromConfigmaps:
     KAFKA_BROKERS: "common-kafka.KAFKA_BROKERS"
@@ -37,6 +51,7 @@ deployment:
     KAFKA_MAX_WAIT_BATCH_MILLIS: "common-kafka.KAFKA_MAX_WAIT_BATCH_MILLIS"
     KAFKA_MESSAGES_TO_READ_PER_BATCH: "common-kafka.KAFKA_MESSAGES_TO_READ_PER_BATCH"
     KAFKA_TOPIC_STARTING_OFFSET: "common-kafka.KAFKA_TOPIC_STARTING_OFFSET"
+    KAFKA_ENABLE_AUTOCOMMIT: "common-kafka.KAFKA_ENABLE_AUTOCOMMIT"
     KAFKA_TOPIC: "common-kafka.APPLICATION_AUDIT_TOPIC"
     DB_HOST: "common-redshift.DB_HOST"
     DB_NAME: "common-redshift.DB_NAME"
@@ -50,3 +65,10 @@ deployment:
     AWS_ROLE_SESSION_NAME: "metadata.name"
     KAFKA_CLIENT_ID: "metadata.name"
     MERGE_TABLE_SUFFIX: "metadata.uid"
+  resources:
+    limits:
+      cpu: "2"
+      memory: "8Gi"
+    requests:
+      cpu: "1"
+      memory: "4Gi"
