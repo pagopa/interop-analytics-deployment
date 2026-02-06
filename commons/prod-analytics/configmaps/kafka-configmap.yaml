@@ -9,6 +9,7 @@ data:
   KAFKA_MAX_WAIT_BATCH_MILLIS: "60000"
   KAFKA_MESSAGES_TO_READ_PER_BATCH: "10000"
   KAFKA_TOPIC_STARTING_OFFSET: "earliest"
+  KAFKA_ENABLE_AUTOCOMMIT: "false"
   APPLICATION_AUDIT_TOPIC: "prod_application.audit"
   CATALOG_TOPIC: "event-store.prod_catalog.events"
   AUTHORIZATION_TOPIC: "event-store.prod_authorization.events"
