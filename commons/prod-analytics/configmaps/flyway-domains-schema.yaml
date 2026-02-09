@@ -886,7 +886,6 @@ data:
   V5__fix_previous_missing_tables_and_added_purposetemplate_document_tables.sql: |-
     ALTER TABLE domains.agreement_contract
       ADD COLUMN signed_at TIMESTAMP WITH TIME ZONE;
-    
     CREATE TABLE IF NOT EXISTS domains.purpose_template (
       id VARCHAR(36),
       metadata_version INTEGER NOT NULL,
