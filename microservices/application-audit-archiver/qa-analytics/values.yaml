@@ -11,6 +11,8 @@ configmap:
   S3_BUCKET: interop-application-audit-archive-qa-es1
   KAFKA_GROUP_ID: "{{.Values.namespace}}-application-audit-archiver"
   GZ_COMPRESSION_LEVEL: 6
+  KAFKA_SESSION_TIMEOUT_MILLIS: 300000
+  KAFKA_REQUEST_TIMEOUT_MILLIS: 120000
 
 deployment:
   envFromConfigmaps:
