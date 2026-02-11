@@ -11,13 +11,16 @@ configmap:
   S3_BUCKET: interop-application-audit-archive-prod-es1
   KAFKA_GROUP_ID: "{{.Values.namespace}}-application-audit-archiver"
   GZ_COMPRESSION_LEVEL: 6
+  KAFKA_MAX_WAIT_BATCH_MILLIS: 300000
+  KAFKA_SESSION_TIMEOUT_MILLIS: 300000
+  KAFKA_REQUEST_TIMEOUT_MILLIS: 120000
 
 deployment:
   replicas: 0
   envFromConfigmaps:
     KAFKA_BROKERS: "common-kafka.KAFKA_BROKERS"
     KAFKA_AVERAGE_MESSAGE_SIZE_IN_BYTES: "common-kafka.KAFKA_AVERAGE_MESSAGE_SIZE_IN_BYTES"
-    KAFKA_MAX_WAIT_BATCH_MILLIS: "common-kafka.KAFKA_MAX_WAIT_BATCH_MILLIS"
+    # KAFKA_MAX_WAIT_BATCH_MILLIS: "common-kafka.KAFKA_MAX_WAIT_BATCH_MILLIS" (commented because a custom value is set for this microservice)
     KAFKA_MESSAGES_TO_READ_PER_BATCH: "common-kafka.KAFKA_MESSAGES_TO_READ_PER_BATCH"
     KAFKA_TOPIC_STARTING_OFFSET: "common-kafka.KAFKA_TOPIC_STARTING_OFFSET"
     KAFKA_TOPIC: "common-kafka.APPLICATION_AUDIT_TOPIC"

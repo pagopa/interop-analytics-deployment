@@ -10,6 +10,8 @@ configmap:
   SERVICE_NAME: pagopa-interop-application-audit-analytics-writer-dev
   KAFKA_GROUP_ID: "{{.Values.namespace}}-application-audit-analytics-writer"
   KAFKA_MAX_WAIT_BATCH_MILLIS: 300000
+  KAFKA_SESSION_TIMEOUT_MILLIS: 300000
+  KAFKA_REQUEST_TIMEOUT_MILLIS: 120000
   ACCUMULATOR_MAX_MESSAGES: 500000
   ACCUMULATOR_FLUSH_TIMEOUT_MS: 30000
   S3_COPY_BUCKET: interop-analytics-etl-application-audit-{{.Values.local.env}}-es1
