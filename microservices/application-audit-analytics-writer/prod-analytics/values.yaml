@@ -20,7 +20,7 @@ configmap:
   DB_INGEST_MODE: "COPY"
 
 deployment:
-  replicas: 1
+  replicas: 0
   flywayInitContainer:
     create: true
     version: "11.4.0"
