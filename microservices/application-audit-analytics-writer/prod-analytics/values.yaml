@@ -12,7 +12,7 @@ configmap:
   KAFKA_SESSION_TIMEOUT_MILLIS: 300000
   KAFKA_REQUEST_TIMEOUT_MILLIS: 120000
   ACCUMULATOR_MAX_MESSAGES: 500000
-  ACCUMULATOR_FLUSH_TIMEOUT_MS: 30000
+  ACCUMULATOR_FLUSH_TIMEOUT_MS: 120000
   S3_COPY_BUCKET: interop-analytics-etl-application-audit-{{.Values.local.env}}-es1
   S3_DELETE_AFTER_COPY: true
   REDSHIFT_COPY_IAM_ROLE_ARN: "arn:aws:iam::697818730278:role/interop-analytics-redshift-s3-copy-{{.Values.local.env}}"
@@ -20,7 +20,7 @@ configmap:
   DB_INGEST_MODE: "COPY"
 
 deployment:
-  replicas: 0
+  replicas: 1
   flywayInitContainer:
     create: true
     version: "11.4.0"
