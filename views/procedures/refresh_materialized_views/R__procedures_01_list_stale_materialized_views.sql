@@ -135,6 +135,7 @@ BEGIN
     from
       views_to_refresh_enriched
     where
+      -- Only include views if they're in the first 2, or if total refresh time is under 7 minutes (420 seconds)
       ordinal <= 2 or coalesce(cumulative_refresh_time, 0) <= 420
     order by
       last_refresh_start_time
