@@ -109,13 +109,13 @@ BEGIN
 	      r.refresh_time_seconds,
 	      sum(r.refresh_time_seconds) 
 	        over ( 
-	          order by r.refresh_start_time 
+	          order by r.refresh_start_time NULLS FIRST
 	          ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
 	        ) 
 	        as cumulative_refresh_time,
 	      ROW_NUMBER() 
 	        over ( 
-	          order by r.refresh_start_time 
+	          order by r.refresh_start_time NULLS FIRST
 	        ) 
 	        as ordinal,
 	      r.refresh_start_time as last_refresh_start_time,
