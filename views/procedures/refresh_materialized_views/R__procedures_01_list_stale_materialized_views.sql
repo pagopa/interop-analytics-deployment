@@ -135,7 +135,7 @@ BEGIN
     from
       views_to_refresh_enriched
     where
-      ordinal <= 2 or cumulative_refresh_time <= 420
+      ordinal <= 2 or coalesce(cumulative_refresh_time, 0) <= 420
     order by
       last_refresh_start_time
   );
