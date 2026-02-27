@@ -69,6 +69,10 @@ BEGIN
           trim(mv_name) as mv_name,
           start_time as refresh_start_time,
           end_time as refresh_end_time,
+          -- extract give null output for null input
+          extract(epoch from refresh_start_time) as refresh_start_time_epoch,
+          extract(epoch from refresh_end_time) as refresh_end_time_epoch,
+          refresh_end_time_epoch - refresh_start_time_epoch as refresh_time_seconds,
           ROW_NUMBER() over ( partition by database_name, schema_name, mv_name order by start_time desc ) as nr
         FROM
           SYS_MV_REFRESH_HISTORY
@@ -95,23 +99,46 @@ BEGIN
           mv_schema,
           mv_name,
           mv_level
+      ),
+      views_to_refresh_enriched as (
+        select
+	      v.mv_schema,
+	      v.mv_name,
+	      v.mv_level,
+	      v.incremental_refresh_not_supported,
+	      r.refresh_time_seconds,
+	      sum(r.refresh_time_seconds) 
+	        over ( 
+	          order by r.refresh_start_time NULLS FIRST
+	          ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+	        ) 
+	        as cumulative_refresh_time,
+	      ROW_NUMBER() 
+	        over ( 
+	          order by r.refresh_start_time NULLS FIRST
+	        ) 
+	        as ordinal,
+	      r.refresh_start_time as last_refresh_start_time,
+	      r.refresh_end_time as last_refresh_end_time,
+	      -- extract give null output for null input
+	      r.refresh_start_time_epoch as last_refresh_start_time_epoch,
+	      r.refresh_end_time_epoch as last_refresh_end_time_epoch,
+	      v.dist
+	    from
+	      views_to_refresh v
+	      left join last_refresh r on r.mv_schema  = v.mv_schema and r.mv_name  = v.mv_name
+	    where
+	      v.mv_level is not null
       )
     select
-      v.mv_schema,
-      v.mv_name,
-      v.mv_level,
-      v.incremental_refresh_not_supported,
-      r.refresh_start_time as last_refresh_start_time,
-      r.refresh_end_time as last_refresh_end_time,
-      -- extract give null output for null input
-      extract(epoch from r.refresh_start_time) as last_refresh_start_time_epoch,
-      extract(epoch from r.refresh_end_time) as last_refresh_end_time_epoch,
-      v.dist
+      *
     from
-      views_to_refresh v
-      left join last_refresh r on r.mv_schema  = v.mv_schema and r.mv_name  = v.mv_name
-      where
-        v.mv_level is not null
+      views_to_refresh_enriched
+    where
+      -- Only include views if they're in the first 2, or if total refresh time is under 7 minutes (420 seconds)
+      ordinal <= 2 or coalesce(cumulative_refresh_time, 0) <= 420
+    order by
+      last_refresh_start_time nulls first
   );
   
   GRANT SELECT ON list_need_refresh_views_results to ${NAMESPACE}_mv_refresher_user;
