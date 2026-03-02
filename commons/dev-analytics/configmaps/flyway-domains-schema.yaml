@@ -1085,3 +1085,6 @@ data:
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.purpose_template_risk_analysis_form_signed_document TO
       ${NAMESPACE}_domains_analytics_writer_user;
+
+  V7__add_eservice_instance_label.sql: |-
+    ALTER TABLE domains.eservice ADD COLUMN IF NOT EXISTS instance_label VARCHAR(2048);
