@@ -1086,7 +1086,7 @@ data:
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.delegation_signed_contract_document TO
       ${NAMESPACE}_domains_analytics_writer_user;
   
-  V7__integrate_soglie_diff_private_attr.sql: |-
+  V7__integrate_suffissi_soglie_diff_private_attr.sql: |-
     ALTER TABLE domains.eservice
       ADD COLUMN instance_label VARCHAR(2048);
     
