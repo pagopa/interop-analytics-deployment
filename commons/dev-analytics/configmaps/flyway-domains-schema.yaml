@@ -1085,3 +1085,13 @@ data:
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.purpose_template_risk_analysis_form_signed_document TO
       ${NAMESPACE}_domains_analytics_writer_user;
+
+  V7__integrate_soglie_diff_private_attr.sql: |-
+    ALTER TABLE domains.eservice
+      ADD COLUMN instance_label VARCHAR(2048);
+    
+    ALTER TABLE domains.tenant
+      ADD COLUMN selfcare_institution_type VARCHAR(2048);
+    
+    ALTER TABLE domains.eservice_descriptor_attribute
+      ADD COLUMN daily_calls_per_consumer INTEGER;
