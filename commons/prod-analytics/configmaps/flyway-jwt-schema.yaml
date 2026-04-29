@@ -83,7 +83,7 @@ data:
 
   V1.0.4__Add_client_assertion_audit_generated_token_issued_at.sql: |-
     ALTER TABLE jwt.client_assertion_audit
-      ADD COLUMN generated_token_issued_at BIGINT NOT NULL;
+      ADD COLUMN generated_token_issued_at BIGINT;
 
     ALTER TABLE jwt.client_assertion_audit
-      ADD COLUMN generated_token_issued_at_tz TIMESTAMPTZ NOT NULL;
+      ADD COLUMN generated_token_issued_at_tz TIMESTAMPTZ;
