@@ -87,3 +87,49 @@ data:
 
     ALTER TABLE jwt.client_assertion_audit
       ADD COLUMN generated_token_issued_at_tz TIMESTAMPTZ;
+
+  V1.0.5__Add_jwt_audit_extra_claims_and_dpop.sql: |-
+    ALTER TABLE jwt.generated_token_audit
+      ADD COLUMN typ VARCHAR(50);
+
+    ALTER TABLE jwt.generated_token_audit
+      ADD COLUMN cnf_jkt VARCHAR(255);
+
+    ALTER TABLE jwt.generated_token_audit
+      ADD COLUMN digest_alg VARCHAR(50);
+
+    ALTER TABLE jwt.generated_token_audit
+      ADD COLUMN digest_val VARCHAR(255);
+
+    ALTER TABLE jwt.generated_token_audit
+      ADD COLUMN dpop_jwt_id VARCHAR(255);
+
+    ALTER TABLE jwt.client_assertion_audit
+      ADD COLUMN digest_alg VARCHAR(50);
+
+    ALTER TABLE jwt.client_assertion_audit
+      ADD COLUMN digest_val VARCHAR(255);
+
+    CREATE TABLE IF NOT EXISTS jwt.dpop_audit (
+      typ VARCHAR(50) NOT NULL,
+      alg VARCHAR(50) NOT NULL,
+      jwk_kty VARCHAR(10) NOT NULL,
+      jwk_n VARCHAR(2048),
+      jwk_e VARCHAR(64),
+      jwk_crv VARCHAR(10),
+      jwk_x VARCHAR(512),
+      jwk_y VARCHAR(512),
+      htm VARCHAR(16) NOT NULL,
+      htu VARCHAR(1024) NOT NULL,
+      iat DOUBLE PRECISION NOT NULL,
+      jti VARCHAR(255) NOT NULL,
+      generated_token_jwt_id VARCHAR(36) PRIMARY KEY,
+      origin_file_reference VARCHAR(255),
+      generated_token_issued_at BIGINT NOT NULL,
+      generated_token_issued_at_tz TIMESTAMPTZ NOT NULL,
+      CONSTRAINT fk_generated_token FOREIGN KEY (generated_token_jwt_id)
+        REFERENCES jwt.generated_token_audit(jwt_id)
+    );
+
+    GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE jwt.dpop_audit TO
+      ${NAMESPACE}_jwt_audit_analytics_writer_user;
