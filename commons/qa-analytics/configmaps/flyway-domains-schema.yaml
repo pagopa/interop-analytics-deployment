@@ -1100,16 +1100,18 @@ data:
     ALTER TABLE domains.purpose_template
       ADD COLUMN handles_personal_data BOOLEAN;
 
+    -- WARNING: Set nullable instead of NOT NULL to avoid application backfill.
+    ALTER TABLE domains.purpose_template_risk_analysis_answer_annotation_document
+      ADD COLUMN checksum VARCHAR;
+
+  V8.1__backfill_purpose_template_handles_personal_data.sql: |-
     UPDATE domains.purpose_template
       SET handles_personal_data = FALSE
       WHERE handles_personal_data IS NULL;
 
+  V8.2__set_purpose_template_handles_personal_data_not_null.sql: |-
     ALTER TABLE domains.purpose_template
       ALTER COLUMN handles_personal_data SET NOT NULL;
-
-    -- WARNING: Set nullable instead of NOT NULL to avoid application backfill
-    ALTER TABLE domains.purpose_template_risk_analysis_answer_annotation_document
-      ADD COLUMN checksum VARCHAR;
 
   V9__integrate_adeguamento_risk_analysis.sql: |-
     ALTER TABLE domains.eservice_risk_analysis
@@ -1128,34 +1130,8 @@ data:
     ALTER TABLE domains.eservice_descriptor_interface
       ADD COLUMN kind VARCHAR(2048);
 
-    UPDATE domains.eservice_descriptor_interface
-      SET kind = 'INTERFACE'
-      WHERE kind IS NULL;
-
-    ALTER TABLE domains.eservice_descriptor_interface
-      ALTER COLUMN kind SET NOT NULL;
-
-    ALTER TABLE domains.eservice_descriptor_interface
-      DROP CONSTRAINT IF EXISTS eservice_descriptor_interface_descriptor_id_key;
-
-    ALTER TABLE domains.eservice_descriptor_interface
-      ADD CONSTRAINT eservice_descriptor_interface_descriptor_id_kind_unique UNIQUE (descriptor_id, kind);
-
     ALTER TABLE domains.eservice_template_version_interface
       ADD COLUMN kind VARCHAR(2048);
-
-    UPDATE domains.eservice_template_version_interface
-      SET kind = 'INTERFACE'
-      WHERE kind IS NULL;
-
-    ALTER TABLE domains.eservice_template_version_interface
-      ALTER COLUMN kind SET NOT NULL;
-
-    ALTER TABLE domains.eservice_template_version_interface
-      DROP CONSTRAINT IF EXISTS eservice_template_version_interface_version_id_key;
-
-    ALTER TABLE domains.eservice_template_version_interface
-      ADD CONSTRAINT eservice_template_version_interface_version_id_kind_unique UNIQUE (version_id, kind);
 
     CREATE TABLE IF NOT EXISTS domains.eservice_descriptor_async_exchange_properties (
       eservice_id VARCHAR(36) NOT NULL REFERENCES domains.eservice (id),
@@ -1188,6 +1164,40 @@ data:
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.eservice_template_version_async_exchange_properties TO
       ${NAMESPACE}_domains_analytics_writer_user;
+
+  V10.1__backfill_eservice_descriptor_interface_kind.sql: |-
+    UPDATE domains.eservice_descriptor_interface
+      SET kind = 'INTERFACE'
+      WHERE kind IS NULL;
+
+  V10.2__set_eservice_descriptor_interface_kind_not_null.sql: |-
+    ALTER TABLE domains.eservice_descriptor_interface
+      ALTER COLUMN kind SET NOT NULL;
+
+  V10.3__drop_eservice_descriptor_interface_unique_constraint.sql: |-
+    ALTER TABLE domains.eservice_descriptor_interface
+      DROP CONSTRAINT IF EXISTS eservice_descriptor_interface_descriptor_id_key;
+
+  V10.4__add_eservice_descriptor_interface_unique_constraint.sql: |-
+    ALTER TABLE domains.eservice_descriptor_interface
+      ADD CONSTRAINT eservice_descriptor_interface_descriptor_id_kind_unique UNIQUE (descriptor_id, kind);
+
+  V10.5__backfill_eservice_template_version_interface_kind.sql: |-
+    UPDATE domains.eservice_template_version_interface
+      SET kind = 'INTERFACE'
+      WHERE kind IS NULL;
+
+  V10.6__set_eservice_template_version_interface_kind_not_null.sql: |-
+    ALTER TABLE domains.eservice_template_version_interface
+      ALTER COLUMN kind SET NOT NULL;
+
+  V10.7__drop_eservice_template_version_interface_unique_constraint.sql: |-
+    ALTER TABLE domains.eservice_template_version_interface
+      DROP CONSTRAINT IF EXISTS eservice_template_version_interface_version_id_key;
+
+  V10.8__add_eservice_template_version_interface_unique_constraint.sql: |-
+    ALTER TABLE domains.eservice_template_version_interface
+      ADD CONSTRAINT eservice_template_version_interface_version_id_kind_unique UNIQUE (version_id, kind);
 
   V11__add_tenant_remote_ids_and_certified_discrete_attributes.sql: |-
     ALTER TABLE domains.eservice_descriptor_attribute
