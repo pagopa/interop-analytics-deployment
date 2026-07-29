@@ -1095,3 +1095,185 @@ data:
     
     ALTER TABLE domains.eservice_descriptor_attribute
       ADD COLUMN daily_calls_per_consumer INTEGER;
+
+  V8__integrate_purpose_template_missing_columns.sql: |-
+    ALTER TABLE domains.purpose_template
+      ADD COLUMN handles_personal_data BOOLEAN;
+
+    UPDATE domains.purpose_template
+      SET handles_personal_data = FALSE
+      WHERE handles_personal_data IS NULL;
+
+    ALTER TABLE domains.purpose_template
+      ALTER COLUMN handles_personal_data SET NOT NULL;
+
+    -- WARNING: Set nullable instead of NOT NULL to avoid application backfill
+    ALTER TABLE domains.purpose_template_risk_analysis_answer_annotation_document
+      ADD COLUMN checksum VARCHAR;
+
+  V9__integrate_adeguamento_risk_analysis.sql: |-
+    ALTER TABLE domains.eservice_risk_analysis
+      ADD COLUMN tenant_kind VARCHAR(2048);
+
+    ALTER TABLE domains.purpose_risk_analysis_form
+      ADD COLUMN tenant_kind VARCHAR(2048);
+
+  V10__integrate_async_exchange_feature.sql: |-
+    ALTER TABLE domains.eservice
+      ADD COLUMN async_exchange BOOLEAN;
+
+    ALTER TABLE domains.eservice_template
+      ADD COLUMN async_exchange BOOLEAN;
+
+    ALTER TABLE domains.eservice_descriptor_interface
+      ADD COLUMN kind VARCHAR(2048);
+
+    UPDATE domains.eservice_descriptor_interface
+      SET kind = 'INTERFACE'
+      WHERE kind IS NULL;
+
+    ALTER TABLE domains.eservice_descriptor_interface
+      ALTER COLUMN kind SET NOT NULL;
+
+    ALTER TABLE domains.eservice_descriptor_interface
+      DROP CONSTRAINT IF EXISTS eservice_descriptor_interface_descriptor_id_key;
+
+    ALTER TABLE domains.eservice_descriptor_interface
+      ADD CONSTRAINT eservice_descriptor_interface_descriptor_id_kind_unique UNIQUE (descriptor_id, kind);
+
+    ALTER TABLE domains.eservice_template_version_interface
+      ADD COLUMN kind VARCHAR(2048);
+
+    UPDATE domains.eservice_template_version_interface
+      SET kind = 'INTERFACE'
+      WHERE kind IS NULL;
+
+    ALTER TABLE domains.eservice_template_version_interface
+      ALTER COLUMN kind SET NOT NULL;
+
+    ALTER TABLE domains.eservice_template_version_interface
+      DROP CONSTRAINT IF EXISTS eservice_template_version_interface_version_id_key;
+
+    ALTER TABLE domains.eservice_template_version_interface
+      ADD CONSTRAINT eservice_template_version_interface_version_id_kind_unique UNIQUE (version_id, kind);
+
+    CREATE TABLE IF NOT EXISTS domains.eservice_descriptor_async_exchange_properties (
+      eservice_id VARCHAR(36) NOT NULL REFERENCES domains.eservice (id),
+      metadata_version INTEGER,
+      descriptor_id VARCHAR(36) NOT NULL REFERENCES domains.eservice_descriptor (id),
+      response_time INTEGER NOT NULL,
+      resource_available_time INTEGER NOT NULL,
+      confirmation BOOLEAN NOT NULL,
+      bulk BOOLEAN NOT NULL,
+      max_result_set INTEGER NOT NULL,
+      deleted BOOLEAN,
+      PRIMARY KEY (descriptor_id)
+    );
+
+    GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.eservice_descriptor_async_exchange_properties TO
+      ${NAMESPACE}_domains_analytics_writer_user;
+
+    CREATE TABLE IF NOT EXISTS domains.eservice_template_version_async_exchange_properties (
+      eservice_template_id VARCHAR(36) NOT NULL REFERENCES domains.eservice_template (id),
+      metadata_version INTEGER NOT NULL,
+      version_id VARCHAR(36) NOT NULL REFERENCES domains.eservice_template_version (id),
+      response_time INTEGER NOT NULL,
+      resource_available_time INTEGER NOT NULL,
+      confirmation BOOLEAN NOT NULL,
+      bulk BOOLEAN NOT NULL,
+      max_result_set INTEGER NOT NULL,
+      deleted BOOLEAN,
+      PRIMARY KEY (version_id)
+    );
+
+    GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.eservice_template_version_async_exchange_properties TO
+      ${NAMESPACE}_domains_analytics_writer_user;
+
+  V11__add_tenant_remote_ids_and_certified_discrete_attributes.sql: |-
+    ALTER TABLE domains.eservice_descriptor_attribute
+      ADD COLUMN certified_discrete_threshold INTEGER;
+
+    ALTER TABLE domains.eservice_descriptor_attribute
+      ADD COLUMN certified_discrete_comparator VARCHAR;
+
+    ALTER TABLE domains.eservice_template_version_attribute
+      ADD COLUMN certified_discrete_threshold INTEGER;
+
+    ALTER TABLE domains.eservice_template_version_attribute
+      ADD COLUMN certified_discrete_comparator VARCHAR;
+
+    CREATE TABLE IF NOT EXISTS domains.tenant_remote_id (
+      tenant_id VARCHAR(36) NOT NULL REFERENCES domains.tenant (id),
+      metadata_version INTEGER NOT NULL,
+      origin VARCHAR(2048) NOT NULL,
+      value VARCHAR(2048) NOT NULL,
+      assignment_timestamp TIMESTAMP WITH TIME ZONE NOT NULL,
+      deleted BOOLEAN,
+      PRIMARY KEY (tenant_id, origin)
+    );
+
+    GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.tenant_remote_id TO
+      ${NAMESPACE}_domains_analytics_writer_user;
+
+    CREATE TABLE IF NOT EXISTS domains.tenant_certified_discrete_attribute (
+      attribute_id VARCHAR(36) NOT NULL,
+      tenant_id VARCHAR(36) NOT NULL REFERENCES domains.tenant (id),
+      metadata_version INTEGER NOT NULL,
+      assignment_timestamp TIMESTAMP WITH TIME ZONE NOT NULL,
+      revocation_timestamp TIMESTAMP WITH TIME ZONE,
+      certified_discrete_value INTEGER NOT NULL,
+      deleted BOOLEAN,
+      PRIMARY KEY (attribute_id, tenant_id)
+    );
+
+    GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.tenant_certified_discrete_attribute TO
+      ${NAMESPACE}_domains_analytics_writer_user;
+
+  V12__add_eservice_descriptor_archiving_schedule.sql: |-
+    ALTER TABLE domains.eservice
+      ADD COLUMN archiving_reason VARCHAR(2048);
+
+    CREATE TABLE IF NOT EXISTS domains.eservice_descriptor_archiving_schedule (
+      eservice_id VARCHAR(36) NOT NULL REFERENCES domains.eservice (id) ON DELETE CASCADE,
+      metadata_version INTEGER NOT NULL,
+      descriptor_id VARCHAR(36) NOT NULL REFERENCES domains.eservice_descriptor (id) ON DELETE CASCADE,
+      scope VARCHAR(2048) NOT NULL,
+      archivable_on TIMESTAMP WITH TIME ZONE NOT NULL,
+      started_at TIMESTAMP WITH TIME ZONE NOT NULL,
+      deleted BOOLEAN,
+      PRIMARY KEY (eservice_id, descriptor_id)
+    );
+
+    GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.eservice_descriptor_archiving_schedule TO
+      ${NAMESPACE}_domains_analytics_writer_user;
+
+  V13__add_purpose_risk_analysis_reviewer.sql: |-
+    ALTER TABLE domains.purpose
+      ADD COLUMN reviewer_workflow_review_mode VARCHAR(2048);
+
+    ALTER TABLE domains.purpose
+      ADD COLUMN reviewer_workflow_signing_state VARCHAR(2048);
+
+    ALTER TABLE domains.purpose
+      ADD COLUMN reviewer_workflow_signed_by VARCHAR(36);
+
+    ALTER TABLE domains.purpose
+      ADD COLUMN reviewer_workflow_rejection_reason VARCHAR(2048);
+
+    ALTER TABLE domains.purpose
+      ADD COLUMN reviewer_workflow_sent_to_reviewer_at TIMESTAMP WITH TIME ZONE;
+
+    CREATE TABLE IF NOT EXISTS domains.purpose_risk_analysis_reviewer (
+      purpose_id VARCHAR(36) NOT NULL REFERENCES domains.purpose(id),
+      metadata_version INTEGER NOT NULL,
+      reviewer_id VARCHAR(36) NOT NULL,
+      deleted BOOLEAN,
+      PRIMARY KEY (purpose_id, reviewer_id)
+    );
+
+    GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE domains.purpose_risk_analysis_reviewer TO
+      ${NAMESPACE}_domains_analytics_writer_user;
+
+  V14__add_eservice_descriptor_server_urls_descriptions.sql: |-
+    ALTER TABLE domains.eservice_descriptor
+      ADD COLUMN server_urls_descriptions VARCHAR(65535);
