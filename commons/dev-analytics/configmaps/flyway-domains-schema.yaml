@@ -1165,37 +1165,30 @@ data:
       ${NAMESPACE}_domains_analytics_writer_user;
 
   V10.1__backfill_eservice_descriptor_interface_kind.sql: |-
-    ALTER TABLE domains.eservice_descriptor_interface
-      ADD COLUMN kind VARCHAR(2048);
-  
-  V10.2__add_eservice_descriptor_interface_kind.sql: |-
+    UPDATE domains.eservice_descriptor_interface
+      SET kind = 'INTERFACE'
+      WHERE kind IS NULL;
+
+  V10.2__drop_eservice_descriptor_interface_unique_constraint.sql: |-
     ALTER TABLE domains.eservice_descriptor_interface
       DROP CONSTRAINT eservice_descriptor_interface_descriptor_id_key;
 
-  V10.3__drop_eservice_descriptor_interface_unique_constraint.sql: |-
-    ALTER TABLE domains.eservice_descriptor_interface
-      DROP CONSTRAINT eservice_descriptor_interface_descriptor_id_key;
-
-  V10.4__add_eservice_descriptor_interface_unique_constraint.sql: |-
+  V10.3__add_eservice_descriptor_interface_unique_constraint.sql: |-
     ALTER TABLE domains.eservice_descriptor_interface
       ADD CONSTRAINT eservice_descriptor_interface_descriptor_id_kind_unique UNIQUE (descriptor_id, kind);
 
-  V10.5__backfill_eservice_template_version_interface_kind.sql: |-
+  V10.4__backfill_eservice_template_version_interface_kind.sql: |-
     UPDATE domains.eservice_template_version_interface
       SET kind = 'INTERFACE'
       WHERE kind IS NULL;
 
-  V10.6__drop_eservice_template_version_interface_unique_constraint.sql: |-
+  V10.5__drop_eservice_template_version_interface_unique_constraint.sql: |-
     ALTER TABLE domains.eservice_template_version_interface
       DROP CONSTRAINT eservice_template_version_interface_version_id_key;
 
-  V10.7__add_eservice_template_version_interface_unique_constraint.sql: |-
+  V10.6__add_eservice_template_version_interface_unique_constraint.sql: |-
     ALTER TABLE domains.eservice_template_version_interface
       ADD CONSTRAINT eservice_template_version_interface_version_id_kind_unique UNIQUE (version_id, kind);
-  
-  V10.8__add_async_exchange_eservice.sql: |-
-    ALTER TABLE domains.eservice
-      ADD COLUMN async_exchange BOOLEAN;
 
   V11__add_tenant_remote_ids_and_certified_discrete_attributes.sql: |-
     ALTER TABLE domains.eservice_descriptor_attribute
