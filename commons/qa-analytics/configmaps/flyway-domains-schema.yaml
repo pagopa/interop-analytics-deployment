@@ -1097,6 +1097,7 @@ data:
       ADD COLUMN daily_calls_per_consumer INTEGER;
 
   V8__integrate_purpose_template_missing_columns.sql: |-
+    -- WARNING: Redshift does not support SET NOT NULL.
     ALTER TABLE domains.purpose_template
       ADD COLUMN handles_personal_data BOOLEAN;
 
@@ -1108,10 +1109,6 @@ data:
     UPDATE domains.purpose_template
       SET handles_personal_data = FALSE
       WHERE handles_personal_data IS NULL;
-
-  V8.2__set_purpose_template_handles_personal_data_not_null.sql: |-
-    ALTER TABLE domains.purpose_template
-      ALTER COLUMN handles_personal_data SET NOT NULL;
 
   V9__integrate_adeguamento_risk_analysis.sql: |-
     ALTER TABLE domains.eservice_risk_analysis
@@ -1127,15 +1124,17 @@ data:
     ALTER TABLE domains.eservice_template
       ADD COLUMN async_exchange BOOLEAN;
 
+    -- WARNING: Redshift does not support SET NOT NULL.
     ALTER TABLE domains.eservice_descriptor_interface
       ADD COLUMN kind VARCHAR(2048);
 
+    -- WARNING: Redshift does not support SET NOT NULL.
     ALTER TABLE domains.eservice_template_version_interface
       ADD COLUMN kind VARCHAR(2048);
 
     CREATE TABLE IF NOT EXISTS domains.eservice_descriptor_async_exchange_properties (
       eservice_id VARCHAR(36) NOT NULL REFERENCES domains.eservice (id),
-      metadata_version INTEGER,
+      metadata_version INTEGER NOT NULL,
       descriptor_id VARCHAR(36) NOT NULL REFERENCES domains.eservice_descriptor (id),
       response_time INTEGER NOT NULL,
       resource_available_time INTEGER NOT NULL,
@@ -1170,32 +1169,24 @@ data:
       SET kind = 'INTERFACE'
       WHERE kind IS NULL;
 
-  V10.2__set_eservice_descriptor_interface_kind_not_null.sql: |-
+  V10.2__drop_eservice_descriptor_interface_unique_constraint.sql: |-
     ALTER TABLE domains.eservice_descriptor_interface
-      ALTER COLUMN kind SET NOT NULL;
+      DROP CONSTRAINT eservice_descriptor_interface_descriptor_id_key;
 
-  V10.3__drop_eservice_descriptor_interface_unique_constraint.sql: |-
-    ALTER TABLE domains.eservice_descriptor_interface
-      DROP CONSTRAINT IF EXISTS eservice_descriptor_interface_descriptor_id_key;
-
-  V10.4__add_eservice_descriptor_interface_unique_constraint.sql: |-
+  V10.3__add_eservice_descriptor_interface_unique_constraint.sql: |-
     ALTER TABLE domains.eservice_descriptor_interface
       ADD CONSTRAINT eservice_descriptor_interface_descriptor_id_kind_unique UNIQUE (descriptor_id, kind);
 
-  V10.5__backfill_eservice_template_version_interface_kind.sql: |-
+  V10.4__backfill_eservice_template_version_interface_kind.sql: |-
     UPDATE domains.eservice_template_version_interface
       SET kind = 'INTERFACE'
       WHERE kind IS NULL;
 
-  V10.6__set_eservice_template_version_interface_kind_not_null.sql: |-
+  V10.5__drop_eservice_template_version_interface_unique_constraint.sql: |-
     ALTER TABLE domains.eservice_template_version_interface
-      ALTER COLUMN kind SET NOT NULL;
+      DROP CONSTRAINT eservice_template_version_interface_version_id_key;
 
-  V10.7__drop_eservice_template_version_interface_unique_constraint.sql: |-
-    ALTER TABLE domains.eservice_template_version_interface
-      DROP CONSTRAINT IF EXISTS eservice_template_version_interface_version_id_key;
-
-  V10.8__add_eservice_template_version_interface_unique_constraint.sql: |-
+  V10.6__add_eservice_template_version_interface_unique_constraint.sql: |-
     ALTER TABLE domains.eservice_template_version_interface
       ADD CONSTRAINT eservice_template_version_interface_version_id_kind_unique UNIQUE (version_id, kind);
 
@@ -1244,9 +1235,9 @@ data:
       ADD COLUMN archiving_reason VARCHAR(2048);
 
     CREATE TABLE IF NOT EXISTS domains.eservice_descriptor_archiving_schedule (
-      eservice_id VARCHAR(36) NOT NULL REFERENCES domains.eservice (id) ON DELETE CASCADE,
+      eservice_id VARCHAR(36) NOT NULL REFERENCES domains.eservice (id),
       metadata_version INTEGER NOT NULL,
-      descriptor_id VARCHAR(36) NOT NULL REFERENCES domains.eservice_descriptor (id) ON DELETE CASCADE,
+      descriptor_id VARCHAR(36) NOT NULL REFERENCES domains.eservice_descriptor (id),
       scope VARCHAR(2048) NOT NULL,
       archivable_on TIMESTAMP WITH TIME ZONE NOT NULL,
       started_at TIMESTAMP WITH TIME ZONE NOT NULL,
