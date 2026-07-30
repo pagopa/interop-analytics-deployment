@@ -1278,3 +1278,7 @@ data:
   V14__add_eservice_descriptor_server_urls_descriptions.sql: |-
     ALTER TABLE domains.eservice_descriptor
       ADD COLUMN server_urls_descriptions VARCHAR(65535);
+
+  V15__add_grace_period_days_to_eservice_descriptor_archiving_schedule.sql: |-
+    ALTER TABLE domains.eservice_descriptor_archiving_schedule
+      ADD COLUMN grace_period_days INTEGER;
