@@ -1283,7 +1283,7 @@ data:
     ALTER TABLE domains.eservice_descriptor_archiving_schedule
       ADD COLUMN grace_period_days INTEGER;
 
-  V16_alter_url_length_for_eservice_descriptor_template_version_ref.sql: |-
+  V16__alter_url_length_for_eservice_descriptor_template_version_ref.sql: |-
     ALTER TABLE domains.eservice_descriptor_template_version_ref
       ALTER COLUMN contact_url TYPE VARCHAR(65535);
       
