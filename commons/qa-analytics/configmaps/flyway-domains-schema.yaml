@@ -1282,3 +1282,10 @@ data:
   V15__add_grace_period_days_to_eservice_descriptor_archiving_schedule.sql: |-
     ALTER TABLE domains.eservice_descriptor_archiving_schedule
       ADD COLUMN grace_period_days INTEGER;
+  
+  V16_alter_url_length_for_eservice_descriptor_template_version_ref.sql: |-
+    ALTER TABLE domains.eservice_descriptor_template_version_ref
+      ALTER COLUMN contact_url TYPE VARCHAR(65535);
+      
+    ALTER TABLE domains.eservice_descriptor_template_version_ref
+      ALTER COLUMN terms_and_conditions_url TYPE VARCHAR(65535);
