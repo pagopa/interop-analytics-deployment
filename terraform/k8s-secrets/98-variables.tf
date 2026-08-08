@@ -19,3 +19,9 @@ variable "eks_cluster_name" {
   type        = string
   description = "Name of the interop EKS cluster"
 }
+
+variable "TF_VAR_namespace" {
+  type        = string
+  description = "Namespace where the secrets will be replicated in the EKS cluster"
+  default     = "dev-analytics" # Default value, it can be overridden by the workflow input
+}

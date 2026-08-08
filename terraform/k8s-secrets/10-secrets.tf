@@ -16,20 +16,28 @@ data "aws_secretsmanager_secret" "tagged_object" {
 data "aws_secretsmanager_secret_version" "filtered" {
   depends_on = [data.aws_secretsmanager_secret.tagged_object]
 
-  for_each = { for key, object in data.aws_secretsmanager_secret.tagged_object : key => object if(object.tags["EKSClusterName"] == var.eks_cluster_name && (contains(local.terraform_states_list, object.tags["TerraformState"]))) }
+  for_each = {
+    for key, object in data.aws_secretsmanager_secret.tagged_object :
+    key => object
+    if(
+      object.tags["EKSClusterName"] == var.eks_cluster_name &&
+      length([
+        for state in split(" ", object.tags["TerraformState"]) : state
+        if contains(flatten([for item in local.terraform_states_list : split(",", item)]), state)
+      ]) > 0
+    )
+  }
 
   secret_id = each.value.name
 }
 
 locals {
   sv_namespaces_pairs = flatten([
-    for sv_key, sv_value in data.aws_secretsmanager_secret_version.filtered : [
-      for ns in toset(split(" ", (data.aws_secretsmanager_secret.tagged_object[sv_key].tags["EKSClusterNamespacesSpaceSeparated"]))) : {
-        eks_replica_secret_name = data.aws_secretsmanager_secret.tagged_object[sv_value.secret_id].tags["EKSReplicaSecretName"],
-        secret_version          = sv_value,
-        namespace               = ns
-      }
-    ]
+    for sv_key, sv_value in data.aws_secretsmanager_secret_version.filtered : {
+      eks_replica_secret_name = data.aws_secretsmanager_secret.tagged_object[sv_value.secret_id].tags["EKSReplicaSecretName"],
+      secret_version          = sv_value,
+      namespace               = var.TF_VAR_namespace
+    }
   ])
 }
 
