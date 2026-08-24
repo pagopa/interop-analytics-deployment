@@ -96,4 +96,4 @@ data:
     );
 
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE m2m_jwt.dpop_audit TO
-      ${NAMESPACE}_jwt_audit_analytics_writer_user;
+      ${NAMESPACE}_m2m_jwt_audit_analytics_writer_user;
