@@ -9,6 +9,7 @@ data:
   DB_NAME: "interop_dev"
   DB_USE_SSL: "true"
   DB_JWT_SCHEMA: "jwt"
+  DB_M2M_JWT_SCHEMA: "m2m_jwt"
   DB_DOMAINS_SCHEMA: "domains"
   DB_ALB_LOGS_SCHEMA: "infra"
   DB_APPLICATION_SCHEMA: "application"
