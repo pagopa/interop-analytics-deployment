@@ -121,3 +121,13 @@ data:
 
     ALTER TABLE application.end_request_auth_server_audit
       ALTER COLUMN correlation_id TYPE VARCHAR(255);
+  
+  V1.2__add_jti_column.sql: |-
+    ALTER TABLE application.end_request_audit
+      ADD COLUMN jwt_id VARCHAR(255);
+
+    ALTER TABLE application.end_request_session_token_exchange_audit
+      ADD COLUMN request_jwt_id VARCHAR(255);
+      
+    ALTER TABLE application.end_request_session_token_exchange_audit  
+      ADD COLUMN producedva bene_jwt_id VARCHAR(255);
