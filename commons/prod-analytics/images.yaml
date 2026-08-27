@@ -1,15 +1,15 @@
 images:
   microservices:
     jwt-audit-analytics-writer:
-      tag: "develop"
+      tag: "1.0.0"
     alb-logs-analytics-writer:
-      tag: "develop"
+      tag: "1.0.0"
     application-audit-analytics-writer:
-      tag: "develop"
+      tag: "1.0.0"
     application-audit-archiver:
-      tag: "develop"
+      tag: "1.0.0"
     domains-analytics-writer:
-      tag: "develop"
+      tag: "1.0.0"
   jobs:
     apply-mv:
       tag: "11.4.0"
