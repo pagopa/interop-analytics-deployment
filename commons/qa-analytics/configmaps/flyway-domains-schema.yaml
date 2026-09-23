@@ -1296,19 +1296,3 @@ data:
       
     ALTER TABLE domains.eservice_descriptor_template_version_ref
       ALTER COLUMN contact_email TYPE VARCHAR(65535);
-
-  V18__add_columns_for_new_operators_second_release.sql: |-
-    ALTER TABLE domains.purpose
-      ADD COLUMN risk_analysis_review_mode VARCHAR(2048);
-
-    ALTER TABLE domains.purpose
-      ADD COLUMN reviewer_workflow_signed_at TIMESTAMP WITH TIME ZONE;
-
-    ALTER TABLE domains.purpose
-      ADD COLUMN reviewer_workflow_rejected_by VARCHAR(36);
-
-    ALTER TABLE domains.purpose
-      ADD COLUMN reviewer_workflow_rejected_at TIMESTAMP WITH TIME ZONE;
-
-    ALTER TABLE domains.purpose_risk_analysis_reviewer
-      ADD COLUMN sent_to_reviewer_at TIMESTAMP WITH TIME ZONE;
