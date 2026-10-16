@@ -1,0 +1,55 @@
+name: "interop-be-m2m-jwt-audit-analytics-writer"
+
+serviceAccount:
+  roleArn: "arn:aws:iam::505630707203:role/interop-be-m2m-jwt-audit-analytics-writer-dev"
+
+service:
+  create: false
+
+configmap:
+  SERVICE_NAME: pagopa-interop-m2m-jwt-audit-analytics-writer
+  SQS_NOTIFICATION_ENDPOINT: https://sqs.eu-south-1.amazonaws.com/{{.Values.local.awsAccountId}}/interop-analytics-m2m-jwt-audit-{{.Values.local.env}}
+  S3_BUCKET: interop-generated-jwt-m2m-details-dev-es1
+  BATCH_SIZE: 500
+  DB_INGEST_MODE: COPY
+  SQS_RECEIVE_MSGS_CALLS: 100
+  SQS_RECEIVE_MSGS_CONCURRENCY: 10
+  S3_COPY_BUCKET: interop-analytics-etl-m2m-jwt-audit-{{.Values.local.env}}-es1
+  S3_DELETE_AFTER_COPY: true
+  GZ_COMPRESSION_LEVEL: 3
+  MAX_DAYS_TOLERANCE_FOR_DUPLICATE_DELAY: 60
+  REDSHIFT_COPY_IAM_ROLE_ARN: arn:aws:iam::{{.Values.local.awsAccountId}}:role/interop-analytics-redshift-s3-copy-{{.Values.local.env}}
+
+deployment:
+  flywayInitContainer:
+    create: true
+    version: "11.4.0"
+    downloadRedshiftDriver: true
+    migrationsConfigmap: "common-flyway-m2m-jwt-schema"
+    env:
+      FLYWAY_CREATE_SCHEMAS: true
+      FLYWAY_PLACEHOLDER_REPLACEMENT: true
+      FLYWAY_PLACEHOLDERS_NAMESPACE: "dev"
+      FLYWAY_URL: jdbc:redshift://$(DB_HOST):$(DB_PORT)/$(DB_NAME)
+      FLYWAY_SCHEMAS: "m2m_jwt"
+    envFromConfigmaps:
+      DB_HOST: "common-redshift.DB_HOST"
+      DB_PORT: "common-redshift.DB_PORT"
+      DB_NAME: "common-redshift.DB_NAME"
+    envFromSecrets:
+      FLYWAY_USER: "redshift-flyway-user.username"
+      FLYWAY_PASSWORD: "redshift-flyway-user.password"
+  env:
+    LOG_LEVEL: "debug"
+    
+  envFromConfigmaps:
+    DB_HOST: "common-redshift.DB_HOST"
+    DB_NAME: "common-redshift.DB_NAME"
+    DB_PORT: "common-redshift.DB_PORT"
+    DB_USE_SSL: "common-redshift.DB_USE_SSL"
+    DB_SCHEMA_NAME: "common-redshift.DB_M2M_JWT_SCHEMA"
+  envFromSecrets:
+    DB_USERNAME: "redshift-m2m-jwt-audit-analytics-writer-user.username"
+    DB_PASSWORD: "redshift-m2m-jwt-audit-analytics-writer-user.password"
+  envFromFieldRef:
+    MERGE_TABLE_SUFFIX: "metadata.uid"
