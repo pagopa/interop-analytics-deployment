@@ -22,7 +22,7 @@ from
 
 COMMENT ON VIEW 
   views.mv_00_clients_descriptions 
-IS 'Client name, organization name and client description of each client'
+IS 'Client name, consumer tenant name and client description of each client'
 ;
 
 GRANT SELECT ON TABLE views.mv_00_clients_descriptions TO ${NAMESPACE}_quicksight_user;
